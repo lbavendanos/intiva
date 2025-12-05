@@ -5,10 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Build & Development Commands
 
 ```bash
-pnpm dev      # Start development server on http://localhost:3000
-pnpm build    # Build for production
-pnpm start    # Start production server
-pnpm lint     # Run ESLint
+pnpm dev            # Start development server on http://localhost:3000
+pnpm build          # Build for production
+pnpm start          # Start production server
+pnpm lint           # Run ESLint
+pnpm format:write   # Format code with Prettier
+pnpm format:check   # Check code formatting
 ```
 
 ## Architecture
@@ -17,9 +19,9 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 
 **Key directories:**
 
-- `src/app/` - App Router pages and layouts
-- `src/components/ui/` - shadcn/ui components
-- `src/lib/` - Utility functions (includes `cn()` helper)
+- `src/app/` - App Router pages, layouts, and global styles
+- `src/components/ui/` - shadcn/ui components (installed via CLI)
+- `src/lib/` - Utility functions
 - `src/hooks/` - Custom React hooks
 - `public/` - Static assets
 
@@ -30,18 +32,20 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 - **No semicolons**
 - **Single quotes**
 - **2-space indentation**
+- **LF line endings**
 - Tailwind classes are auto-sorted by Prettier
 - Imports are auto-sorted by Prettier
 
 ## Technology Stack
 
-- **Framework:** Next.js 16 with App Router
-- **Language:** TypeScript (strict mode)
-- **Styling:** Tailwind CSS v4
+- **Framework:** Next.js 16.0.7 with App Router
+- **Language:** TypeScript 5.9.3 (strict mode)
+- **React:** 19.2.1
+- **React Compiler:** Enabled for automatic optimizations
+- **Styling:** Tailwind CSS 4.1.17
 - **UI Components:** shadcn/ui (new-york style)
 - **Icons:** Lucide React
 - **Package Manager:** pnpm
-- **React Compiler:** Enabled for automatic optimizations
 
 ## shadcn/ui
 
@@ -49,10 +53,32 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 pnpm dlx shadcn@latest add <component>  # Add a new component
 ```
 
-Components are installed in `src/components/ui/`. Use the `cn()` utility from `@/lib/utils` for conditional class merging.
+Components are installed in `src/components/ui/`.
 
 ## Git Commits
 
-- Do not include "Generated with Claude Code" footer in commit messages
-- Do not include "Co-Authored-By: Claude" in commit messages
-- Keep commit messages concise and descriptive
+Follow [Conventional Commits](https://www.conventionalcommits.org/) specification.
+
+**Format:** `<type>(<optional scope>): <description>`
+
+**Types:**
+
+- `feat` - New feature
+- `fix` - Bug fix
+- `docs` - Documentation changes
+- `style` - Code style (formatting, semicolons, etc.)
+- `refactor` - Code refactoring (no feature or fix)
+- `perf` - Performance improvements
+- `test` - Adding or updating tests
+- `build` - Build system or dependencies
+- `ci` - CI/CD configuration
+- `chore` - Other changes (maintenance, tooling)
+
+**Rules:**
+
+- Use imperative mood: "Add feature" not "Added feature"
+- Keep subject line under 50 characters
+- Do not end subject line with a period
+- Use `!` for breaking changes: `feat!: remove deprecated API`
+- Do not include "Generated with Claude Code" footer
+- Do not include "Co-Authored-By: Claude"
