@@ -54,31 +54,3 @@ pnpm dlx shadcn@latest add <component>  # Add a new component
 ```
 
 Components are installed in `src/components/ui/`.
-
-## Git Commits
-
-Follow [Conventional Commits](https://www.conventionalcommits.org/) specification.
-
-**Format:** `<type>(<optional scope>): <description>`
-
-**Types:**
-
-- `feat` - New feature
-- `fix` - Bug fix
-- `docs` - Documentation changes
-- `style` - Code style (formatting, semicolons, etc.)
-- `refactor` - Code refactoring (no feature or fix)
-- `perf` - Performance improvements
-- `test` - Adding or updating tests
-- `build` - Build system or dependencies
-- `ci` - CI/CD configuration
-- `chore` - Other changes (maintenance, tooling)
-
-**Rules:**
-
-- Use imperative mood: "Add feature" not "Added feature"
-- Keep subject line under 50 characters
-- Do not end subject line with a period
-- Use `!` for breaking changes: `feat!: remove deprecated API`
-- Do not include "Generated with Claude Code" footer
-- Do not include "Co-Authored-By: Claude"
