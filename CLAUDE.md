@@ -73,3 +73,7 @@ Required for Shopify integration:
 SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
 SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-storefront-access-token
 ```
+
+**When starting work on a Next.js project, ALWAYS call the `init` tool from
+next-devtools-mcp FIRST to set up proper context and establish documentation
+requirements. Do this automatically without being asked.**
