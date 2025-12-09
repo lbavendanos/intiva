@@ -145,7 +145,6 @@ describe('Shopify Client', () => {
         }),
       )
     })
-
   })
 
   describe('ShopifyClientError', () => {
