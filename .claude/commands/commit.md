@@ -16,6 +16,7 @@ Create a commit following the Conventional Commits specification.
 **Format:** `<type>(<optional scope>): <description>`
 
 **Available types:**
+
 - `feat` - New feature
 - `fix` - Bug fix
 - `docs` - Documentation changes
@@ -28,6 +29,7 @@ Create a commit following the Conventional Commits specification.
 - `chore` - Other changes (maintenance, tooling)
 
 **Mandatory rules:**
+
 - Use imperative mood: "Add feature" not "Added feature"
 - Keep subject line under 50 characters
 - Do not end subject line with a period
