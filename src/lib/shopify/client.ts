@@ -124,8 +124,9 @@ export function formatMoney(money: {
   amount: string
   currencyCode: string
 }): string {
+  const locale = process.env.APP_LOCALE || 'en-US'
   const amount = parseFloat(money.amount)
-  return new Intl.NumberFormat('es-ES', {
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: money.currencyCode,
   }).format(amount)
