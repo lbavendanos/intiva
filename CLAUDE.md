@@ -12,6 +12,7 @@ pnpm lint           # Run ESLint
 pnpm format:write   # Format code with Prettier
 pnpm format:check   # Check code formatting
 pnpm test           # Run unit tests with Vitest (watch mode)
+pnpm test:ui        # Run unit tests with Vitest UI
 pnpm test:run       # Run unit tests once
 pnpm test:coverage  # Run unit tests with coverage report
 pnpm test:e2e       # Run E2E tests with Playwright
@@ -25,14 +26,59 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 **Key directories:**
 
 - `src/app/` - App Router pages, layouts, and global styles
+- `src/app/(shop)/` - Shop route group (products, collections)
 - `src/components/ui/` - shadcn/ui components (installed via CLI)
-- `src/lib/` - Utility functions
-- `src/lib/shopify/` - Shopify Storefront API client, types, and GraphQL fragments
+- `src/components/shop/` - Shop-specific components (cards, grids, pagination)
+- `src/lib/` - Utility functions (`cn`, `url`)
+- `src/lib/shopify/` - Shopify Storefront API integration
 - `src/hooks/` - Custom React hooks
-- `__tests__/` - Test files (unit in `unit/`, E2E in `e2e/`)
+- `__tests__/unit/` - Unit tests (Vitest)
+- `__tests__/e2e/` - E2E tests (Playwright)
 - `public/` - Static assets
 
 **Path alias:** `@/*` maps to `./src/*`
+
+## Shopify Integration
+
+### Client (`src/lib/shopify/client.ts`)
+
+- `storefrontQuery<T>(query, options)` - Execute GraphQL queries against Shopify Storefront API
+- `extractNodesFromEdges<T>(connection)` - Extract nodes from Shopify connection edges
+- `formatMoney(money)` - Format money with locale support
+- `ShopifyClientError` - Custom error class with GraphQL error details
+
+### Queries (`src/lib/shopify/queries/`)
+
+**Products:**
+- `getProducts(first?, after?)` - Paginated product list
+- `getProductByHandle(handle)` - Single product by handle
+
+**Collections:**
+- `getCollections(first?, after?)` - Paginated collection list
+- `getCollectionByHandle(handle)` - Single collection by handle
+- `getCollectionProducts(handle, first?, after?)` - Products in a collection
+
+### GraphQL Fragments (`src/lib/shopify/fragments/`)
+
+Reusable fragments: `ImageFragment`, `MoneyFragment`, `SEOFragment`, `PageInfoFragment`, `ProductCardFragment`, `ProductFragment`, `CollectionFragment`, `CartFragment`, `CustomerFragment`, `OrderFragment`
+
+### Types (`src/lib/shopify/types.ts`)
+
+Comprehensive TypeScript types: `Product`, `ProductVariant`, `Collection`, `Cart`, `CartLineItem`, `Customer`, `Order`, `PageInfo`, `Money`, `Image`, `Connection<T>`
+
+## Shop Components (`src/components/shop/`)
+
+- `ProductCard` / `ProductCardSkeleton` - Product display card with image, price, availability
+- `ProductGrid` / `ProductGridSkeleton` - Responsive grid for products
+- `CollectionCard` / `CollectionCardSkeleton` - Collection display card
+- `CollectionGrid` / `CollectionGridSkeleton` - Responsive grid for collections
+- `Pagination` - Cursor-based pagination with Next.js navigation
+
+## Implemented Pages
+
+- `/products` - Products catalog with pagination
+- `/collections` - Collections list with pagination
+- `/collections/[handle]` - Collection detail with products
 
 ## Code Style
 
@@ -65,15 +111,26 @@ pnpm dlx shadcn@latest add <component>  # Add a new component
 
 Components are installed in `src/components/ui/`.
 
+Installed components: `button`, `card`, `badge`, `skeleton`
+
 ## Environment Variables
 
-Required for Shopify integration:
+Required:
 
 ```
 SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
 SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-storefront-access-token
+APP_URL=http://localhost:3000    # Base URL for url() helper
+APP_LOCALE=en-US                 # Locale for formatMoney()
 ```
+
+## Testing Patterns
+
+**Unit Tests:** Mock `fetch` globally, set env vars in `beforeEach`, use Vitest's `vi.fn()` for mocks
+
+**E2E Tests:** Use data-testid attributes (`product-card`, `collection-card`), test responsive design, verify no JS errors
 
 **When starting work on a Next.js project, ALWAYS call the `init` tool from
 next-devtools-mcp FIRST to set up proper context and establish documentation
 requirements. Do this automatically without being asked.**
+- to memorize
