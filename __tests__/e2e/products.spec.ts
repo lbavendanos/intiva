@@ -28,9 +28,7 @@ test.describe('Products Page', () => {
     const count = await productCards.count()
 
     if (count === 0) {
-      await expect(
-        page.getByText('No se encontraron productos'),
-      ).toBeVisible()
+      await expect(page.getByText('No se encontraron productos')).toBeVisible()
     }
   })
 

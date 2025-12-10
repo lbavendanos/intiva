@@ -10,7 +10,9 @@ test.describe('Collections Page', () => {
     ).toBeVisible()
   })
 
-  test('should show collection grid when collections exist', async ({ page }) => {
+  test('should show collection grid when collections exist', async ({
+    page,
+  }) => {
     await page.goto('/collections')
 
     const collectionCards = page.locator('[data-testid="collection-card"]')
@@ -21,7 +23,9 @@ test.describe('Collections Page', () => {
     }
   })
 
-  test('should show empty state when no collections exist', async ({ page }) => {
+  test('should show empty state when no collections exist', async ({
+    page,
+  }) => {
     await page.goto('/collections')
 
     const collectionCards = page.locator('[data-testid="collection-card"]')

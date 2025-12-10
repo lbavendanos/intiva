@@ -50,10 +50,12 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 ### Queries (`src/lib/shopify/queries/`)
 
 **Products:**
+
 - `getProducts(first?, after?)` - Paginated product list
 - `getProductByHandle(handle)` - Single product by handle
 
 **Collections:**
+
 - `getCollections(first?, after?)` - Paginated collection list
 - `getCollectionByHandle(handle)` - Single collection by handle
 - `getCollectionProducts(handle, first?, after?)` - Products in a collection
@@ -133,4 +135,5 @@ APP_LOCALE=en-US                 # Locale for formatMoney()
 **When starting work on a Next.js project, ALWAYS call the `init` tool from
 next-devtools-mcp FIRST to set up proper context and establish documentation
 requirements. Do this automatically without being asked.**
+
 - to memorize
