@@ -21,6 +21,33 @@ export const SEO_FRAGMENT = /* GraphQL */ `
   }
 `
 
+export const PAGE_INFO_FRAGMENT = /* GraphQL */ `
+  fragment PageInfoFragment on PageInfo {
+    hasNextPage
+    hasPreviousPage
+    startCursor
+    endCursor
+  }
+`
+
+export const CUSTOMER_ADDRESS_FRAGMENT = /* GraphQL */ `
+  fragment CustomerAddressFragment on MailingAddress {
+    id
+    firstName
+    lastName
+    company
+    address1
+    address2
+    city
+    province
+    provinceCode
+    country
+    countryCodeV2
+    zip
+    phone
+  }
+`
+
 export const PRODUCT_VARIANT_FRAGMENT = /* GraphQL */ `
   fragment ProductVariantFragment on ProductVariant {
     id
@@ -41,8 +68,39 @@ export const PRODUCT_VARIANT_FRAGMENT = /* GraphQL */ `
       ...ImageFragment
     }
   }
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
+`
+
+export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
+  fragment ProductCardFragment on Product {
+    id
+    title
+    handle
+    availableForSale
+    priceRange {
+      minVariantPrice {
+        ...MoneyFragment
+      }
+    }
+    featuredImage {
+      ...ImageFragment
+    }
+  }
+`
+
+export const COLLECTION_FRAGMENT = /* GraphQL */ `
+  fragment CollectionFragment on Collection {
+    id
+    title
+    handle
+    description
+    descriptionHtml
+    image {
+      ...ImageFragment
+    }
+    seo {
+      ...SEOFragment
+    }
+  }
 `
 
 export const PRODUCT_FRAGMENT = /* GraphQL */ `
@@ -92,47 +150,6 @@ export const PRODUCT_FRAGMENT = /* GraphQL */ `
     createdAt
     updatedAt
   }
-  ${SEO_FRAGMENT}
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
-  ${PRODUCT_VARIANT_FRAGMENT}
-`
-
-export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
-  fragment ProductCardFragment on Product {
-    id
-    title
-    handle
-    availableForSale
-    priceRange {
-      minVariantPrice {
-        ...MoneyFragment
-      }
-    }
-    featuredImage {
-      ...ImageFragment
-    }
-  }
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
-`
-
-export const COLLECTION_FRAGMENT = /* GraphQL */ `
-  fragment CollectionFragment on Collection {
-    id
-    title
-    handle
-    description
-    descriptionHtml
-    image {
-      ...ImageFragment
-    }
-    seo {
-      ...SEOFragment
-    }
-  }
-  ${IMAGE_FRAGMENT}
-  ${SEO_FRAGMENT}
 `
 
 export const CART_LINE_FRAGMENT = /* GraphQL */ `
@@ -175,8 +192,6 @@ export const CART_LINE_FRAGMENT = /* GraphQL */ `
       }
     }
   }
-  ${IMAGE_FRAGMENT}
-  ${MONEY_FRAGMENT}
 `
 
 export const CART_FRAGMENT = /* GraphQL */ `
@@ -203,25 +218,6 @@ export const CART_FRAGMENT = /* GraphQL */ `
       }
     }
   }
-  ${CART_LINE_FRAGMENT}
-`
-
-export const CUSTOMER_ADDRESS_FRAGMENT = /* GraphQL */ `
-  fragment CustomerAddressFragment on MailingAddress {
-    id
-    firstName
-    lastName
-    company
-    address1
-    address2
-    city
-    province
-    provinceCode
-    country
-    countryCodeV2
-    zip
-    phone
-  }
 `
 
 export const CUSTOMER_FRAGMENT = /* GraphQL */ `
@@ -246,7 +242,6 @@ export const CUSTOMER_FRAGMENT = /* GraphQL */ `
     createdAt
     updatedAt
   }
-  ${CUSTOMER_ADDRESS_FRAGMENT}
 `
 
 export const ORDER_FRAGMENT = /* GraphQL */ `
@@ -290,17 +285,5 @@ export const ORDER_FRAGMENT = /* GraphQL */ `
     shippingAddress {
       ...CustomerAddressFragment
     }
-  }
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
-  ${CUSTOMER_ADDRESS_FRAGMENT}
-`
-
-export const PAGE_INFO_FRAGMENT = /* GraphQL */ `
-  fragment PageInfoFragment on PageInfo {
-    hasNextPage
-    hasPreviousPage
-    startCursor
-    endCursor
   }
 `
