@@ -69,7 +69,7 @@ export default async function CollectionPage({
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-zinc-900">{collection.title}</h1>
+        <h1 data-testid="collection-title" className="text-3xl font-bold text-zinc-900">{collection.title}</h1>
         {collection.description && (
           <p className="mt-2 text-zinc-600">{collection.description}</p>
         )}
