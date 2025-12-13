@@ -15,7 +15,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link
-      href={`/product/${handle}`}
+      href={`/products/${handle}`}
       className="group"
       data-testid="product-card"
     >

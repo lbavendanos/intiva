@@ -27,7 +27,10 @@ export function ProductDetail({ product }: ProductDetailProps) {
     selectedVariant?.availableForSale ?? product.availableForSale
 
   return (
-    <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+    <div
+      data-testid="product-detail"
+      className="grid gap-8 lg:grid-cols-2 lg:gap-12"
+    >
       <ProductGallery images={product.images} productTitle={product.title} />
 
       <div className="flex flex-col">

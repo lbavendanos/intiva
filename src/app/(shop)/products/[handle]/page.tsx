@@ -40,7 +40,7 @@ export async function generateMetadata({
       title,
       description,
       type: 'website',
-      url: url(`/product/${handle}`),
+      url: url(`/products/${handle}`),
       images: product.featuredImage
         ? [
             {
