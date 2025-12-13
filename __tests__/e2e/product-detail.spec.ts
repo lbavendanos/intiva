@@ -10,58 +10,89 @@ test.describe('Product Detail Page', () => {
   test('should navigate to product detail from product card', async ({
     page,
   }) => {
-    const productLinks = page.locator('a[href^="/product/"]')
-    const count = await productLinks.count()
+    const productCards = page.getByTestId('product-card')
+    const count = await productCards.count()
 
     if (count > 0) {
-      const firstProductHref = await productLinks.first().getAttribute('href')
-      await productLinks.first().click()
+      const firstProductCard = productCards.first()
+      const firstProductHref = await firstProductCard.getAttribute('href')
+
+      await firstProductCard.click()
+
+      await page.waitForURL(firstProductHref!)
+      await page.waitForLoadState('networkidle')
+
+      const productDetail = page.getByTestId('product-detail')
+      await expect(productDetail).toBeVisible()
 
       await expect(page).toHaveURL(firstProductHref!)
-      await expect(page.locator('h1')).toBeVisible()
     }
   })
 
   test('should display product title', async ({ page }) => {
-    const productLinks = page.locator('a[href^="/product/"]')
-    const count = await productLinks.count()
+    const productCards = page.getByTestId('product-card')
+    const count = await productCards.count()
 
     if (count > 0) {
-      await productLinks.first().click()
+      const firstProductCard = productCards.first()
+      const firstProductHref = await firstProductCard.getAttribute('href')
+      const expectedTitle = await firstProductCard.locator('h3').textContent()
+
+      await firstProductCard.click()
+
+      await page.waitForURL(firstProductHref!)
       await page.waitForLoadState('networkidle')
 
-      const title = page.locator('h1')
+      const productDetail = page.getByTestId('product-detail')
+      await expect(productDetail).toBeVisible()
+
+      const title = productDetail.locator('h1')
       await expect(title).toBeVisible()
-      const titleText = await title.textContent()
-      expect(titleText).toBeTruthy()
+      await expect(title).toHaveText(expectedTitle!)
     }
   })
 
   test('should display product price', async ({ page }) => {
-    const productLinks = page.locator('a[href^="/product/"]')
-    const count = await productLinks.count()
+    const productCards = page.getByTestId('product-card')
+    const count = await productCards.count()
 
     if (count > 0) {
-      await productLinks.first().click()
+      const firstProductCard = productCards.first()
+      const firstProductHref = await firstProductCard.getAttribute('href')
+
+      await firstProductCard.click()
+
+      await page.waitForURL(firstProductHref!)
       await page.waitForLoadState('networkidle')
 
+      const productDetail = page.getByTestId('product-detail')
+      await expect(productDetail).toBeVisible()
+
       // Look for price element (contains currency symbol)
-      const priceElement = page.locator('text=/\\$|€|£/')
+      const priceElement = productDetail.locator('text=/\\$|€|£/')
       await expect(priceElement.first()).toBeVisible()
     }
   })
 
   test('should display product image gallery', async ({ page }) => {
-    const productLinks = page.locator('a[href^="/product/"]')
-    const count = await productLinks.count()
+    const productCards = page.getByTestId('product-card')
+    const count = await productCards.count()
 
     if (count > 0) {
-      await productLinks.first().click()
+      const firstProductCard = productCards.first()
+      const firstProductHref = await firstProductCard.getAttribute('href')
+
+      await firstProductCard.click()
+
+      await page.waitForURL(firstProductHref!)
       await page.waitForLoadState('networkidle')
 
+      const productDetail = page.getByTestId('product-detail')
+      await expect(productDetail).toBeVisible()
+
       // Check for main image or "Sin imagen" text
-      const mainImage = page.locator('img[alt]').first()
-      const noImage = page.getByText('Sin imagen')
+      const mainImage = productDetail.locator('img[alt]').first()
+      const noImage = productDetail.getByText('Sin imagen')
 
       const hasImage = await mainImage.isVisible().catch(() => false)
       const hasNoImageText = await noImage.isVisible().catch(() => false)
@@ -71,14 +102,22 @@ test.describe('Product Detail Page', () => {
   })
 
   test('should display add to cart button', async ({ page }) => {
-    const productLinks = page.locator('a[href^="/product/"]')
-    const count = await productLinks.count()
+    const productCards = page.getByTestId('product-card')
+    const count = await productCards.count()
 
     if (count > 0) {
-      await productLinks.first().click()
+      const firstProductCard = productCards.first()
+      const firstProductHref = await firstProductCard.getAttribute('href')
+
+      await firstProductCard.click()
+
+      await page.waitForURL(firstProductHref!)
       await page.waitForLoadState('networkidle')
 
-      const addToCartButton = page.getByRole('button', {
+      const productDetail = page.getByTestId('product-detail')
+      await expect(productDetail).toBeVisible()
+
+      const addToCartButton = productDetail.getByRole('button', {
         name: /agregar al carrito|agotado|selecciona/i,
       })
       await expect(addToCartButton).toBeVisible()
@@ -89,12 +128,20 @@ test.describe('Product Detail Page', () => {
     const errors: string[] = []
     page.on('pageerror', (error) => errors.push(error.message))
 
-    const productLinks = page.locator('a[href^="/product/"]')
-    const count = await productLinks.count()
+    const productCards = page.getByTestId('product-card')
+    const count = await productCards.count()
 
     if (count > 0) {
-      await productLinks.first().click()
+      const firstProductCard = productCards.first()
+      const firstProductHref = await firstProductCard.getAttribute('href')
+
+      await firstProductCard.click()
+
+      await page.waitForURL(firstProductHref!)
       await page.waitForLoadState('networkidle')
+
+      const productDetail = page.getByTestId('product-detail')
+      await expect(productDetail).toBeVisible()
 
       expect(errors).toHaveLength(0)
     }
@@ -106,15 +153,23 @@ test.describe('Product Detail Page - Variant Selection', () => {
     await page.goto('/products')
     await page.waitForLoadState('networkidle')
 
-    const productLinks = page.locator('a[href^="/product/"]')
-    const count = await productLinks.count()
+    const productCards = page.getByTestId('product-card')
+    const count = await productCards.count()
 
     if (count > 0) {
-      await productLinks.first().click()
+      const firstProductCard = productCards.first()
+      const firstProductHref = await firstProductCard.getAttribute('href')
+
+      await firstProductCard.click()
+
+      await page.waitForURL(firstProductHref!)
       await page.waitForLoadState('networkidle')
 
+      const productDetail = page.getByTestId('product-detail')
+      await expect(productDetail).toBeVisible()
+
       // Check for variant selector buttons (excluding the add to cart button)
-      const variantButtons = page.locator('button[role="radio"]')
+      const variantButtons = productDetail.locator('button[role="radio"]')
       const variantCount = await variantButtons.count()
 
       if (variantCount > 1) {
@@ -138,14 +193,21 @@ test.describe('Product Detail Page - Responsive Design', () => {
     await page.goto('/products')
     await page.waitForLoadState('networkidle')
 
-    const productLinks = page.locator('a[href^="/product/"]')
-    const count = await productLinks.count()
+    const productCards = page.getByTestId('product-card')
+    const count = await productCards.count()
 
     if (count > 0) {
-      await productLinks.first().click()
+      const firstProductCard = productCards.first()
+      const firstProductHref = await firstProductCard.getAttribute('href')
+
+      await firstProductCard.click()
+
+      await page.waitForURL(firstProductHref!)
       await page.waitForLoadState('networkidle')
 
-      await expect(page.locator('h1')).toBeVisible()
+      const productDetail = page.getByTestId('product-detail')
+      await expect(productDetail).toBeVisible()
+      await expect(productDetail.locator('h1')).toBeVisible()
     }
   })
 
@@ -155,14 +217,21 @@ test.describe('Product Detail Page - Responsive Design', () => {
     await page.goto('/products')
     await page.waitForLoadState('networkidle')
 
-    const productLinks = page.locator('a[href^="/product/"]')
-    const count = await productLinks.count()
+    const productCards = page.getByTestId('product-card')
+    const count = await productCards.count()
 
     if (count > 0) {
-      await productLinks.first().click()
+      const firstProductCard = productCards.first()
+      const firstProductHref = await firstProductCard.getAttribute('href')
+
+      await firstProductCard.click()
+
+      await page.waitForURL(firstProductHref!)
       await page.waitForLoadState('networkidle')
 
-      await expect(page.locator('h1')).toBeVisible()
+      const productDetail = page.getByTestId('product-detail')
+      await expect(productDetail).toBeVisible()
+      await expect(productDetail.locator('h1')).toBeVisible()
     }
   })
 })
@@ -172,16 +241,24 @@ test.describe('Product Detail Page - SEO', () => {
     await page.goto('/products')
     await page.waitForLoadState('networkidle')
 
-    const productLinks = page.locator('a[href^="/product/"]')
-    const count = await productLinks.count()
+    const productCards = page.getByTestId('product-card')
+    const count = await productCards.count()
 
     if (count > 0) {
-      await productLinks.first().click()
+      const firstProductCard = productCards.first()
+      const firstProductHref = await firstProductCard.getAttribute('href')
+      const expectedTitle = await firstProductCard.locator('h3').textContent()
+
+      await firstProductCard.click()
+
+      await page.waitForURL(firstProductHref!)
       await page.waitForLoadState('networkidle')
 
-      // Check title tag
-      const title = await page.title()
-      expect(title).toBeTruthy()
+      const productDetail = page.getByTestId('product-detail')
+      await expect(productDetail).toBeVisible()
+
+      // Check title tag (wait for metadata to be set)
+      await expect(page).toHaveTitle(new RegExp(expectedTitle!.trim()))
 
       // Check meta description
       const metaDescription = page.locator('meta[name="description"]')

@@ -35,12 +35,12 @@ test.describe('Products Page', () => {
   test('should have valid product links', async ({ page }) => {
     await page.goto('/products')
 
-    const productLinks = page.locator('a[href^="/product/"]')
+    const productLinks = page.locator('a[href^="/products/"]')
     const count = await productLinks.count()
 
     if (count > 0) {
       const firstProductHref = await productLinks.first().getAttribute('href')
-      expect(firstProductHref).toMatch(/^\/product\/[\w-]+$/)
+      expect(firstProductHref).toMatch(/^\/products\/[\w-]+$/)
     }
   })
 
