@@ -72,6 +72,11 @@ Comprehensive TypeScript types: `Product`, `ProductVariant`, `Collection`, `Cart
 
 - `ProductCard` / `ProductCardSkeleton` - Product display card with image, price, availability
 - `ProductGrid` / `ProductGridSkeleton` - Responsive grid for products
+- `ProductDetail` - Product detail view with gallery, variants, and add to cart
+- `ProductGallery` - Product image gallery with thumbnail navigation
+- `VariantSelector` - Product variant option selector
+- `PriceDisplay` - Price display with compare at price support
+- `AddToCartButton` - Add to cart button
 - `CollectionCard` / `CollectionCardSkeleton` - Collection display card
 - `CollectionGrid` / `CollectionGridSkeleton` - Responsive grid for collections
 - `Pagination` - Cursor-based pagination with Next.js navigation
@@ -79,6 +84,7 @@ Comprehensive TypeScript types: `Product`, `ProductVariant`, `Collection`, `Cart
 ## Implemented Pages
 
 - `/products` - Products catalog with pagination
+- `/products/[handle]` - Product detail with variant selection
 - `/collections` - Collections list with pagination
 - `/collections/[handle]` - Collection detail with products
 
@@ -135,5 +141,3 @@ APP_LOCALE=en-US                 # Locale for formatMoney()
 **When starting work on a Next.js project, ALWAYS call the `init` tool from
 next-devtools-mcp FIRST to set up proper context and establish documentation
 requirements. Do this automatically without being asked.**
-
-- to memorize
