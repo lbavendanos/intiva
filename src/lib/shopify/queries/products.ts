@@ -18,6 +18,9 @@ export interface ProductCardData {
   priceRange: {
     minVariantPrice: Money
   }
+  compareAtPriceRange: {
+    minVariantPrice: Money
+  }
   featuredImage: Image | null
 }
 

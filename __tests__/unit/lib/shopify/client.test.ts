@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   extractNodesFromEdges,
-  formatMoney,
   ShopifyClientError,
   storefrontQuery,
 } from '@/lib/shopify/client'
@@ -192,53 +191,6 @@ describe('Shopify Client', () => {
     it('should return empty array for connection without edges', () => {
       const result = extractNodesFromEdges({ edges: [] })
       expect(result).toEqual([])
-    })
-  })
-
-  describe('formatMoney', () => {
-    it('should format currency using APP_LOCALE', () => {
-      const money = { amount: '99.99', currencyCode: 'USD' }
-      const result = formatMoney(money)
-      // es-PE locale formats with currency code
-      expect(result).toContain('99.99')
-      expect(result).toMatch(/USD|US\$|\$/)
-    })
-
-    it('should format EUR currency with APP_LOCALE', () => {
-      const money = { amount: '149.50', currencyCode: 'EUR' }
-      const result = formatMoney(money)
-      expect(result).toContain('149.50')
-      expect(result).toMatch(/EUR|€/)
-    })
-
-    it('should handle whole numbers', () => {
-      const money = { amount: '100.00', currencyCode: 'USD' }
-      const result = formatMoney(money)
-      expect(result).toContain('100.00')
-    })
-
-    it('should use fallback locale when APP_LOCALE is not set', () => {
-      delete process.env.APP_LOCALE
-      const money = { amount: '99.99', currencyCode: 'USD' }
-      const result = formatMoney(money)
-      // en-US locale uses period for decimal and $ symbol
-      expect(result).toBe('$99.99')
-    })
-
-    it('should respect different locales', () => {
-      process.env.APP_LOCALE = 'en-US'
-      const money = { amount: '1234.56', currencyCode: 'USD' }
-      const result = formatMoney(money)
-      expect(result).toBe('$1,234.56')
-    })
-
-    it('should format with es-ES locale', () => {
-      process.env.APP_LOCALE = 'es-ES'
-      const money = { amount: '1234.56', currencyCode: 'EUR' }
-      const result = formatMoney(money)
-      // es-ES uses comma for decimal separator
-      expect(result).toMatch(/1\.?234,56/)
-      expect(result).toContain('€')
     })
   })
 })

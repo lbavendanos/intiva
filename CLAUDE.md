@@ -27,7 +27,7 @@ Required:
 SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
 SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-storefront-access-token
 APP_URL=http://localhost:3000    # Base URL for url() helper
-APP_LOCALE=en-US                 # Locale for formatMoney()
+APP_LOCALE=en-US                 # Locale for date/price formatting
 ```
 
 ## Architecture
@@ -55,7 +55,6 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 
 - `storefrontQuery<T>(query, options)` - Execute GraphQL queries against Shopify Storefront API
 - `extractNodesFromEdges<T>(connection)` - Extract nodes from Shopify connection edges
-- `formatMoney(money)` - Format money with locale support
 - `ShopifyClientError` - Custom error class with GraphQL error details
 
 ### Queries

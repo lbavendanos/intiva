@@ -81,6 +81,11 @@ export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
         ...MoneyFragment
       }
     }
+    compareAtPriceRange {
+      minVariantPrice {
+        ...MoneyFragment
+      }
+    }
     featuredImage {
       ...ImageFragment
     }

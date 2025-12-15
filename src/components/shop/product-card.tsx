@@ -1,17 +1,31 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { formatMoney } from '@/lib/shopify/client'
 import type { ProductCardData } from '@/lib/shopify/queries'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+
+import { Price } from './price'
 
 interface ProductCardProps {
   product: ProductCardData
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { title, handle, availableForSale, priceRange, featuredImage } = product
+  const {
+    title,
+    handle,
+    availableForSale,
+    priceRange,
+    compareAtPriceRange,
+    featuredImage,
+  } = product
+
+  const price = priceRange.minVariantPrice
+  const compareAtPrice = compareAtPriceRange?.minVariantPrice || null
+  const hasDiscount =
+    compareAtPrice &&
+    parseFloat(compareAtPrice.amount) > parseFloat(price.amount)
 
   return (
     <Link
@@ -51,8 +65,14 @@ export function ProductCard({ product }: ProductCardProps) {
           </h3>
         </CardContent>
         <CardFooter className="p-4 pt-0">
-          <p className="text-lg font-semibold text-zinc-900">
-            {formatMoney(priceRange.minVariantPrice)}
+          <p className="flex items-center gap-2 text-lg font-semibold">
+            <Price {...price} />
+            {hasDiscount && (
+              <Price
+                className="text-xl font-semibold line-through opacity-40"
+                {...compareAtPrice}
+              />
+            )}
           </p>
         </CardFooter>
       </Card>

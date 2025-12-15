@@ -5,7 +5,7 @@ import { useVariantSelector } from '@/hooks/use-variant-selector'
 import { Separator } from '@/components/ui/separator'
 
 import { AddToCartButton } from './add-to-cart-button'
-import { PriceDisplay } from './price-display'
+import { Price } from './price'
 import { ProductGallery } from './product-gallery'
 import { VariantSelector } from './variant-selector'
 
@@ -20,9 +20,18 @@ export function ProductDetail({ product }: ProductDetailProps) {
       variants: product.variants,
     })
 
-  const displayPrice =
-    selectedVariant?.price || product.priceRange.minVariantPrice
-  const displayCompareAtPrice = selectedVariant?.compareAtPrice || null
+  const price = selectedVariant?.price || product.priceRange.minVariantPrice
+  const compareAtPrice = selectedVariant?.compareAtPrice || null
+  const hasDiscount =
+    compareAtPrice &&
+    parseFloat(compareAtPrice.amount) > parseFloat(price.amount)
+  const discountPercentage = hasDiscount
+    ? Math.round(
+        ((parseFloat(compareAtPrice.amount) - parseFloat(price.amount)) /
+          parseFloat(compareAtPrice.amount)) *
+          100,
+      )
+    : 0
   const isAvailable =
     selectedVariant?.availableForSale ?? product.availableForSale
 
@@ -40,12 +49,20 @@ export function ProductDetail({ product }: ProductDetailProps) {
           <p className="mt-1 text-sm text-zinc-500">{product.vendor}</p>
         )}
 
-        <div className="mt-4">
-          <PriceDisplay
-            price={displayPrice}
-            compareAtPrice={displayCompareAtPrice}
-          />
-        </div>
+        <p className="mt-4 flex items-center gap-2">
+          <Price className="text-2xl font-semibold" {...price} />
+          {hasDiscount && (
+            <Price
+              className="text-2xl font-semibold line-through opacity-40"
+              {...compareAtPrice}
+            />
+          )}
+          {hasDiscount && (
+            <span className="rounded bg-red-100 px-2 py-0.5 text-sm font-medium text-red-800">
+              {discountPercentage}% de descuento
+            </span>
+          )}
+        </p>
 
         {!isAvailable && (
           <p className="mt-2 text-sm font-medium text-red-600">
@@ -72,19 +89,19 @@ export function ProductDetail({ product }: ProductDetailProps) {
             </>
           )}
 
-        <AddToCartButton
-          variantId={selectedVariant?.id || null}
-          availableForSale={isAvailable}
-        />
-
         {selectedVariant?.quantityAvailable !== null &&
           selectedVariant?.quantityAvailable !== undefined &&
           selectedVariant.quantityAvailable <= 5 &&
           selectedVariant.quantityAvailable > 0 && (
-            <p className="mt-2 text-sm text-amber-600">
+            <p className="my-2 text-sm text-amber-600">
               Solo quedan {selectedVariant.quantityAvailable} unidades
             </p>
           )}
+
+        <AddToCartButton
+          variantId={selectedVariant?.id || null}
+          availableForSale={isAvailable}
+        />
 
         {product.descriptionHtml && (
           <>
