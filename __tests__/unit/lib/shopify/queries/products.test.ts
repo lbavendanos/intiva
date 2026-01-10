@@ -37,6 +37,9 @@ describe('Products Queries', () => {
                   priceRange: {
                     minVariantPrice: { amount: '29.99', currencyCode: 'USD' },
                   },
+                  compareAtPriceRange: {
+                    minVariantPrice: { amount: '39.99', currencyCode: 'USD' },
+                  },
                   featuredImage: {
                     url: 'https://example.com/image.jpg',
                     altText: 'Test image',
@@ -152,6 +155,55 @@ describe('Products Queries', () => {
 
       expect(result.products).toEqual([])
     })
+
+    it('should compute pricing for each product', async () => {
+      const mockProducts = {
+        data: {
+          products: {
+            edges: [
+              {
+                node: {
+                  id: 'gid://shopify/Product/1',
+                  title: 'Discounted Product',
+                  handle: 'discounted-product',
+                  availableForSale: true,
+                  priceRange: {
+                    minVariantPrice: { amount: '19.99', currencyCode: 'USD' },
+                  },
+                  compareAtPriceRange: {
+                    minVariantPrice: { amount: '29.99', currencyCode: 'USD' },
+                  },
+                  featuredImage: null,
+                },
+              },
+            ],
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: null,
+              endCursor: null,
+            },
+          },
+        },
+      }
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockProducts),
+      })
+
+      const result = await getProducts()
+
+      expect(result.products[0].price).toEqual({
+        amount: '19.99',
+        currencyCode: 'USD',
+      })
+      expect(result.products[0].compareAtPrice).toEqual({
+        amount: '29.99',
+        currencyCode: 'USD',
+      })
+      expect(result.products[0].hasDiscount).toBe(true)
+    })
   })
 
   describe('getProductByHandle', () => {
@@ -169,6 +221,9 @@ describe('Products Queries', () => {
             priceRange: {
               minVariantPrice: { amount: '29.99', currencyCode: 'USD' },
               maxVariantPrice: { amount: '49.99', currencyCode: 'USD' },
+            },
+            compareAtPriceRange: {
+              minVariantPrice: { amount: '39.99', currencyCode: 'USD' },
             },
             featuredImage: {
               url: 'https://example.com/image.jpg',
@@ -253,6 +308,52 @@ describe('Products Queries', () => {
           body: expect.stringContaining('"handle":"my-product"'),
         }),
       )
+    })
+
+    it('should compute pricing for the product', async () => {
+      const mockProduct = {
+        data: {
+          product: {
+            id: 'gid://shopify/Product/1',
+            title: 'Sale Product',
+            handle: 'sale-product',
+            description: 'A product on sale',
+            descriptionHtml: '<p>A product on sale</p>',
+            availableForSale: true,
+            seo: { title: 'Sale Product', description: 'SEO description' },
+            priceRange: {
+              minVariantPrice: { amount: '49.99', currencyCode: 'USD' },
+              maxVariantPrice: { amount: '49.99', currencyCode: 'USD' },
+            },
+            compareAtPriceRange: {
+              minVariantPrice: { amount: '79.99', currencyCode: 'USD' },
+            },
+            featuredImage: null,
+            images: { edges: [] },
+            options: [],
+            variants: { edges: [] },
+            tags: [],
+            productType: '',
+            vendor: '',
+            createdAt: '2024-01-01T00:00:00Z',
+            updatedAt: '2024-01-01T00:00:00Z',
+          },
+        },
+      }
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockProduct),
+      })
+
+      const result = await getProductByHandle('sale-product')
+
+      expect(result?.price).toEqual({ amount: '49.99', currencyCode: 'USD' })
+      expect(result?.compareAtPrice).toEqual({
+        amount: '79.99',
+        currencyCode: 'USD',
+      })
+      expect(result?.hasDiscount).toBe(true)
     })
   })
 })
