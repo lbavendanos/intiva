@@ -3,9 +3,16 @@ import { notFound } from 'next/navigation'
 
 import { getProductByHandle, getProducts } from '@/lib/shopify/queries'
 import { url } from '@/lib/utils'
-import { ProductDetail } from '@/components/shop/product-detail'
+import {
+  Price,
+  ProductDetail,
+  ProductForm,
+  ProductGallery,
+  ProductJsonLd,
+} from '@/components/shop'
+import { Separator } from '@/components/ui/separator'
 
-interface ProductPageProps {
+type ProductPageProps = {
   params: Promise<{ handle: string }>
 }
 
@@ -39,7 +46,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      type: 'website',
+      type: 'article',
       url: url(`/products/${handle}`),
       images: product.featuredImage
         ? [
@@ -71,7 +78,42 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <ProductDetail product={product} />
+      <ProductJsonLd product={product} />
+      <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+        <ProductGallery images={product.images} productTitle={product.title} />
+        <div className="flex flex-col">
+          <h1 className="text-3xl font-bold text-zinc-900">{product.title}</h1>
+          {product.vendor && (
+            <p className="mt-1 text-sm text-zinc-500">{product.vendor}</p>
+          )}
+          <div className="mt-4 flex items-center gap-2">
+            <Price className="text-2xl font-semibold" {...product.price} />
+            {product.hasDiscount && (
+              <Price
+                className="text-2xl font-semibold line-through opacity-40"
+                {...product.compareAtPrice}
+              />
+            )}
+          </div>
+          <Separator className="my-6" />
+          <ProductForm product={product} />
+          {product.descriptionHtml && (
+            <>
+              <Separator className="my-6" />
+              <div className="prose prose-zinc max-w-none">
+                <h2 className="text-lg font-semibold text-zinc-900">
+                  Descripción
+                </h2>
+                <div
+                  className="mt-2 text-sm text-zinc-600"
+                  dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+                />
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+      {/* <ProductDetail product={product} /> */}
     </div>
   )
 }
