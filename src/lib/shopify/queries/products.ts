@@ -1,4 +1,7 @@
+import { cacheLife } from 'next/cache'
+
 import { extractNodesFromEdges, storefrontQuery } from '../client'
+import { computePricing } from '../common'
 import {
   IMAGE_FRAGMENT,
   MONEY_FRAGMENT,
@@ -8,30 +11,16 @@ import {
   PRODUCT_VARIANT_FRAGMENT,
   SEO_FRAGMENT,
 } from '../fragments'
-import type { Image, Money, PageInfo, Product } from '../types'
+import type { Image, PageInfo, Product, ProductListItem } from '../types'
 
-export interface ProductCardData {
-  id: string
-  title: string
-  handle: string
-  availableForSale: boolean
-  priceRange: {
-    minVariantPrice: Money
-  }
-  compareAtPriceRange: {
-    minVariantPrice: Money
-  }
-  featuredImage: Image | null
-}
-
-export interface GetProductsResult {
-  products: ProductCardData[]
+export type GetProductsResult = {
+  products: ProductListItem[]
   pageInfo: PageInfo
 }
 
-interface GetProductsQueryResponse {
+type GetProductsQueryResponse = {
   products: {
-    edges: Array<{ node: ProductCardData }>
+    edges: Array<{ node: ProductListItem }>
     pageInfo: PageInfo
   }
 }
@@ -66,13 +55,18 @@ export async function getProducts(
     },
   )
 
+  const products = extractNodesFromEdges(data.products).map((product) => ({
+    ...product,
+    ...computePricing(product),
+  }))
+
   return {
-    products: extractNodesFromEdges(data.products),
+    products,
     pageInfo: data.products.pageInfo,
   }
 }
 
-interface GetProductByHandleQueryResponse {
+type GetProductByHandleQueryResponse = {
   product: Product | null
 }
 
@@ -92,6 +86,9 @@ const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
 export async function getProductByHandle(
   handle: string,
 ): Promise<Product | null> {
+  'use cache'
+  cacheLife('hours')
+
   const data = await storefrontQuery<GetProductByHandleQueryResponse>(
     GET_PRODUCT_BY_HANDLE_QUERY,
     {
@@ -103,17 +100,20 @@ export async function getProductByHandle(
     return null
   }
 
+  const product = data.product
+
   return {
-    ...data.product,
+    ...product,
     images: extractNodesFromEdges(
-      data.product.images as unknown as {
+      product.images as unknown as {
         edges: Array<{ node: Image }>
       },
     ),
     variants: extractNodesFromEdges(
-      data.product.variants as unknown as {
+      product.variants as unknown as {
         edges: Array<{ node: Product['variants'][0] }>
       },
     ),
+    ...computePricing(product),
   }
 }

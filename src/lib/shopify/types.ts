@@ -1,41 +1,41 @@
 export type Maybe<T> = T | null
 
-export interface PageInfo {
+export type PageInfo = {
   hasNextPage: boolean
   hasPreviousPage: boolean
   startCursor: Maybe<string>
   endCursor: Maybe<string>
 }
 
-export interface Money {
+export type Money = {
   amount: string
   currencyCode: string
 }
 
-export interface Image {
+export type Image = {
   url: string
   altText: Maybe<string>
   width: Maybe<number>
   height: Maybe<number>
 }
 
-export interface SEO {
+export type SEO = {
   title: Maybe<string>
   description: Maybe<string>
 }
 
-export interface SelectedOption {
+export type SelectedOption = {
   name: string
   value: string
 }
 
-export interface ProductOption {
+export type ProductOption = {
   id: string
   name: string
   values: string[]
 }
 
-export interface ProductVariant {
+export type ProductVariant = {
   id: string
   title: string
   availableForSale: boolean
@@ -46,7 +46,14 @@ export interface ProductVariant {
   image: Maybe<Image>
 }
 
-export interface Product {
+/** Derived pricing fields computed from Shopify price ranges */
+export type ProductPricing = {
+  price: Money
+  compareAtPrice: Money
+  hasDiscount: boolean
+}
+
+export type Product = {
   id: string
   title: string
   handle: string
@@ -55,6 +62,10 @@ export interface Product {
   availableForSale: boolean
   seo: SEO
   priceRange: {
+    minVariantPrice: Money
+    maxVariantPrice: Money
+  }
+  compareAtPriceRange: {
     minVariantPrice: Money
     maxVariantPrice: Money
   }
@@ -67,9 +78,23 @@ export interface Product {
   vendor: string
   createdAt: string
   updatedAt: string
-}
+} & ProductPricing
 
-export interface Collection {
+export type ProductListItem = {
+  id: string
+  title: string
+  handle: string
+  availableForSale: boolean
+  priceRange: {
+    minVariantPrice: Money
+  }
+  compareAtPriceRange: {
+    minVariantPrice: Money
+  }
+  featuredImage: Image | null
+} & ProductPricing
+
+export type Collection = {
   id: string
   title: string
   handle: string
@@ -80,7 +105,7 @@ export interface Collection {
   products?: Product[]
 }
 
-export interface CartLineItem {
+export type CartLineItem = {
   id: string
   quantity: number
   merchandise: {
@@ -103,7 +128,7 @@ export interface CartLineItem {
   }
 }
 
-export interface Cart {
+export type Cart = {
   id: string
   checkoutUrl: string
   totalQuantity: number
@@ -115,7 +140,7 @@ export interface Cart {
   }
 }
 
-export interface CustomerAddress {
+export type CustomerAddress = {
   id: string
   firstName: Maybe<string>
   lastName: Maybe<string>
@@ -131,7 +156,7 @@ export interface CustomerAddress {
   phone: Maybe<string>
 }
 
-export interface Customer {
+export type Customer = {
   id: string
   email: string
   firstName: Maybe<string>
@@ -145,12 +170,12 @@ export interface Customer {
   updatedAt: string
 }
 
-export interface CustomerAccessToken {
+export type CustomerAccessToken = {
   accessToken: string
   expiresAt: string
 }
 
-export interface OrderLineItem {
+export type OrderLineItem = {
   title: string
   quantity: number
   variant: Maybe<{
@@ -161,7 +186,7 @@ export interface OrderLineItem {
   }>
 }
 
-export interface Order {
+export type Order = {
   id: string
   orderNumber: number
   name: string
@@ -176,25 +201,25 @@ export interface Order {
   shippingAddress: Maybe<CustomerAddress>
 }
 
-export interface ShopifyError {
+export type ShopifyError = {
   message: string
   locations?: Array<{ line: number; column: number }>
   path?: string[]
   extensions?: Record<string, unknown>
 }
 
-export interface UserError {
+export type UserError = {
   field: Maybe<string[]>
   message: string
   code?: string
 }
 
-export interface ShopifyResponse<T> {
+export type ShopifyResponse<T> = {
   data?: T
   errors?: ShopifyError[]
 }
 
-export interface Connection<T> {
+export type Connection<T> = {
   edges: Array<{ node: T; cursor: string }>
   pageInfo: PageInfo
 }

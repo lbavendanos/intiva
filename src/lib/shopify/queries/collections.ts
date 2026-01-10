@@ -7,8 +7,7 @@ import {
   PRODUCT_CARD_FRAGMENT,
   SEO_FRAGMENT,
 } from '../fragments'
-import type { Collection, Image, PageInfo } from '../types'
-import type { ProductCardData } from './products'
+import type { Collection, Image, PageInfo, ProductListItem } from '../types'
 
 export interface CollectionCardData {
   id: string
@@ -102,7 +101,7 @@ export async function getCollectionByHandle(
 
 export interface GetCollectionProductsResult {
   collection: Collection | null
-  products: ProductCardData[]
+  products: ProductListItem[]
   pageInfo: PageInfo
 }
 
@@ -116,7 +115,7 @@ interface GetCollectionProductsQueryResponse {
     image: Image | null
     seo: { title: string | null; description: string | null }
     products: {
-      edges: Array<{ node: ProductCardData }>
+      edges: Array<{ node: ProductListItem }>
       pageInfo: PageInfo
     }
   } | null

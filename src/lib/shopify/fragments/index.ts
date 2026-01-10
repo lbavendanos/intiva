@@ -127,6 +127,14 @@ export const PRODUCT_FRAGMENT = /* GraphQL */ `
         ...MoneyFragment
       }
     }
+    compareAtPriceRange {
+      minVariantPrice {
+        ...MoneyFragment
+      }
+      maxVariantPrice {
+        ...MoneyFragment
+      }
+    }
     featuredImage {
       ...ImageFragment
     }

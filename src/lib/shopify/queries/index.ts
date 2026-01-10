@@ -1,7 +1,6 @@
 export {
   getProducts,
   getProductByHandle,
-  type ProductCardData,
   type GetProductsResult,
 } from './products'
 
