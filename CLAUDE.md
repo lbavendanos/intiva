@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Before You Start
+
+**Always consult Context7 MCP before making changes.** When creating or modifying files, use Context7 to query the official documentation of the libraries/frameworks involved. This ensures code follows current best practices and uses up-to-date APIs.
+
 ## Build & Development Commands
 
 ```bash
@@ -40,14 +44,53 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 - `src/app/(shop)/` - Shop route group (products, collections)
 - `src/components/ui/` - shadcn/ui components (installed via CLI)
 - `src/components/shop/` - Shop-specific components (cards, grids, pagination)
-- `src/lib/` - Utility functions (`cn`, `url`)
+- `src/lib/` - Utility functions
 - `src/lib/shopify/` - Shopify Storefront API integration
+- `src/lib/shopify/fragments/` - GraphQL fragments for reusable query parts
+- `src/lib/shopify/mutations/` - GraphQL mutations for data modifications
+- `src/lib/shopify/queries/` - GraphQL queries for data fetching
 - `src/hooks/` - Custom React hooks
 - `__tests__/unit/` - Unit tests (Vitest)
 - `__tests__/e2e/` - E2E tests (Playwright)
 - `public/` - Static assets
 
 **Path alias:** `@/*` maps to `./src/*`
+
+## Code Style Guidelines
+
+**Formatting:**
+
+- See `prettier.config.mjs` for Prettier configuration
+
+**Import order:**
+
+- See `prettier.config.mjs` for import ordering configuration
+
+**TypeScript conventions:**
+
+- See `tsconfig.json` for compiler options
+- Use `type` instead of `interface` for type definitions
+- Prefer explicit return types for exported functions
+
+**Naming conventions:**
+
+- Components: PascalCase (e.g., `ProductCard`)
+- Files: kebab-case (e.g., `product-card.tsx`)
+- Hooks: camelCase with `use` prefix (e.g., `useCart`)
+- Types: PascalCase (e.g., `ProductProps`)
+- Constants: SCREAMING_SNAKE_CASE for true constants
+
+**Component patterns:**
+
+- Define props as `type ComponentNameProps = { ... }`
+- Use named exports for components
+- Colocate component-specific types in the same file
+
+**Error handling:**
+
+- Use custom error classes for domain-specific errors (e.g., `ShopifyClientError`)
+- Prefer early returns for error conditions
+- Let errors propagate to Next.js error boundaries when appropriate
 
 ## Shopify Integration
 
