@@ -1,14 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import type { ProductCardData } from '@/lib/shopify/queries'
+import type { ProductListItem } from '@/lib/shopify/types'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 
 import { Price } from './price'
 
-interface ProductCardProps {
-  product: ProductCardData
+type ProductCardProps = {
+  product: ProductListItem
 }
 
 export function ProductCard({ product }: ProductCardProps) {
@@ -16,16 +16,10 @@ export function ProductCard({ product }: ProductCardProps) {
     title,
     handle,
     availableForSale,
-    priceRange,
-    compareAtPriceRange,
     featuredImage,
+    price,
+    compareAtPrice,
   } = product
-
-  const price = priceRange.minVariantPrice
-  const compareAtPrice = compareAtPriceRange?.minVariantPrice || null
-  const hasDiscount =
-    compareAtPrice &&
-    parseFloat(compareAtPrice.amount) > parseFloat(price.amount)
 
   return (
     <Link
@@ -65,15 +59,15 @@ export function ProductCard({ product }: ProductCardProps) {
           </h3>
         </CardContent>
         <CardFooter className="p-4 pt-0">
-          <p className="flex items-center gap-2 text-lg font-semibold">
+          <div className="flex items-center gap-2 text-lg font-semibold">
             <Price {...price} />
-            {hasDiscount && (
+            {product.hasDiscount && (
               <Price
                 className="text-xl font-semibold line-through opacity-40"
                 {...compareAtPrice}
               />
             )}
-          </p>
+          </div>
         </CardFooter>
       </Card>
     </Link>

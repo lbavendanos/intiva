@@ -1,10 +1,10 @@
-import type { ProductCardData } from '@/lib/shopify/queries'
+import { ProductListItem } from '@/lib/shopify/types'
 
 import { ProductCard } from './product-card'
 import { ProductCardSkeleton } from './product-card-skeleton'
 
 interface ProductGridProps {
-  products: ProductCardData[]
+  products: ProductListItem[]
 }
 
 export function ProductGrid({ products }: ProductGridProps) {
