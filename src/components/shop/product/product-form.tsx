@@ -49,7 +49,11 @@ function createDefaultValues(product: Product) {
   const defaults: Record<string, string> = {}
 
   product.options.forEach((option) => {
-    defaults[option.name] = ''
+    if (option.values.length === 1) {
+      defaults[option.name] = option.values[0]
+    } else {
+      defaults[option.name] = ''
+    }
   })
 
   return defaults
@@ -126,17 +130,23 @@ export function ProductForm({
     [product.variants, selectedOptions],
   )
 
-  const allOptionsSelected = useMemo(
-    () =>
-      product.options.every(
-        (option) => selectedOptions[option.name]?.length > 0,
-      ),
-    [product.options, selectedOptions],
-  )
+  const hasRealOptions =
+    product.options.length > 0 &&
+    !(
+      product.options.length === 1 &&
+      product.options[0].name === 'Title' &&
+      product.options[0].values.length === 1
+    )
 
-  const isSelectedVariantAvailable = selectedVariant?.availableForSale ?? false
+  const isAvailableForSale = hasRealOptions
+    ? (selectedVariant?.availableForSale ?? false)
+    : product.availableForSale
 
-  function onSubmit(data: FormValues) {
+  const isSoldOut = hasRealOptions
+    ? selectedVariant?.availableForSale === false
+    : !product.availableForSale
+
+  const handleSubmit = (data: FormValues) => {
     // TODO: Implement add to cart functionality
     console.log('Form submitted:', data)
     console.log('Product:', product.id)
@@ -146,85 +156,80 @@ export function ProductForm({
   return (
     <form
       id={`product-form-${product.handle}`}
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(handleSubmit)}
       className={className}
       {...props}
     >
       <FieldGroup>
-        {product.options.map((option) => (
-          <Controller
-            key={option.id}
-            name={option.name}
-            control={form.control}
-            render={({ field, fieldState }) => {
-              const isInvalid = fieldState.invalid
+        {hasRealOptions &&
+          product.options.map((option) => (
+            <Controller
+              key={option.id}
+              name={option.name}
+              control={form.control}
+              render={({ field, fieldState }) => {
+                const isInvalid = fieldState.invalid
 
-              return (
-                <FieldSet data-invalid={isInvalid}>
-                  <FieldLegend variant="label">{option.name}</FieldLegend>
-                  <RadioGroup
-                    name={field.name}
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    aria-invalid={isInvalid}
-                  >
-                    {option.values.map((value) => {
-                      const optionId =
-                        `${product.handle}-${option.name}-${value}`
-                          .toLowerCase()
-                          .replace(/\s+/g, '-')
+                return (
+                  <FieldSet data-invalid={isInvalid}>
+                    <FieldLegend variant="label">{option.name}</FieldLegend>
+                    <RadioGroup
+                      name={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      aria-invalid={isInvalid}
+                    >
+                      {option.values.map((value) => {
+                        const optionId =
+                          `${product.handle}-${option.name}-${value}`
+                            .toLowerCase()
+                            .replace(/\s+/g, '-')
 
-                      const isValueAvailable = isOptionValueAvailable(
-                        optionAvailability,
-                        option.name,
-                        value,
-                      )
+                        const isValueAvailable = isOptionValueAvailable(
+                          optionAvailability,
+                          option.name,
+                          value,
+                        )
 
-                      return (
-                        <FieldLabel
-                          key={value}
-                          htmlFor={optionId}
-                          className={cn(!isValueAvailable && 'opacity-50')}
-                        >
-                          <Field
-                            orientation="horizontal"
-                            data-invalid={isInvalid}
-                            data-unavailable={!isValueAvailable}
+                        return (
+                          <FieldLabel
+                            key={value}
+                            htmlFor={optionId}
+                            className={cn(!isValueAvailable && 'opacity-50')}
                           >
-                            <FieldContent>
-                              <FieldTitle
-                                className={cn(
-                                  !isValueAvailable && 'line-through',
-                                )}
-                              >
-                                {value}
-                              </FieldTitle>
-                            </FieldContent>
-                            <RadioGroupItem
-                              value={value}
-                              id={optionId}
-                              aria-invalid={isInvalid}
-                            />
-                          </Field>
-                        </FieldLabel>
-                      )
-                    })}
-                  </RadioGroup>
-                  {isInvalid && <FieldError errors={[fieldState.error]} />}
-                </FieldSet>
-              )
-            }}
-          />
-        ))}
+                            <Field
+                              orientation="horizontal"
+                              data-invalid={isInvalid}
+                              data-unavailable={!isValueAvailable}
+                            >
+                              <FieldContent>
+                                <FieldTitle
+                                  className={cn(
+                                    !isValueAvailable && 'line-through',
+                                  )}
+                                >
+                                  {value}
+                                </FieldTitle>
+                              </FieldContent>
+                              <RadioGroupItem
+                                value={value}
+                                id={optionId}
+                                aria-invalid={isInvalid}
+                              />
+                            </Field>
+                          </FieldLabel>
+                        )
+                      })}
+                    </RadioGroup>
+                    {isInvalid && <FieldError errors={[fieldState.error]} />}
+                  </FieldSet>
+                )
+              }}
+            />
+          ))}
 
-        <Button
-          type="submit"
-          disabled={!allOptionsSelected || !isSelectedVariantAvailable}
-          className="w-full"
-        >
-          {allOptionsSelected && !isSelectedVariantAvailable
-            ? 'Sold out'
-            : 'Add to cart'}
+        <Button type="submit" disabled={!isAvailableForSale} className="w-full">
+          {isSoldOut ? 'Sold out' : 'Add to cart'}
         </Button>
       </FieldGroup>
     </form>
