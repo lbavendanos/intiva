@@ -85,6 +85,7 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 - Define props as `type ComponentNameProps = { ... }`
 - Use named exports for components
 - Colocate component-specific types in the same file
+- Do not use `useMemo`, `useCallback`, or `React.memo` manually - React Compiler handles memoization automatically
 
 **Error handling:**
 

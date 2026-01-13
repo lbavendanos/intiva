@@ -1,11 +1,10 @@
 'use client'
 
-import { useMemo } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import * as z from 'zod'
 
-import { Product, ProductVariant } from '@/lib/shopify/types'
+import { Product } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -23,8 +22,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 type ProductFormProps = React.ComponentProps<'form'> & {
   product: Product
 }
-
-type OptionAvailability = Record<string, Record<string, boolean>>
 
 function createFormSchema(product: Product) {
   const schemaShape: Record<string, z.ZodString> = {}
@@ -59,59 +56,13 @@ function createDefaultValues(product: Product) {
   return defaults
 }
 
-function createOptionAvailability(
-  variants: ProductVariant[],
-): OptionAvailability {
-  const availability: OptionAvailability = {}
-
-  variants.forEach((variant) => {
-    variant.selectedOptions.forEach(({ name, value }) => {
-      if (!availability[name]) {
-        availability[name] = {}
-      }
-
-      if (variant.availableForSale) {
-        availability[name][value] = true
-      } else if (availability[name][value] === undefined) {
-        availability[name][value] = false
-      }
-    })
-  })
-
-  return availability
-}
-
-function isOptionValueAvailable(
-  optionAvailability: OptionAvailability,
-  optionName: string,
-  optionValue: string,
-): boolean {
-  return optionAvailability[optionName]?.[optionValue] ?? false
-}
-
-function findVariantBySelectedOptions(
-  variants: ProductVariant[],
-  selectedOptions: Record<string, string>,
-): ProductVariant | undefined {
-  return variants.find((variant) =>
-    variant.selectedOptions.every(
-      ({ name, value }) => selectedOptions[name] === value,
-    ),
-  )
-}
-
 export function ProductForm({
   product,
   className,
   ...props
 }: ProductFormProps) {
-  const formSchema = useMemo(() => createFormSchema(product), [product])
-  const defaultValues = useMemo(() => createDefaultValues(product), [product])
-
-  const optionAvailability = useMemo(
-    () => createOptionAvailability(product.variants),
-    [product.variants],
-  )
+  const formSchema = createFormSchema(product)
+  const defaultValues = createDefaultValues(product)
 
   type FormValues = z.infer<typeof formSchema>
 
@@ -120,14 +71,33 @@ export function ProductForm({
     defaultValues,
   })
 
-  const selectedOptions = useWatch({ control: form.control }) as Record<
+  const currentSelections = useWatch({ control: form.control }) as Record<
     string,
     string
   >
 
-  const selectedVariant = useMemo(
-    () => findVariantBySelectedOptions(product.variants, selectedOptions),
-    [product.variants, selectedOptions],
+  const checkValueAvailability = (
+    optionName: string,
+    optionValue: string,
+  ): boolean => {
+    return product.variants.some(
+      (variant) =>
+        variant.availableForSale &&
+        variant.selectedOptions.every((option) => {
+          if (option.name === optionName) {
+            return option.value === optionValue
+          }
+
+          const selectedValue = currentSelections[option.name]
+          return !selectedValue || selectedValue === option.value
+        }),
+    )
+  }
+
+  const selectedVariant = product.variants.find((variant) =>
+    variant.selectedOptions.every(
+      ({ name, value }) => currentSelections[name] === value,
+    ),
   )
 
   const hasRealOptions =
@@ -185,8 +155,7 @@ export function ProductForm({
                             .toLowerCase()
                             .replace(/\s+/g, '-')
 
-                        const isValueAvailable = isOptionValueAvailable(
-                          optionAvailability,
+                        const isValueAvailable = checkValueAvailability(
                           option.name,
                           value,
                         )
