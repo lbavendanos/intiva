@@ -5,7 +5,6 @@ import { getProductByHandle, getProducts } from '@/lib/shopify/queries'
 import { url } from '@/lib/utils'
 import {
   Price,
-  ProductDetail,
   ProductForm,
   ProductGallery,
   ProductJsonLd,
@@ -113,7 +112,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
           )}
         </div>
       </div>
-      {/* <ProductDetail product={product} /> */}
     </div>
   )
 }

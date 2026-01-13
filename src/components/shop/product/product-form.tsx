@@ -76,24 +76,6 @@ export function ProductForm({
     string
   >
 
-  const checkValueAvailability = (
-    optionName: string,
-    optionValue: string,
-  ): boolean => {
-    return product.variants.some(
-      (variant) =>
-        variant.availableForSale &&
-        variant.selectedOptions.every((option) => {
-          if (option.name === optionName) {
-            return option.value === optionValue
-          }
-
-          const selectedValue = currentSelections[option.name]
-          return !selectedValue || selectedValue === option.value
-        }),
-    )
-  }
-
   const selectedVariant = product.variants.find((variant) =>
     variant.selectedOptions.every(
       ({ name, value }) => currentSelections[name] === value,
@@ -115,6 +97,24 @@ export function ProductForm({
   const isSoldOut = hasRealOptions
     ? selectedVariant?.availableForSale === false
     : !product.availableForSale
+
+  const checkValueAvailability = (
+    optionName: string,
+    optionValue: string,
+  ): boolean => {
+    return product.variants.some(
+      (variant) =>
+        variant.availableForSale &&
+        variant.selectedOptions.every((option) => {
+          if (option.name === optionName) {
+            return option.value === optionValue
+          }
+
+          const selectedValue = currentSelections[option.name]
+          return !selectedValue || selectedValue === option.value
+        }),
+    )
+  }
 
   const handleSubmit = (data: FormValues) => {
     // TODO: Implement add to cart functionality
@@ -148,6 +148,7 @@ export function ProductForm({
                       value={field.value}
                       onValueChange={field.onChange}
                       aria-invalid={isInvalid}
+                      className="flex flex-wrap gap-3"
                     >
                       {option.values.map((value) => {
                         const optionId =
@@ -164,7 +165,10 @@ export function ProductForm({
                           <FieldLabel
                             key={value}
                             htmlFor={optionId}
-                            className={cn(!isValueAvailable && 'opacity-50')}
+                            className={cn(
+                              'w-auto!',
+                              !isValueAvailable && 'opacity-50',
+                            )}
                           >
                             <Field
                               orientation="horizontal"
@@ -184,6 +188,7 @@ export function ProductForm({
                                 value={value}
                                 id={optionId}
                                 aria-invalid={isInvalid}
+                                className="sr-only"
                               />
                             </Field>
                           </FieldLabel>
@@ -196,6 +201,15 @@ export function ProductForm({
               }}
             />
           ))}
+
+        {selectedVariant?.quantityAvailable !== null &&
+          selectedVariant?.quantityAvailable !== undefined &&
+          selectedVariant.quantityAvailable <= 5 &&
+          selectedVariant.quantityAvailable > 0 && (
+            <p className="text-sm text-amber-600">
+              Only {selectedVariant.quantityAvailable} left in stock
+            </p>
+          )}
 
         <Button type="submit" disabled={!isAvailableForSale} className="w-full">
           {isSoldOut ? 'Sold out' : 'Add to cart'}
