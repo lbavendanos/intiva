@@ -1,7 +1,9 @@
 export {
   getProducts,
   getProductByHandle,
+  getProductRecommendations,
   type GetProductsResult,
+  type ProductRecommendationIntent,
 } from './products'
 
 export {

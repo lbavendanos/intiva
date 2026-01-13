@@ -117,3 +117,47 @@ export async function getProductByHandle(
     ...computePricing(product),
   }
 }
+
+export type ProductRecommendationIntent = 'RELATED' | 'COMPLEMENTARY'
+
+type GetProductRecommendationsQueryResponse = {
+  productRecommendations: ProductListItem[] | null
+}
+
+const GET_PRODUCT_RECOMMENDATIONS_QUERY = /* GraphQL */ `
+  query getProductRecommendations(
+    $productId: ID!
+    $intent: ProductRecommendationIntent
+  ) {
+    productRecommendations(productId: $productId, intent: $intent) {
+      ...ProductCardFragment
+    }
+  }
+  ${PRODUCT_CARD_FRAGMENT}
+  ${MONEY_FRAGMENT}
+  ${IMAGE_FRAGMENT}
+`
+
+export async function getProductRecommendations(
+  productId: string,
+  intent: ProductRecommendationIntent = 'RELATED',
+): Promise<ProductListItem[]> {
+  'use cache'
+  cacheLife('hours')
+
+  const data = await storefrontQuery<GetProductRecommendationsQueryResponse>(
+    GET_PRODUCT_RECOMMENDATIONS_QUERY,
+    {
+      variables: { productId, intent },
+    },
+  )
+
+  if (!data.productRecommendations) {
+    return []
+  }
+
+  return data.productRecommendations.map((product) => ({
+    ...product,
+    ...computePricing(product),
+  }))
+}

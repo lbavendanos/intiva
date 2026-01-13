@@ -8,6 +8,7 @@ import {
   ProductForm,
   ProductGallery,
   ProductJsonLd,
+  RelatedProducts,
 } from '@/components/shop'
 import { Separator } from '@/components/ui/separator'
 
@@ -112,6 +113,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           )}
         </div>
       </div>
+      <RelatedProducts productId={product.id} />
     </div>
   )
 }
