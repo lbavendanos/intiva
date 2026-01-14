@@ -1,6 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { getProductByHandle, getProducts } from '@/lib/shopify/queries/products'
+import {
+  getProductByHandle,
+  getProductRecommendations,
+  getProducts,
+} from '@/lib/shopify/queries/products'
 
 const mockFetch = vi.fn()
 
@@ -354,6 +358,149 @@ describe('Products Queries', () => {
         currencyCode: 'USD',
       })
       expect(result?.hasDiscount).toBe(true)
+    })
+  })
+
+  describe('getProductRecommendations', () => {
+    it('should fetch product recommendations', async () => {
+      const mockRecommendations = {
+        data: {
+          productRecommendations: [
+            {
+              id: 'gid://shopify/Product/2',
+              title: 'Recommended Product 1',
+              handle: 'recommended-product-1',
+              availableForSale: true,
+              priceRange: {
+                minVariantPrice: { amount: '19.99', currencyCode: 'USD' },
+              },
+              compareAtPriceRange: {
+                minVariantPrice: { amount: '0', currencyCode: 'USD' },
+              },
+              featuredImage: {
+                url: 'https://example.com/image1.jpg',
+                altText: 'Recommended image 1',
+                width: 800,
+                height: 600,
+              },
+            },
+            {
+              id: 'gid://shopify/Product/3',
+              title: 'Recommended Product 2',
+              handle: 'recommended-product-2',
+              availableForSale: true,
+              priceRange: {
+                minVariantPrice: { amount: '29.99', currencyCode: 'USD' },
+              },
+              compareAtPriceRange: {
+                minVariantPrice: { amount: '0', currencyCode: 'USD' },
+              },
+              featuredImage: null,
+            },
+          ],
+        },
+      }
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockRecommendations),
+      })
+
+      const result = await getProductRecommendations('gid://shopify/Product/1')
+
+      expect(result).toHaveLength(2)
+      expect(result[0].title).toBe('Recommended Product 1')
+      expect(result[1].title).toBe('Recommended Product 2')
+    })
+
+    it('should return empty array when no recommendations', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ data: { productRecommendations: null } }),
+      })
+
+      const result = await getProductRecommendations('gid://shopify/Product/1')
+
+      expect(result).toEqual([])
+    })
+
+    it('should pass productId and intent variables to query', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ data: { productRecommendations: null } }),
+      })
+
+      await getProductRecommendations(
+        'gid://shopify/Product/1',
+        'COMPLEMENTARY',
+      )
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: expect.stringContaining(
+            '"productId":"gid://shopify/Product/1"',
+          ),
+        }),
+      )
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: expect.stringContaining('"intent":"COMPLEMENTARY"'),
+        }),
+      )
+    })
+
+    it('should use default intent of RELATED', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ data: { productRecommendations: null } }),
+      })
+
+      await getProductRecommendations('gid://shopify/Product/1')
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: expect.stringContaining('"intent":"RELATED"'),
+        }),
+      )
+    })
+
+    it('should compute pricing for each recommended product', async () => {
+      const mockRecommendations = {
+        data: {
+          productRecommendations: [
+            {
+              id: 'gid://shopify/Product/2',
+              title: 'Discounted Recommendation',
+              handle: 'discounted-recommendation',
+              availableForSale: true,
+              priceRange: {
+                minVariantPrice: { amount: '24.99', currencyCode: 'USD' },
+              },
+              compareAtPriceRange: {
+                minVariantPrice: { amount: '34.99', currencyCode: 'USD' },
+              },
+              featuredImage: null,
+            },
+          ],
+        },
+      }
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockRecommendations),
+      })
+
+      const result = await getProductRecommendations('gid://shopify/Product/1')
+
+      expect(result[0].price).toEqual({ amount: '24.99', currencyCode: 'USD' })
+      expect(result[0].compareAtPrice).toEqual({
+        amount: '34.99',
+        currencyCode: 'USD',
+      })
+      expect(result[0].hasDiscount).toBe(true)
     })
   })
 })
