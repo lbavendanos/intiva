@@ -1,9 +1,12 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
+import { useTransition } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import * as z from 'zod'
 
+import { addToCart } from '@/lib/actions/cart'
 import { Product } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -61,6 +64,7 @@ export function ProductForm({
   className,
   ...props
 }: ProductFormProps) {
+  const [isPending, startTransition] = useTransition()
   const formSchema = createFormSchema(product)
   const defaultValues = createDefaultValues(product)
 
@@ -116,11 +120,12 @@ export function ProductForm({
     )
   }
 
-  const handleSubmit = (data: FormValues) => {
-    // TODO: Implement add to cart functionality
-    console.log('Form submitted:', data)
-    console.log('Product:', product.id)
-    console.log('Selected variant:', selectedVariant?.id)
+  const handleSubmit = () => {
+    if (!selectedVariant) return
+
+    startTransition(async () => {
+      await addToCart(selectedVariant.id, 1)
+    })
   }
 
   return (
@@ -211,8 +216,21 @@ export function ProductForm({
             </p>
           )}
 
-        <Button type="submit" disabled={!isAvailableForSale} className="w-full">
-          {isSoldOut ? 'Sold out' : 'Add to cart'}
+        <Button
+          type="submit"
+          disabled={!isAvailableForSale || isPending}
+          className="w-full"
+        >
+          {isPending ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Agregando...
+            </>
+          ) : isSoldOut ? (
+            'Agotado'
+          ) : (
+            'Agregar al carrito'
+          )}
         </Button>
       </FieldGroup>
     </form>
