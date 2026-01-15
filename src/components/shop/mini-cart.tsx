@@ -1,7 +1,7 @@
 'use client'
 
-import { ShoppingBag } from 'lucide-react'
 import { useState } from 'react'
+import { ShoppingBag } from 'lucide-react'
 
 import type { Cart } from '@/lib/shopify/types'
 import { Button } from '@/components/ui/button'
@@ -68,10 +68,7 @@ export function MiniCart({ cart }: MiniCartProps) {
           </div>
         ) : (
           <>
-            <div
-              className="flex-1 overflow-y-auto"
-              data-testid="cart-items"
-            >
+            <div className="flex-1 overflow-y-auto" data-testid="cart-items">
               <div className="divide-y divide-zinc-200">
                 {cart.lines.map((item) => (
                   <CartItem key={item.id} item={item} />

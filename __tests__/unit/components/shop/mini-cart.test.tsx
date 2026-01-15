@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, beforeEach, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { MiniCart } from '@/components/shop/mini-cart'
 import type { Cart } from '@/lib/shopify/types'
+import { MiniCart } from '@/components/shop/mini-cart'
 
 vi.mock('@/lib/actions/cart', () => ({
   updateCartItem: vi.fn(() => Promise.resolve({ success: true, cart: null })),
@@ -162,7 +162,7 @@ describe('MiniCart', () => {
     await user.click(cartButton)
 
     expect(
-      screen.getByRole('button', { name: 'Continuar comprando' })
+      screen.getByRole('button', { name: 'Continuar comprando' }),
     ).toBeInTheDocument()
   })
 

@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
-  createCart,
   addToCart,
-  updateCartLines,
+  createCart,
   removeFromCart,
+  updateCartLines,
 } from '@/lib/shopify/mutations/cart'
 
 const mockFetch = vi.fn()
@@ -177,9 +177,9 @@ describe('Cart Mutations', () => {
         expect.any(String),
         expect.objectContaining({
           body: expect.stringContaining(
-            '"merchandiseId":"gid://shopify/ProductVariant/1"'
+            '"merchandiseId":"gid://shopify/ProductVariant/1"',
           ),
-        })
+        }),
       )
     })
   })
@@ -229,7 +229,7 @@ describe('Cart Mutations', () => {
         expect.any(String),
         expect.objectContaining({
           body: expect.stringContaining('"cartId":"gid://shopify/Cart/123"'),
-        })
+        }),
       )
     })
 
@@ -307,7 +307,7 @@ describe('Cart Mutations', () => {
         expect.any(String),
         expect.objectContaining({
           body: expect.stringContaining('"quantity":5'),
-        })
+        }),
       )
     })
 
@@ -393,7 +393,7 @@ describe('Cart Mutations', () => {
         expect.any(String),
         expect.objectContaining({
           body: expect.stringContaining('"lineIds"'),
-        })
+        }),
       )
     })
 

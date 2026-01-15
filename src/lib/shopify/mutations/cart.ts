@@ -1,11 +1,16 @@
+import { extractNodesFromEdges, storefrontQuery } from '@/lib/shopify/client'
 import {
+  CART_FRAGMENT,
+  CART_LINE_FRAGMENT,
   IMAGE_FRAGMENT,
   MONEY_FRAGMENT,
-  CART_LINE_FRAGMENT,
-  CART_FRAGMENT,
 } from '@/lib/shopify/fragments'
-import { storefrontQuery, extractNodesFromEdges } from '@/lib/shopify/client'
-import type { Cart, UserError, Connection, CartLineItem } from '@/lib/shopify/types'
+import type {
+  Cart,
+  CartLineItem,
+  Connection,
+  UserError,
+} from '@/lib/shopify/types'
 
 type CartLineNode = Omit<CartLineItem, 'merchandise'> & {
   merchandise: CartLineItem['merchandise']
@@ -142,7 +147,7 @@ export type CartCreateResult = {
 }
 
 export async function createCart(
-  lines?: CartLineInput[]
+  lines?: CartLineInput[],
 ): Promise<CartCreateResult> {
   const response = await storefrontQuery<CartCreateResponse>(
     CART_CREATE_MUTATION,
@@ -150,7 +155,7 @@ export async function createCart(
       variables: {
         input: lines ? { lines } : undefined,
       },
-    }
+    },
   )
 
   const { cart, userErrors } = response.cartCreate
@@ -163,7 +168,7 @@ export async function createCart(
 
 export async function addToCart(
   cartId: string,
-  lines: CartLineInput[]
+  lines: CartLineInput[],
 ): Promise<CartCreateResult> {
   const response = await storefrontQuery<CartLinesAddResponse>(
     CART_LINES_ADD_MUTATION,
@@ -172,7 +177,7 @@ export async function addToCart(
         cartId,
         lines,
       },
-    }
+    },
   )
 
   const { cart, userErrors } = response.cartLinesAdd
@@ -185,7 +190,7 @@ export async function addToCart(
 
 export async function updateCartLines(
   cartId: string,
-  lines: CartLineUpdateInput[]
+  lines: CartLineUpdateInput[],
 ): Promise<CartCreateResult> {
   const response = await storefrontQuery<CartLinesUpdateResponse>(
     CART_LINES_UPDATE_MUTATION,
@@ -194,7 +199,7 @@ export async function updateCartLines(
         cartId,
         lines,
       },
-    }
+    },
   )
 
   const { cart, userErrors } = response.cartLinesUpdate
@@ -207,7 +212,7 @@ export async function updateCartLines(
 
 export async function removeFromCart(
   cartId: string,
-  lineIds: string[]
+  lineIds: string[],
 ): Promise<CartCreateResult> {
   const response = await storefrontQuery<CartLinesRemoveResponse>(
     CART_LINES_REMOVE_MUTATION,
@@ -216,7 +221,7 @@ export async function removeFromCart(
         cartId,
         lineIds,
       },
-    }
+    },
   )
 
   const { cart, userErrors } = response.cartLinesRemove

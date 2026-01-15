@@ -112,7 +112,7 @@ describe('Cart Query', () => {
         expect.any(String),
         expect.objectContaining({
           body: expect.stringContaining('"cartId":"gid://shopify/Cart/456"'),
-        })
+        }),
       )
     })
 
@@ -144,7 +144,7 @@ describe('Cart Query', () => {
       const result = await getCart('gid://shopify/Cart/123')
 
       expect(result?.checkoutUrl).toBe(
-        'https://store.myshopify.com/checkouts/123'
+        'https://store.myshopify.com/checkouts/123',
       )
     })
 

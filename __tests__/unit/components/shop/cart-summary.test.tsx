@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
-import { CartSummary } from '@/components/shop/cart-summary'
 import type { Cart } from '@/lib/shopify/types'
+import { CartSummary } from '@/components/shop/cart-summary'
 
 const mockCart: Cart = {
   id: 'gid://shopify/Cart/123',
@@ -93,7 +93,7 @@ describe('CartSummary', () => {
     expect(checkoutLink).toBeInTheDocument()
     expect(checkoutLink).toHaveAttribute(
       'href',
-      'https://store.myshopify.com/checkouts/123'
+      'https://store.myshopify.com/checkouts/123',
     )
   })
 
@@ -101,7 +101,7 @@ describe('CartSummary', () => {
     render(<CartSummary cart={mockCart} />)
 
     expect(
-      screen.getByText('Impuestos y envío calculados en el checkout')
+      screen.getByText('Impuestos y envío calculados en el checkout'),
     ).toBeInTheDocument()
   })
 

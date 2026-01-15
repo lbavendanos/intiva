@@ -1,14 +1,15 @@
 'use server'
 
 import { revalidateTag } from 'next/cache'
+
 import { getCartId, setCartId } from '@/lib/cart-cookie'
-import { getCart as getCartQuery } from '@/lib/shopify/queries'
 import {
-  createCart,
   addToCart as addToCartMutation,
-  updateCartLines,
+  createCart,
   removeFromCart as removeFromCartMutation,
+  updateCartLines,
 } from '@/lib/shopify/mutations'
+import { getCart as getCartQuery } from '@/lib/shopify/queries'
 import type { Cart } from '@/lib/shopify/types'
 
 export type CartActionResult = {
@@ -36,7 +37,7 @@ export async function getCart(): Promise<Cart | null> {
 
 export async function addToCart(
   merchandiseId: string,
-  quantity: number = 1
+  quantity: number = 1,
 ): Promise<CartActionResult> {
   const cartId = await getCartId()
 
@@ -86,7 +87,7 @@ export async function addToCart(
 
 export async function updateCartItem(
   lineId: string,
-  quantity: number
+  quantity: number,
 ): Promise<CartActionResult> {
   const cartId = await getCartId()
 
@@ -123,7 +124,9 @@ export async function updateCartItem(
   }
 }
 
-export async function removeFromCart(lineId: string): Promise<CartActionResult> {
+export async function removeFromCart(
+  lineId: string,
+): Promise<CartActionResult> {
   const cartId = await getCartId()
 
   if (!cartId) {

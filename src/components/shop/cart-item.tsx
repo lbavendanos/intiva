@@ -1,12 +1,12 @@
 'use client'
 
+import { useTransition } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Minus, Plus, X } from 'lucide-react'
-import { useTransition } from 'react'
 
+import { removeFromCart, updateCartItem } from '@/lib/actions/cart'
 import type { CartLineItem } from '@/lib/shopify/types'
-import { updateCartItem, removeFromCart } from '@/lib/actions/cart'
 import { Button } from '@/components/ui/button'
 
 import { Price } from './price'
@@ -33,9 +33,7 @@ export function CartItem({ item }: CartItemProps) {
     })
   }
 
-  const variantTitle = selectedOptions
-    .map((option) => option.value)
-    .join(' / ')
+  const variantTitle = selectedOptions.map((option) => option.value).join(' / ')
 
   return (
     <div
@@ -45,7 +43,7 @@ export function CartItem({ item }: CartItemProps) {
     >
       <Link
         href={`/products/${product.handle}`}
-        className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-zinc-100"
+        className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-zinc-100"
       >
         {product.featuredImage ? (
           <Image

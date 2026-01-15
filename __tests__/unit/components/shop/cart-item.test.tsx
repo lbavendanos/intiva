@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { CartItem } from '@/components/shop/cart-item'
 import type { CartLineItem } from '@/lib/shopify/types'
+import { CartItem } from '@/components/shop/cart-item'
 
 vi.mock('@/lib/actions/cart', () => ({
   updateCartItem: vi.fn(() => Promise.resolve({ success: true, cart: null })),
@@ -116,10 +116,10 @@ describe('CartItem', () => {
     render(<CartItem item={mockItem} />)
 
     expect(
-      screen.getByRole('button', { name: 'Disminuir cantidad' })
+      screen.getByRole('button', { name: 'Disminuir cantidad' }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: 'Aumentar cantidad' })
+      screen.getByRole('button', { name: 'Aumentar cantidad' }),
     ).toBeInTheDocument()
   })
 

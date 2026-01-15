@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { getCartId, setCartId, deleteCartId } from '@/lib/cart-cookie'
+import { deleteCartId, getCartId, setCartId } from '@/lib/cart-cookie'
 
 const mockCookieStore = {
   get: vi.fn(),
@@ -23,7 +23,9 @@ describe('Cart Cookie Helper', () => {
 
   describe('getCartId', () => {
     it('should return cart id when cookie exists', async () => {
-      mockCookieStore.get.mockReturnValueOnce({ value: 'gid://shopify/Cart/123' })
+      mockCookieStore.get.mockReturnValueOnce({
+        value: 'gid://shopify/Cart/123',
+      })
 
       const result = await getCartId()
 
@@ -64,7 +66,7 @@ describe('Cart Cookie Helper', () => {
       expect(mockCookieStore.set).toHaveBeenCalledWith(
         expect.objectContaining({
           secure: true,
-        })
+        }),
       )
 
       process.env.NODE_ENV = originalEnv

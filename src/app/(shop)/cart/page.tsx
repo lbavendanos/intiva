@@ -1,12 +1,12 @@
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Suspense } from 'react'
 import { ShoppingBag } from 'lucide-react'
 
 import { getCart } from '@/lib/actions/cart'
+import { CartItem, CartSummary } from '@/components/shop'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CartItem, CartSummary } from '@/components/shop'
 
 export const metadata: Metadata = {
   title: 'Carrito',

@@ -1,6 +1,6 @@
 import type { Cart } from '@/lib/shopify/types'
-import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 
 import { Price } from './price'
 
