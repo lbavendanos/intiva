@@ -136,7 +136,6 @@ export type Cart = {
   cost: {
     subtotalAmount: Money
     totalAmount: Money
-    totalTaxAmount: Maybe<Money>
   }
 }
 

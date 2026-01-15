@@ -14,3 +14,5 @@ export {
   type GetCollectionsResult,
   type GetCollectionProductsResult,
 } from './collections'
+
+export { getCart } from './cart'

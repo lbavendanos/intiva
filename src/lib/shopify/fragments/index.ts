@@ -226,9 +226,6 @@ export const CART_FRAGMENT = /* GraphQL */ `
       totalAmount {
         ...MoneyFragment
       }
-      totalTaxAmount {
-        ...MoneyFragment
-      }
     }
   }
 `
