@@ -11,7 +11,14 @@ import {
   PRODUCT_VARIANT_FRAGMENT,
   SEO_FRAGMENT,
 } from '../fragments'
-import type { Image, PageInfo, Product, ProductListItem } from '../types'
+import type {
+  Connection,
+  Image,
+  PageInfo,
+  Product,
+  ProductListItem,
+  ProductVariant,
+} from '../types'
 
 export type GetProductsResult = {
   products: ProductListItem[]
@@ -19,10 +26,7 @@ export type GetProductsResult = {
 }
 
 type GetProductsQueryResponse = {
-  products: {
-    edges: Array<{ node: ProductListItem }>
-    pageInfo: PageInfo
-  }
+  products: Connection<ProductListItem>
 }
 
 const GET_PRODUCTS_QUERY = /* GraphQL */ `
@@ -66,8 +70,13 @@ export async function getProducts(
   }
 }
 
+type ProductResponse = Omit<Product, 'images' | 'variants'> & {
+  images: Connection<Image>
+  variants: Connection<ProductVariant>
+}
+
 type GetProductByHandleQueryResponse = {
-  product: Product | null
+  product: ProductResponse | null
 }
 
 const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
@@ -104,16 +113,8 @@ export async function getProductByHandle(
 
   return {
     ...product,
-    images: extractNodesFromEdges(
-      product.images as unknown as {
-        edges: Array<{ node: Image }>
-      },
-    ),
-    variants: extractNodesFromEdges(
-      product.variants as unknown as {
-        edges: Array<{ node: Product['variants'][0] }>
-      },
-    ),
+    images: extractNodesFromEdges(product.images),
+    variants: extractNodesFromEdges(product.variants),
     ...computePricing(product),
   }
 }
