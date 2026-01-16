@@ -3,7 +3,16 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Cart } from '@/lib/shopify/types'
+import { MiniCartProvider } from '@/hooks/use-mini-cart'
 import { MiniCart } from '@/components/shop/mini-cart'
+
+function renderWithProvider(cart: Cart | null) {
+  return render(
+    <MiniCartProvider>
+      <MiniCart cart={cart} />
+    </MiniCartProvider>,
+  )
+}
 
 vi.mock('@/lib/actions/cart', () => ({
   updateCartItem: vi.fn(() => Promise.resolve({ success: true, cart: null })),
@@ -73,14 +82,14 @@ describe('MiniCart', () => {
   })
 
   it('should render cart button', () => {
-    render(<MiniCart cart={null} />)
+    renderWithProvider(null)
 
     const cartButton = screen.getByTestId('cart-button')
     expect(cartButton).toBeInTheDocument()
   })
 
   it('should have accessible label with item count', () => {
-    render(<MiniCart cart={mockCart} />)
+    renderWithProvider(mockCart)
 
     const cartButton = screen.getByRole('button', {
       name: 'Carrito de compras, 3 artículos',
@@ -89,7 +98,7 @@ describe('MiniCart', () => {
   })
 
   it('should show item count badge when cart has items', () => {
-    render(<MiniCart cart={mockCart} />)
+    renderWithProvider(mockCart)
 
     const badge = screen.getByTestId('cart-count')
     expect(badge).toBeInTheDocument()
@@ -97,7 +106,7 @@ describe('MiniCart', () => {
   })
 
   it('should not show badge when cart is empty', () => {
-    render(<MiniCart cart={null} />)
+    renderWithProvider(null)
 
     expect(screen.queryByTestId('cart-count')).not.toBeInTheDocument()
   })
@@ -108,7 +117,7 @@ describe('MiniCart', () => {
       totalQuantity: 150,
     }
 
-    render(<MiniCart cart={largeCart} />)
+    renderWithProvider(largeCart)
 
     const badge = screen.getByTestId('cart-count')
     expect(badge).toHaveTextContent('99+')
@@ -117,7 +126,7 @@ describe('MiniCart', () => {
   it('should open sheet when cart button is clicked', async () => {
     const user = userEvent.setup()
 
-    render(<MiniCart cart={mockCart} />)
+    renderWithProvider(mockCart)
 
     const cartButton = screen.getByTestId('cart-button')
     await user.click(cartButton)
@@ -129,7 +138,7 @@ describe('MiniCart', () => {
   it('should show empty cart message when cart is null', async () => {
     const user = userEvent.setup()
 
-    render(<MiniCart cart={null} />)
+    renderWithProvider(null)
 
     const cartButton = screen.getByTestId('cart-button')
     await user.click(cartButton)
@@ -145,7 +154,7 @@ describe('MiniCart', () => {
       lines: [],
     }
 
-    render(<MiniCart cart={emptyCart} />)
+    renderWithProvider(emptyCart)
 
     const cartButton = screen.getByTestId('cart-button')
     await user.click(cartButton)
@@ -156,7 +165,7 @@ describe('MiniCart', () => {
   it('should show continue shopping button when empty', async () => {
     const user = userEvent.setup()
 
-    render(<MiniCart cart={null} />)
+    renderWithProvider(null)
 
     const cartButton = screen.getByTestId('cart-button')
     await user.click(cartButton)
@@ -169,7 +178,7 @@ describe('MiniCart', () => {
   it('should render cart items when cart has lines', async () => {
     const user = userEvent.setup()
 
-    render(<MiniCart cart={mockCart} />)
+    renderWithProvider(mockCart)
 
     const cartButton = screen.getByTestId('cart-button')
     await user.click(cartButton)
@@ -182,7 +191,7 @@ describe('MiniCart', () => {
   it('should render cart summary when cart has items', async () => {
     const user = userEvent.setup()
 
-    render(<MiniCart cart={mockCart} />)
+    renderWithProvider(mockCart)
 
     const cartButton = screen.getByTestId('cart-button')
     await user.click(cartButton)
@@ -193,7 +202,7 @@ describe('MiniCart', () => {
   it('should close sheet when continue shopping is clicked', async () => {
     const user = userEvent.setup()
 
-    render(<MiniCart cart={null} />)
+    renderWithProvider(null)
 
     const cartButton = screen.getByTestId('cart-button')
     await user.click(cartButton)
