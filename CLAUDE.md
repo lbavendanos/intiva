@@ -36,15 +36,17 @@ APP_LOCALE=en-US                 # Locale for date/price formatting
 
 ## Architecture
 
-This is a Next.js 16 project using the App Router pattern with React 19 and TypeScript.
+This is a Next.js 16 project using the App Router pattern with React 19 and TypeScript. It integrates with the Shopify Storefront API version `2025-10`.
 
 **Key directories:**
 
 - `src/app/` - App Router pages, layouts, and global styles
-- `src/app/(shop)/` - Shop route group (products, collections)
+- `src/app/(shop)/` - Shop route group
 - `src/components/ui/` - shadcn/ui components (installed via CLI)
-- `src/components/shop/` - Shop-specific components (cards, grids, pagination)
+- `src/components/layout/` - Layout components
+- `src/components/shop/` - Shop-specific components
 - `src/lib/` - Utility functions
+- `src/lib/actions/` - Server Actions
 - `src/lib/shopify/` - Shopify Storefront API integration
 - `src/lib/shopify/fragments/` - GraphQL fragments for reusable query parts
 - `src/lib/shopify/mutations/` - GraphQL mutations for data modifications
