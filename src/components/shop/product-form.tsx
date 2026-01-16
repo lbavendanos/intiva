@@ -7,8 +7,9 @@ import { Controller, useForm, useWatch } from 'react-hook-form'
 import * as z from 'zod'
 
 import { addToCart } from '@/lib/actions/cart'
-import { Product } from '@/lib/shopify/types'
+import type { Product } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
+import { useMiniCart } from '@/hooks/use-mini-cart'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -65,6 +66,7 @@ export function ProductForm({
   ...props
 }: ProductFormProps) {
   const [isPending, startTransition] = useTransition()
+  const { openMiniCart } = useMiniCart()
   const formSchema = createFormSchema(product)
   const defaultValues = createDefaultValues(product)
 
@@ -124,7 +126,11 @@ export function ProductForm({
     if (!selectedVariant) return
 
     startTransition(async () => {
-      await addToCart(selectedVariant.id, 1)
+      const result = await addToCart(selectedVariant.id, 1)
+
+      if (result.success) {
+        openMiniCart()
+      }
     })
   }
 

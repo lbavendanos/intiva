@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { ShoppingBag } from 'lucide-react'
 
 import type { Cart } from '@/lib/shopify/types'
+import { useMiniCart } from '@/hooks/use-mini-cart'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -21,7 +21,7 @@ type MiniCartProps = {
 }
 
 export function MiniCart({ cart }: MiniCartProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const { isOpen, setIsOpen } = useMiniCart()
 
   const itemCount = cart?.totalQuantity ?? 0
   const isEmpty = !cart || cart.lines.length === 0
