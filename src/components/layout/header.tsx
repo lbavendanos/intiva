@@ -1,19 +1,22 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
+import { ShoppingBag } from 'lucide-react'
 
 import { getCart } from '@/lib/actions/cart'
 import { MiniCart } from '@/components/shop/mini-cart'
+import { Button } from '@/components/ui/button'
 
-export async function Header() {
-  const cart = await getCart()
+export function Header() {
+  const appName = process.env.APP_NAME
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link
           href="/"
           className="text-xl font-bold tracking-tight text-zinc-900"
         >
-          {process.env.APP_NAME}
+          {appName}
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -32,9 +35,25 @@ export async function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <MiniCart cart={cart} />
+          <Suspense fallback={<MiniCartSkeleton />}>
+            <MiniCartWrapper />
+          </Suspense>
         </div>
       </div>
     </header>
+  )
+}
+
+async function MiniCartWrapper() {
+  const cart = await getCart()
+
+  return <MiniCart cart={cart} />
+}
+
+function MiniCartSkeleton() {
+  return (
+    <Button variant="ghost" size="icon" disabled aria-label="Cargando carrito">
+      <ShoppingBag className="h-5 w-5" />
+    </Button>
   )
 }
