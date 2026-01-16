@@ -18,7 +18,7 @@ describe('Shopify Client', () => {
       ...originalEnv,
       SHOPIFY_STORE_DOMAIN: 'test-store.myshopify.com',
       SHOPIFY_STOREFRONT_ACCESS_TOKEN: 'test-token',
-      APP_LOCALE: 'es-PE',
+      NEXT_PUBLIC_APP_LOCALE: 'es-PE',
     }
   })
 

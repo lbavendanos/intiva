@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 })
 
 export function generateMetadata(): Metadata {
-  const appName = process.env.APP_NAME as string
-  const appLocale = process.env.APP_LOCALE
+  const appName = process.env.NEXT_PUBLIC_APP_NAME as string
+  const appLocale = process.env.NEXT_PUBLIC_APP_LOCALE
   const description = `${appName} es una boutique de moda en línea de Perú para mujer. Encuentra calzado, ropa y accesorios de marcas exclusivas y modelos de edición limitada.`
 
   return {
@@ -71,7 +71,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const appLocale = process.env.APP_LOCALE
+  const appLocale = process.env.NEXT_PUBLIC_APP_LOCALE
 
   return (
     <html lang={appLocale}>

@@ -44,7 +44,7 @@ const mockItem: CartLineItem = {
 describe('CartItem', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    process.env.APP_LOCALE = 'en-US'
+    process.env.NEXT_PUBLIC_APP_LOCALE = 'en-US'
   })
 
   it('should render product title', () => {

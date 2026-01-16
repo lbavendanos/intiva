@@ -7,7 +7,7 @@ import { MiniCart } from '@/components/shop/mini-cart'
 import { Button } from '@/components/ui/button'
 
 export function Header() {
-  const appName = process.env.APP_NAME
+  const appName = process.env.NEXT_PUBLIC_APP_NAME
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60">

@@ -16,14 +16,14 @@ export function cn(...inputs: ClassValue[]): string {
  *
  * @param {string} path - The path to generate the url for.
  * @returns {URL} Returns the generated url.
- * @throws {Error} If APP_URL environment variable is not defined.
+ * @throws {Error} If NEXT_PUBLIC_APP_URL environment variable is not defined.
  */
 export function url(path: string = '/'): URL {
-  if (!process.env.APP_URL) {
+  if (!process.env.NEXT_PUBLIC_APP_URL) {
     throw new Error(
-      'APP_URL environment variable is not defined. Please set it in your .env file.',
+      'NEXT_PUBLIC_APP_URL environment variable is not defined. Please set it in your .env file.',
     )
   }
 
-  return new URL(path, process.env.APP_URL)
+  return new URL(path, process.env.NEXT_PUBLIC_APP_URL)
 }

@@ -30,8 +30,8 @@ Required:
 ```
 SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
 SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-storefront-access-token
-APP_URL=http://localhost:3000    # Base URL for url() helper
-APP_LOCALE=en-US                 # Locale for date/price formatting
+NEXT_PUBLIC_APP_URL=http://localhost:3000    # Base URL for url() helper
+NEXT_PUBLIC_APP_LOCALE=en-US                 # Locale for date/price formatting
 ```
 
 ## Architecture

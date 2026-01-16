@@ -9,7 +9,7 @@ describe('url', () => {
     vi.resetModules()
     process.env = {
       ...originalEnv,
-      APP_URL: 'https://example.com',
+      NEXT_PUBLIC_APP_URL: 'https://example.com',
     }
   })
 
@@ -47,19 +47,19 @@ describe('url', () => {
     expect(result.href).toBe('https://example.com/products')
   })
 
-  it('should handle APP_URL with trailing slash', () => {
-    process.env.APP_URL = 'https://example.com/'
+  it('should handle NEXT_PUBLIC_APP_URL with trailing slash', () => {
+    process.env.NEXT_PUBLIC_APP_URL = 'https://example.com/'
 
     const result = url('/products')
 
     expect(result.href).toBe('https://example.com/products')
   })
 
-  it('should throw error when APP_URL is not defined', () => {
-    delete process.env.APP_URL
+  it('should throw error when NEXT_PUBLIC_APP_URL is not defined', () => {
+    delete process.env.NEXT_PUBLIC_APP_URL
 
     expect(() => url()).toThrow(
-      'APP_URL environment variable is not defined. Please set it in your .env file.',
+      'NEXT_PUBLIC_APP_URL environment variable is not defined. Please set it in your .env file.',
     )
   })
 })

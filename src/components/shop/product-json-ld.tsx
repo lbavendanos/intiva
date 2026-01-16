@@ -8,7 +8,7 @@ type ProductJsonLdProps = {
 }
 
 export function ProductJsonLd({ product }: ProductJsonLdProps) {
-  const appName = process.env.APP_NAME
+  const appName = process.env.NEXT_PUBLIC_APP_NAME
 
   const name = product.seo.title || product.title
   const description =

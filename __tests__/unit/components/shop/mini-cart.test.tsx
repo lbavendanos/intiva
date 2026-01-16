@@ -68,7 +68,7 @@ const mockCart: Cart = {
 
 describe('MiniCart', () => {
   beforeEach(() => {
-    process.env.APP_LOCALE = 'en-US'
+    process.env.NEXT_PUBLIC_APP_LOCALE = 'en-US'
     vi.clearAllMocks()
   })
 
