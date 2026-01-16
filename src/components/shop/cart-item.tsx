@@ -21,6 +21,11 @@ export function CartItem({ item }: CartItemProps) {
   const { id, quantity, merchandise, cost } = item
   const { product, selectedOptions } = merchandise
 
+  const variantTitle = selectedOptions
+    .filter((option) => option.value !== 'Default Title')
+    .map((option) => option.value)
+    .join(' / ')
+
   const handleUpdateQuantity = (newQuantity: number) => {
     startTransition(async () => {
       await updateCartItem(id, newQuantity)
@@ -32,8 +37,6 @@ export function CartItem({ item }: CartItemProps) {
       await removeFromCart(id)
     })
   }
-
-  const variantTitle = selectedOptions.map((option) => option.value).join(' / ')
 
   return (
     <div

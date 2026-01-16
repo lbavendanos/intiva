@@ -59,6 +59,21 @@ describe('CartItem', () => {
     expect(screen.getByText('Small / Red')).toBeInTheDocument()
   })
 
+  it('should not render variant title when product has default variant only', () => {
+    const itemWithDefaultVariant = {
+      ...mockItem,
+      merchandise: {
+        ...mockItem.merchandise,
+        title: 'Default Title',
+        selectedOptions: [{ name: 'Title', value: 'Default Title' }],
+      },
+    }
+
+    render(<CartItem item={itemWithDefaultVariant} />)
+
+    expect(screen.queryByText('Default Title')).not.toBeInTheDocument()
+  })
+
   it('should render quantity', () => {
     render(<CartItem item={mockItem} />)
 
