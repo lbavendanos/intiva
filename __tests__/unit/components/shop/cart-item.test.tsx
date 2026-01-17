@@ -108,7 +108,7 @@ describe('CartItem', () => {
 
     render(<CartItem item={itemWithoutImage} />)
 
-    expect(screen.getByText('Sin imagen')).toBeInTheDocument()
+    expect(screen.getByText('No image')).toBeInTheDocument()
   })
 
   it('should have link to product page', () => {
@@ -122,7 +122,7 @@ describe('CartItem', () => {
     render(<CartItem item={mockItem} />)
 
     const removeButton = screen.getByRole('button', {
-      name: 'Eliminar Test Product del carrito',
+      name: 'Remove Test Product from cart',
     })
     expect(removeButton).toBeInTheDocument()
   })
@@ -131,10 +131,10 @@ describe('CartItem', () => {
     render(<CartItem item={mockItem} />)
 
     expect(
-      screen.getByRole('button', { name: 'Disminuir cantidad' }),
+      screen.getByRole('button', { name: 'Decrease quantity' }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: 'Aumentar cantidad' }),
+      screen.getByRole('button', { name: 'Increase quantity' }),
     ).toBeInTheDocument()
   })
 
@@ -147,7 +147,7 @@ describe('CartItem', () => {
     render(<CartItem item={itemWithQuantityOne} />)
 
     const decreaseButton = screen.getByRole('button', {
-      name: 'Disminuir cantidad',
+      name: 'Decrease quantity',
     })
     expect(decreaseButton).toBeDisabled()
   })
@@ -159,7 +159,7 @@ describe('CartItem', () => {
     render(<CartItem item={mockItem} />)
 
     const increaseButton = screen.getByRole('button', {
-      name: 'Aumentar cantidad',
+      name: 'Increase quantity',
     })
     await user.click(increaseButton)
 
@@ -173,7 +173,7 @@ describe('CartItem', () => {
     render(<CartItem item={mockItem} />)
 
     const decreaseButton = screen.getByRole('button', {
-      name: 'Disminuir cantidad',
+      name: 'Decrease quantity',
     })
     await user.click(decreaseButton)
 
@@ -187,7 +187,7 @@ describe('CartItem', () => {
     render(<CartItem item={mockItem} />)
 
     const removeButton = screen.getByRole('button', {
-      name: 'Eliminar Test Product del carrito',
+      name: 'Remove Test Product from cart',
     })
     await user.click(removeButton)
 

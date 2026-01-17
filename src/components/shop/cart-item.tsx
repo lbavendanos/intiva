@@ -6,8 +6,8 @@ import Link from 'next/link'
 import { Minus, Plus, X } from 'lucide-react'
 
 import { removeFromCart, updateCartItem } from '@/lib/actions/cart'
-import { __ } from '@/lib/lang'
 import type { CartLineItem } from '@/lib/shopify/types'
+import { __ } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
 import { Price } from './price'

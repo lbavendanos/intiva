@@ -1,5 +1,5 @@
-import { __ } from '@/lib/lang'
 import { getProductRecommendations } from '@/lib/shopify/queries'
+import { __ } from '@/lib/utils'
 
 import { ProductCard } from './product-card'
 

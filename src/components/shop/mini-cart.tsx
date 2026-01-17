@@ -2,8 +2,8 @@
 
 import { ShoppingBag } from 'lucide-react'
 
-import { __ } from '@/lib/lang'
 import type { Cart } from '@/lib/shopify/types'
+import { __ } from '@/lib/utils'
 import { useMiniCart } from '@/hooks/use-mini-cart'
 import { Button } from '@/components/ui/button'
 import {

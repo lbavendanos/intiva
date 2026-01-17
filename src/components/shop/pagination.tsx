@@ -1,9 +1,8 @@
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import { __ } from '@/lib/lang'
 import type { PageInfo } from '@/lib/shopify/types'
-import { url } from '@/lib/utils'
+import { __, url } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
 interface PaginationProps {

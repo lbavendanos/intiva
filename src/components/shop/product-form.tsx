@@ -7,9 +7,8 @@ import { Controller, useForm, useWatch } from 'react-hook-form'
 import * as z from 'zod'
 
 import { addToCart } from '@/lib/actions/cart'
-import { __ } from '@/lib/lang'
 import type { Product } from '@/lib/shopify/types'
-import { cn } from '@/lib/utils'
+import { __, cn } from '@/lib/utils'
 import { useMiniCart } from '@/hooks/use-mini-cart'
 import { Button } from '@/components/ui/button'
 import {

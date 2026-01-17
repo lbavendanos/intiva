@@ -1,6 +1,12 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+import {
+  getTranslator,
+  type Replacements,
+  type TranslationKeys,
+} from '@/lib/translation/translator'
+
 /**
  * Utility for constructing className strings conditionally and merging them with Tailwind CSS classes.
  *
@@ -26,4 +32,28 @@ export function url(path: string = '/'): URL {
   }
 
   return new URL(path, process.env.NEXT_PUBLIC_APP_URL)
+}
+
+/**
+ * Translate a given key with optional replacements.
+ * Similar to Laravel's __() helper function.
+ *
+ * @param {TranslationKeys} key - The translation key to look up.
+ * @param {Replacements} replacements - Optional key-value pairs for placeholder replacements.
+ * @returns {string} The translated string with replacements applied.
+ *
+ * @example
+ * // Simple translation
+ * __('cart.empty') // "Your cart is empty" or "Tu carrito está vacío"
+ *
+ * @example
+ * // Translation with replacements
+ * __('cart.title', { count: 3 }) // "Cart (3)" or "Carrito (3)"
+ *
+ * @example
+ * // Translation with string replacement
+ * __('cart.item.remove', { name: 'Product Name' }) // "Remove Product Name from cart"
+ */
+export function __(key: TranslationKeys, replacements?: Replacements): string {
+  return getTranslator().get(key, replacements)
 }

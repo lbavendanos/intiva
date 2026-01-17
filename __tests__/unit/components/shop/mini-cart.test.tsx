@@ -92,7 +92,7 @@ describe('MiniCart', () => {
     renderWithProvider(mockCart)
 
     const cartButton = screen.getByRole('button', {
-      name: 'Carrito de compras, 3 artículos',
+      name: 'Shopping cart, 3 items',
     })
     expect(cartButton).toBeInTheDocument()
   })
@@ -132,7 +132,7 @@ describe('MiniCart', () => {
     await user.click(cartButton)
 
     expect(screen.getByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByText('Carrito (3)')).toBeInTheDocument()
+    expect(screen.getByText('Cart (3)')).toBeInTheDocument()
   })
 
   it('should show empty cart message when cart is null', async () => {
@@ -143,7 +143,7 @@ describe('MiniCart', () => {
     const cartButton = screen.getByTestId('cart-button')
     await user.click(cartButton)
 
-    expect(screen.getByText('Tu carrito está vacío')).toBeInTheDocument()
+    expect(screen.getByText('Your cart is empty')).toBeInTheDocument()
   })
 
   it('should show empty cart message when cart has no lines', async () => {
@@ -159,7 +159,7 @@ describe('MiniCart', () => {
     const cartButton = screen.getByTestId('cart-button')
     await user.click(cartButton)
 
-    expect(screen.getByText('Tu carrito está vacío')).toBeInTheDocument()
+    expect(screen.getByText('Your cart is empty')).toBeInTheDocument()
   })
 
   it('should show continue shopping button when empty', async () => {
@@ -171,7 +171,7 @@ describe('MiniCart', () => {
     await user.click(cartButton)
 
     expect(
-      screen.getByRole('button', { name: 'Continuar comprando' }),
+      screen.getByRole('button', { name: 'Continue shopping' }),
     ).toBeInTheDocument()
   })
 
@@ -208,7 +208,7 @@ describe('MiniCart', () => {
     await user.click(cartButton)
 
     const continueButton = screen.getByRole('button', {
-      name: 'Continuar comprando',
+      name: 'Continue shopping',
     })
     await user.click(continueButton)
 

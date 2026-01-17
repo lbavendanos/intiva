@@ -1,5 +1,5 @@
-import { __ } from '@/lib/lang'
 import type { Cart } from '@/lib/shopify/types'
+import { __ } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 

@@ -76,8 +76,8 @@ describe('CartSummary', () => {
   it('should render shipping info', () => {
     render(<CartSummary cart={mockCart} />)
 
-    expect(screen.getByText('Envío')).toBeInTheDocument()
-    expect(screen.getByText('Calculado en checkout')).toBeInTheDocument()
+    expect(screen.getByText('Shipping')).toBeInTheDocument()
+    expect(screen.getByText('Calculated at checkout')).toBeInTheDocument()
   })
 
   it('should render total', () => {
@@ -89,7 +89,7 @@ describe('CartSummary', () => {
   it('should render checkout button with correct link', () => {
     render(<CartSummary cart={mockCart} />)
 
-    const checkoutLink = screen.getByRole('link', { name: 'Finalizar compra' })
+    const checkoutLink = screen.getByRole('link', { name: 'Checkout' })
     expect(checkoutLink).toBeInTheDocument()
     expect(checkoutLink).toHaveAttribute(
       'href',
@@ -101,7 +101,7 @@ describe('CartSummary', () => {
     render(<CartSummary cart={mockCart} />)
 
     expect(
-      screen.getByText('Impuestos y envío calculados en el checkout'),
+      screen.getByText('Taxes and shipping calculated at checkout'),
     ).toBeInTheDocument()
   })
 
