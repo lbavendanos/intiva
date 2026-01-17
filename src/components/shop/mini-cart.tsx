@@ -2,6 +2,7 @@
 
 import { ShoppingBag } from 'lucide-react'
 
+import { __ } from '@/lib/lang'
 import type { Cart } from '@/lib/shopify/types'
 import { useMiniCart } from '@/hooks/use-mini-cart'
 import { Button } from '@/components/ui/button'
@@ -33,7 +34,7 @@ export function MiniCart({ cart }: MiniCartProps) {
           variant="ghost"
           size="icon"
           className="relative"
-          aria-label={`Carrito de compras, ${itemCount} artículos`}
+          aria-label={__('cart.aria_label', { count: itemCount })}
           data-testid="cart-button"
         >
           <ShoppingBag className="h-5 w-5" />
@@ -49,21 +50,19 @@ export function MiniCart({ cart }: MiniCartProps) {
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col sm:max-w-md">
         <SheetHeader>
-          <SheetTitle>Carrito ({itemCount})</SheetTitle>
+          <SheetTitle>{__('cart.title', { count: itemCount })}</SheetTitle>
         </SheetHeader>
 
         {isEmpty ? (
           <div className="flex flex-1 flex-col items-center justify-center">
             <ShoppingBag className="h-12 w-12 text-zinc-300" />
-            <p className="mt-4 text-center text-zinc-500">
-              Tu carrito está vacío
-            </p>
+            <p className="mt-4 text-center text-zinc-500">{__('cart.empty')}</p>
             <Button
               variant="outline"
               className="mt-4"
               onClick={() => setIsOpen(false)}
             >
-              Continuar comprando
+              {__('cart.continue_shopping')}
             </Button>
           </div>
         ) : (

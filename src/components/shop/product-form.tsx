@@ -7,6 +7,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form'
 import * as z from 'zod'
 
 import { addToCart } from '@/lib/actions/cart'
+import { __ } from '@/lib/lang'
 import type { Product } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
 import { useMiniCart } from '@/hooks/use-mini-cart'
@@ -37,10 +38,10 @@ function createFormSchema(product: Product) {
       .string({
         error: (issue) =>
           issue.input === undefined
-            ? `Please select a ${optionName}`
-            : `Invalid ${optionName}`,
+            ? __('product.select_option', { option: optionName })
+            : __('product.invalid_option', { option: optionName }),
       })
-      .min(1, { error: `Please select a ${optionName}` })
+      .min(1, { error: __('product.select_option', { option: optionName }) })
   })
 
   return z.object(schemaShape)
@@ -218,7 +219,9 @@ export function ProductForm({
           selectedVariant.quantityAvailable <= 5 &&
           selectedVariant.quantityAvailable > 0 && (
             <p className="text-sm text-amber-600">
-              Only {selectedVariant.quantityAvailable} left in stock
+              {__('product.stock_warning', {
+                count: selectedVariant.quantityAvailable,
+              })}
             </p>
           )}
 
@@ -230,12 +233,12 @@ export function ProductForm({
           {isPending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Agregando...
+              {__('product.adding')}
             </>
           ) : isSoldOut ? (
-            'Agotado'
+            __('product.sold_out')
           ) : (
-            'Agregar al carrito'
+            __('product.add_to_cart')
           )}
         </Button>
       </FieldGroup>

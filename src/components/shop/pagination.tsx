@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
+import { __ } from '@/lib/lang'
 import type { PageInfo } from '@/lib/shopify/types'
 import { url } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -30,32 +31,32 @@ export function Pagination({ pageInfo, basePath }: PaginationProps) {
   return (
     <nav
       className="flex items-center justify-center gap-4 py-8"
-      aria-label="Paginación"
+      aria-label={__('pagination.aria_label')}
     >
       {hasPreviousPage ? (
         <Button variant="outline" asChild>
           <Link href={basePath}>
             <ChevronLeft className="mr-2 h-4 w-4" />
-            Anterior
+            {__('pagination.previous')}
           </Link>
         </Button>
       ) : (
         <Button variant="outline" disabled>
           <ChevronLeft className="mr-2 h-4 w-4" />
-          Anterior
+          {__('pagination.previous')}
         </Button>
       )}
 
       {hasNextPage ? (
         <Button variant="outline" asChild>
           <Link href={createUrl(endCursor)}>
-            Siguiente
+            {__('pagination.next')}
             <ChevronRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>
       ) : (
         <Button variant="outline" disabled>
-          Siguiente
+          {__('pagination.next')}
           <ChevronRight className="ml-2 h-4 w-4" />
         </Button>
       )}

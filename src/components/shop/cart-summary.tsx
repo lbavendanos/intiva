@@ -1,3 +1,4 @@
+import { __ } from '@/lib/lang'
 import type { Cart } from '@/lib/shopify/types'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -17,7 +18,7 @@ export function CartSummary({ cart }: CartSummaryProps) {
 
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-zinc-600">Subtotal</span>
+          <span className="text-zinc-600">{__('cart.subtotal')}</span>
           <Price
             className="font-medium"
             amount={cost.subtotalAmount.amount}
@@ -25,15 +26,17 @@ export function CartSummary({ cart }: CartSummaryProps) {
           />
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-zinc-600">Envío</span>
-          <span className="text-zinc-600">Calculado en checkout</span>
+          <span className="text-zinc-600">{__('cart.shipping')}</span>
+          <span className="text-zinc-600">
+            {__('cart.shipping_calculated')}
+          </span>
         </div>
       </div>
 
       <Separator />
 
       <div className="flex justify-between text-base font-semibold">
-        <span>Total</span>
+        <span>{__('cart.total')}</span>
         <Price
           amount={cost.totalAmount.amount}
           currencyCode={cost.totalAmount.currencyCode}
@@ -41,11 +44,11 @@ export function CartSummary({ cart }: CartSummaryProps) {
       </div>
 
       <Button asChild className="w-full" size="lg">
-        <a href={checkoutUrl}>Finalizar compra</a>
+        <a href={checkoutUrl}>{__('cart.checkout')}</a>
       </Button>
 
       <p className="text-center text-xs text-zinc-500">
-        Impuestos y envío calculados en el checkout
+        {__('cart.taxes_note')}
       </p>
     </div>
   )

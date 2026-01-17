@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Minus, Plus, X } from 'lucide-react'
 
 import { removeFromCart, updateCartItem } from '@/lib/actions/cart'
+import { __ } from '@/lib/lang'
 import type { CartLineItem } from '@/lib/shopify/types'
 import { Button } from '@/components/ui/button'
 
@@ -58,7 +59,9 @@ export function CartItem({ item }: CartItemProps) {
           />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <span className="text-xs text-zinc-400">Sin imagen</span>
+            <span className="text-xs text-zinc-400">
+              {__('cart.item.no_image')}
+            </span>
           </div>
         )}
       </Link>
@@ -82,7 +85,7 @@ export function CartItem({ item }: CartItemProps) {
             className="h-6 w-6"
             onClick={handleRemove}
             disabled={isPending}
-            aria-label={`Eliminar ${product.title} del carrito`}
+            aria-label={__('cart.item.remove', { name: product.title })}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -96,7 +99,7 @@ export function CartItem({ item }: CartItemProps) {
               className="h-7 w-7"
               onClick={() => handleUpdateQuantity(quantity - 1)}
               disabled={isPending || quantity <= 1}
-              aria-label="Disminuir cantidad"
+              aria-label={__('cart.item.decrease')}
             >
               <Minus className="h-3 w-3" />
             </Button>
@@ -107,7 +110,7 @@ export function CartItem({ item }: CartItemProps) {
               className="h-7 w-7"
               onClick={() => handleUpdateQuantity(quantity + 1)}
               disabled={isPending}
-              aria-label="Aumentar cantidad"
+              aria-label={__('cart.item.increase')}
             >
               <Plus className="h-3 w-3" />
             </Button>

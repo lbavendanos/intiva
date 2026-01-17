@@ -52,6 +52,7 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 - `src/lib/shopify/mutations/` - GraphQL mutations for data modifications
 - `src/lib/shopify/queries/` - GraphQL queries for data fetching
 - `src/hooks/` - Custom React hooks
+- `src/lang/` - Translation dictionaries (en.json, es.json)
 - `__tests__/unit/` - Unit tests (Vitest)
 - `__tests__/e2e/` - E2E tests (Playwright)
 - `public/` - Static assets

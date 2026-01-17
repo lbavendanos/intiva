@@ -1,3 +1,4 @@
+import { __ } from '@/lib/lang'
 import { getProductRecommendations } from '@/lib/shopify/queries'
 
 import { ProductCard } from './product-card'
@@ -16,7 +17,7 @@ export async function RelatedProducts({ productId }: RelatedProductsProps) {
   return (
     <section className="mt-16">
       <h2 className="mb-6 text-2xl font-bold text-zinc-900">
-        You may also like
+        {__('product.related')}
       </h2>
       <div className="flex gap-4 overflow-x-auto sm:gap-6">
         {products.map((product) => (
