@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge'
 
 import {
   getTranslator,
+  type Locale,
   type Replacements,
   type TranslationKeys,
 } from '@/lib/translation/translator'
@@ -40,6 +41,7 @@ export function url(path: string = '/'): URL {
  *
  * @param {TranslationKeys} key - The translation key to look up.
  * @param {Replacements} replacements - Optional key-value pairs for placeholder replacements.
+ * @param {Locale} locale - Optional locale to use for translation.
  * @returns {string} The translated string with replacements applied.
  *
  * @example
@@ -53,7 +55,15 @@ export function url(path: string = '/'): URL {
  * @example
  * // Translation with string replacement
  * __('cart.item.remove', { name: 'Product Name' }) // "Remove Product Name from cart"
+ *
+ * @example
+ * // Translation with specific locale
+ * __('cart.empty', {}, 'es') // "Tu carrito está vacío"
  */
-export function __(key: TranslationKeys, replacements?: Replacements): string {
-  return getTranslator().get(key, replacements)
+export function __(
+  key: TranslationKeys,
+  replacements?: Replacements,
+  locale?: Locale,
+): string {
+  return getTranslator().get(key, replacements, locale)
 }
