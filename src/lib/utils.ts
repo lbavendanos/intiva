@@ -1,13 +1,13 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
-import { getUrlGenerator } from '@/lib/routing/url-generator'
+import { getUrlGenerator } from '@/lib/foundation/routing/url-generator'
 import {
   getTranslator,
   type Locale,
   type Replacements,
   type TranslationKeys,
-} from '@/lib/translation/translator'
+} from '@/lib/foundation/translation/translator'
 
 /**
  * Utility for constructing className strings conditionally and merging them with Tailwind CSS classes.

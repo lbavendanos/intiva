@@ -46,6 +46,7 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 - `src/components/layout/` - Layout components
 - `src/components/shop/` - Shop-specific components
 - `src/lib/` - Utility functions
+- `src/lib/foundation/` - Core framework modules
 - `src/lib/actions/` - Server Actions
 - `src/lib/shopify/` - Shopify Storefront API integration
 - `src/lib/shopify/fragments/` - GraphQL fragments for reusable query parts
