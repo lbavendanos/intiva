@@ -10,10 +10,8 @@ type Replacements = Record<string, string | number>
 type Dictionaries = Record<Locale, Record<string, string>>
 
 /**
- * Translator class inspired by Laravel's Illuminate\Translation\Translator.
- * Implements a simplified version of the Illuminate\Contracts\Translation\Translator contract.
- *
- * @see https://github.com/illuminate/contracts/blob/12.x/Translation/Translator.php
+ * Translator class for handling internationalization (i18n) in the application.
+ * Provides translation lookup, placeholder replacement, and pluralization support.
  */
 class Translator {
   /**
@@ -175,7 +173,7 @@ class Translator {
     let result = translation
 
     Object.entries(replace).forEach(([placeholder, value]) => {
-      // Replace :placeholder format (Laravel style)
+      // Replace :placeholder format
       result = result.replace(new RegExp(`:${placeholder}`, 'g'), String(value))
     })
 

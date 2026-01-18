@@ -1,8 +1,6 @@
 /**
- * UrlGenerator class inspired by Laravel's Illuminate\Routing\UrlGenerator.
- * Implements a simplified version of the Illuminate\Contracts\Routing\UrlGenerator contract.
- *
- * @see https://github.com/illuminate/contracts/blob/12.x/Routing/UrlGenerator.php
+ * UrlGenerator class for generating absolute URLs in the application.
+ * Provides a centralized way to build URLs based on the configured root URL.
  */
 class UrlGenerator {
   /**

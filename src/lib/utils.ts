@@ -10,10 +10,32 @@ import {
 } from '@/lib/foundation/translation/translator'
 
 /**
- * Utility for constructing className strings conditionally and merging them with Tailwind CSS classes.
+ * Utility for constructing className strings conditionally and merging Tailwind CSS classes.
+ * Combines clsx for conditional class handling with tailwind-merge for deduplication.
  *
- * @param {ClassValue[]} inputs - The classes to add or merged.
- * @returns {string} Returns a string of class names.
+ * @param {ClassValue[]} inputs - Class values to merge (strings, objects, arrays, or falsy values).
+ * @returns {string} A single merged className string with Tailwind conflicts resolved.
+ *
+ * @example
+ * // Simple class concatenation
+ * cn('px-4', 'py-2') // 'px-4 py-2'
+ *
+ * @example
+ * // Conditional classes with objects
+ * cn('btn', { 'btn-primary': isPrimary, 'btn-disabled': isDisabled })
+ *
+ * @example
+ * // Tailwind conflict resolution (last value wins)
+ * cn('px-2', 'px-4') // 'px-4'
+ * cn('text-red-500', 'text-blue-500') // 'text-blue-500'
+ *
+ * @example
+ * // Mixed inputs with arrays and conditionals
+ * cn('base-class', ['array-class'], isActive && 'active', { 'hidden': !isVisible })
+ *
+ * @example
+ * // Component prop merging (common pattern)
+ * cn('default-styles', className) // Allows className prop to override defaults
  */
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs))
@@ -21,7 +43,6 @@ export function cn(...inputs: ClassValue[]): string {
 
 /**
  * Generate a url for the application.
- * Similar to Laravel's url() helper function.
  *
  * @param {string} path - The path to generate the url for.
  * @returns {URL} Returns the generated url.
@@ -47,7 +68,6 @@ export function url(path: string = '/'): URL {
 
 /**
  * Translate a given key with optional replacements.
- * Similar to Laravel's __() helper function.
  *
  * @param {TranslationKeys} key - The translation key to look up.
  * @param {Replacements} replacements - Optional key-value pairs for placeholder replacements.
