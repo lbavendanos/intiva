@@ -244,9 +244,16 @@ let translator: Translator | null = null
  * NEXT_PUBLIC_APP_LOCALE environment variable.
  *
  * @returns {Translator} The translator instance.
+ * @throws {Error} If NEXT_PUBLIC_APP_LOCALE environment variable is not defined.
  */
 export function getTranslator(): Translator {
   if (!translator) {
+    if (!process.env.NEXT_PUBLIC_APP_LOCALE) {
+      throw new Error(
+        'NEXT_PUBLIC_APP_LOCALE environment variable is not defined. Please set it in your .env file.',
+      )
+    }
+
     const locale = parseLocale(process.env.NEXT_PUBLIC_APP_LOCALE)
 
     translator = new Translator({ en, es }, locale)

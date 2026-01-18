@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+import { getUrlGenerator } from '@/lib/routing/url-generator'
 import {
   getTranslator,
   type Locale,
@@ -20,19 +21,28 @@ export function cn(...inputs: ClassValue[]): string {
 
 /**
  * Generate a url for the application.
+ * Similar to Laravel's url() helper function.
  *
  * @param {string} path - The path to generate the url for.
  * @returns {URL} Returns the generated url.
  * @throws {Error} If NEXT_PUBLIC_APP_URL environment variable is not defined.
+ *
+ * @example
+ * // Generate base URL
+ * url() // URL { href: 'http://localhost:3000/' }
+ *
+ * @example
+ * // Generate URL with path
+ * url('/products') // URL { href: 'http://localhost:3000/products' }
+ *
+ * @example
+ * // Generate URL and manipulate query params
+ * const productUrl = url('/products')
+ * productUrl.searchParams.set('page', '2')
+ * productUrl.toString() // 'http://localhost:3000/products?page=2'
  */
 export function url(path: string = '/'): URL {
-  if (!process.env.NEXT_PUBLIC_APP_URL) {
-    throw new Error(
-      'NEXT_PUBLIC_APP_URL environment variable is not defined. Please set it in your .env file.',
-    )
-  }
-
-  return new URL(path, process.env.NEXT_PUBLIC_APP_URL)
+  return getUrlGenerator().to(path)
 }
 
 /**
