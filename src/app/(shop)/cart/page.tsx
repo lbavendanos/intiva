@@ -3,11 +3,11 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ShoppingBag } from 'lucide-react'
 
-import { getCart } from '@/lib/actions/cart'
 import { __ } from '@/lib/utils'
 import { CartItem, CartSummary } from '@/components/shop'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { getCart } from '@/actions/cart'
 
 export const metadata: Metadata = {
   title: __('cart.page_title'),

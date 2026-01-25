@@ -2,9 +2,9 @@ import { Suspense } from 'react'
 import Link from 'next/link'
 import { ShoppingBag } from 'lucide-react'
 
-import { getCart } from '@/lib/actions/cart'
 import { MiniCart } from '@/components/shop/mini-cart'
 import { Button } from '@/components/ui/button'
+import { getCart } from '@/actions/cart'
 
 export function Header() {
   const appName = process.env.NEXT_PUBLIC_APP_NAME

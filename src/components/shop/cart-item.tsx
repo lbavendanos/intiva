@@ -5,10 +5,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Minus, Plus, X } from 'lucide-react'
 
-import { removeFromCart, updateCartItem } from '@/lib/actions/cart'
 import type { CartLineItem } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { removeFromCart, updateCartItem } from '@/actions/cart'
 
 import { Price } from './price'
 

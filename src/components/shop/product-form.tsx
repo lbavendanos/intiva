@@ -6,7 +6,6 @@ import { Loader2 } from 'lucide-react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import * as z from 'zod'
 
-import { addToCart } from '@/lib/actions/cart'
 import type { Product } from '@/lib/shopify/types'
 import { __, cn } from '@/lib/utils'
 import { useMiniCart } from '@/hooks/use-mini-cart'
@@ -22,6 +21,7 @@ import {
   FieldTitle,
 } from '@/components/ui/field'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { addToCart } from '@/actions/cart'
 
 type ProductFormProps = React.ComponentProps<'form'> & {
   product: Product
