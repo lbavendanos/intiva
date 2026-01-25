@@ -1,8 +1,8 @@
 'use server'
 
 import { revalidateTag } from 'next/cache'
+import { cookies } from 'next/headers'
 
-import { getCartId, setCartId } from '@/lib/cart-cookie'
 import {
   addToCart as addToCartMutation,
   createCart,
@@ -11,6 +11,27 @@ import {
 } from '@/lib/shopify/mutations'
 import { getCart as getCartQuery } from '@/lib/shopify/queries'
 import type { Cart } from '@/lib/shopify/types'
+
+const CART_COOKIE_NAME = 'cartId'
+const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
+
+async function getCartId(): Promise<string | undefined> {
+  const cookieStore = await cookies()
+  return cookieStore.get(CART_COOKIE_NAME)?.value
+}
+
+async function setCartId(cartId: string): Promise<void> {
+  const cookieStore = await cookies()
+  cookieStore.set({
+    name: CART_COOKIE_NAME,
+    value: cartId,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: CART_COOKIE_MAX_AGE,
+  })
+}
 
 export type CartActionResult = {
   success: boolean
