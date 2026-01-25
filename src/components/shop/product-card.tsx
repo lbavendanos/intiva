@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import type { ProductListItem } from '@/lib/shopify/types'
+import { __ } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 
@@ -40,7 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
               />
             ) : (
               <div className="flex h-full items-center justify-center">
-                <span className="text-zinc-400">Sin imagen</span>
+                <span className="text-zinc-400">{__('product.no_image')}</span>
               </div>
             )}
             {!availableForSale && (
@@ -48,7 +49,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 variant="secondary"
                 className="absolute top-2 right-2 bg-zinc-900 text-white"
               >
-                Agotado
+                {__('product.sold_out')}
               </Badge>
             )}
           </div>

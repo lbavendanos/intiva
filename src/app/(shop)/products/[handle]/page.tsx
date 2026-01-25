@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { getProductByHandle, getProducts } from '@/lib/shopify/queries'
-import { url } from '@/lib/utils'
+import { __, url } from '@/lib/utils'
 import {
   Price,
   ProductForm,
@@ -32,7 +32,7 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: 'Producto no encontrado',
+      title: __('product.not_found'),
     }
   }
 
@@ -102,7 +102,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <Separator className="my-6" />
               <div className="prose prose-zinc max-w-none">
                 <h2 className="text-lg font-semibold text-zinc-900">
-                  Descripción
+                  {__('product.description')}
                 </h2>
                 <div
                   className="mt-2 text-sm text-zinc-600"

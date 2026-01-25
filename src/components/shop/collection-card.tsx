@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import type { CollectionCardData } from '@/lib/shopify/queries'
+import { __ } from '@/lib/utils'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
 interface CollectionCardProps {
@@ -30,7 +31,9 @@ export function CollectionCard({ collection }: CollectionCardProps) {
               />
             ) : (
               <div className="flex h-full items-center justify-center">
-                <span className="text-zinc-400">Sin imagen</span>
+                <span className="text-zinc-400">
+                  {__('collection.no_image')}
+                </span>
               </div>
             )}
           </div>

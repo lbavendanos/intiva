@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { getCollectionProducts } from '@/lib/shopify/queries'
+import { __ } from '@/lib/utils'
 import { Pagination, ProductGrid, ProductGridSkeleton } from '@/components/shop'
 
 interface CollectionPageProps {
@@ -18,7 +19,7 @@ export async function generateMetadata({
 
   if (!collection) {
     return {
-      title: 'Colección no encontrada',
+      title: __('collection.not_found'),
     }
   }
 

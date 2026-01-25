@@ -4,19 +4,20 @@ import Link from 'next/link'
 import { ShoppingBag } from 'lucide-react'
 
 import { getCart } from '@/lib/actions/cart'
+import { __ } from '@/lib/utils'
 import { CartItem, CartSummary } from '@/components/shop'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {
-  title: 'Carrito',
-  description: 'Tu carrito de compras',
+  title: __('cart.page_title'),
+  description: __('cart.page_description'),
 }
 
 export default function CartPage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-2xl font-bold">Carrito de compras</h1>
+      <h1 className="mb-8 text-2xl font-bold">{__('cart.page_title')}</h1>
       <Suspense fallback={<CartSkeleton />}>
         <CartContent />
       </Suspense>
@@ -33,9 +34,9 @@ async function CartContent() {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <ShoppingBag className="h-16 w-16 text-zinc-300" />
-        <p className="mt-4 text-lg text-zinc-500">Tu carrito está vacío</p>
+        <p className="mt-4 text-lg text-zinc-500">{__('cart.empty')}</p>
         <Button asChild className="mt-6">
-          <Link href="/products">Explorar productos</Link>
+          <Link href="/products">{__('cart.explore_products')}</Link>
         </Button>
       </div>
     )
@@ -53,7 +54,9 @@ async function CartContent() {
 
       <div className="lg:col-span-1">
         <div className="sticky top-24 rounded-lg border border-zinc-200 p-6">
-          <h2 className="mb-4 text-lg font-semibold">Resumen del pedido</h2>
+          <h2 className="mb-4 text-lg font-semibold">
+            {__('cart.order_summary')}
+          </h2>
           <CartSummary cart={cart} />
         </div>
       </div>

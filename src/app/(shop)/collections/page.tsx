@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
 import { getCollections } from '@/lib/shopify/queries'
+import { __ } from '@/lib/utils'
 import {
   CollectionGrid,
   CollectionGridSkeleton,
@@ -9,8 +10,8 @@ import {
 } from '@/components/shop'
 
 export const metadata: Metadata = {
-  title: 'Colecciones',
-  description: 'Explora nuestras colecciones de productos.',
+  title: __('collections.title'),
+  description: __('collections.description'),
 }
 
 interface CollectionsPageProps {
@@ -36,10 +37,10 @@ export default async function CollectionsPage({
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-zinc-900">Colecciones</h1>
-        <p className="mt-2 text-zinc-600">
-          Explora nuestras colecciones de productos.
-        </p>
+        <h1 className="text-3xl font-bold text-zinc-900">
+          {__('collections.title')}
+        </h1>
+        <p className="mt-2 text-zinc-600">{__('collections.description')}</p>
       </div>
 
       <Suspense fallback={<CollectionGridSkeleton count={6} />}>

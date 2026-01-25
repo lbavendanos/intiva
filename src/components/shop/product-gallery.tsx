@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 
 import type { Image as ShopifyImage } from '@/lib/shopify/types'
-import { cn } from '@/lib/utils'
+import { __, cn } from '@/lib/utils'
 
 interface ProductGalleryProps {
   images: ShopifyImage[]
@@ -18,7 +18,7 @@ export function ProductGallery({ images, productTitle }: ProductGalleryProps) {
     return (
       <div className="aspect-square w-full rounded-lg bg-zinc-100">
         <div className="flex h-full items-center justify-center">
-          <span className="text-zinc-400">Sin imagen</span>
+          <span className="text-zinc-400">{__('product.no_image')}</span>
         </div>
       </div>
     )
@@ -43,7 +43,7 @@ export function ProductGallery({ images, productTitle }: ProductGalleryProps) {
         <div
           className="flex gap-2 overflow-x-auto pb-2"
           role="listbox"
-          aria-label="Galería de imágenes del producto"
+          aria-label={__('product.gallery_aria_label')}
         >
           {images.map((image, index) => (
             <button
@@ -58,11 +58,14 @@ export function ProductGallery({ images, productTitle }: ProductGalleryProps) {
               )}
               role="option"
               aria-selected={selectedIndex === index}
-              aria-label={`Ver imagen ${index + 1}`}
+              aria-label={__('product.view_image', { index: index + 1 })}
             >
               <Image
                 src={image.url}
-                alt={image.altText || `${productTitle} - Imagen ${index + 1}`}
+                alt={
+                  image.altText ||
+                  `${productTitle} - ${__('product.image_alt', { index: index + 1 })}`
+                }
                 fill
                 sizes="80px"
                 className="object-cover"
