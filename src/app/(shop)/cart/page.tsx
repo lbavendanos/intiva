@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 
 import { __ } from '@/lib/utils'
-
-import { CartContent } from './cart-content'
+import { CartContent } from '@/components/shop'
 
 export const metadata: Metadata = {
   title: __('cart.page_title'),

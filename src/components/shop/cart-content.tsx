@@ -5,9 +5,10 @@ import { ShoppingBag } from 'lucide-react'
 
 import { __ } from '@/lib/utils'
 import { useCart } from '@/hooks/use-cart'
-import { CartItem } from '@/components/shop/cart-item'
-import { CartSummary } from '@/components/shop/cart-summary'
 import { Button } from '@/components/ui/button'
+
+import { CartItem } from './cart-item'
+import { CartSummary } from './cart-summary'
 
 export function CartContent() {
   const { cart } = useCart()

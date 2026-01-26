@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { MiniCart } from '@/components/shop/mini-cart'
+import { MiniCart } from '@/components/shop'
 
 export function Header() {
   const appName = process.env.NEXT_PUBLIC_APP_NAME
