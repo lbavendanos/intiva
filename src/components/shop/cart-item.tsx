@@ -1,14 +1,13 @@
 'use client'
 
-import { useTransition } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Minus, Plus, X } from 'lucide-react'
 
 import type { CartLineItem } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
+import { useCart } from '@/hooks/use-cart'
 import { Button } from '@/components/ui/button'
-import { removeFromCart, updateCartItem } from '@/actions/cart'
 
 import { Price } from './price'
 
@@ -17,7 +16,7 @@ type CartItemProps = {
 }
 
 export function CartItem({ item }: CartItemProps) {
-  const [isPending, startTransition] = useTransition()
+  const { updateQuantity, removeItem } = useCart()
 
   const { id, quantity, merchandise, cost } = item
   const { product, selectedOptions } = merchandise
@@ -28,23 +27,15 @@ export function CartItem({ item }: CartItemProps) {
     .join(' / ')
 
   const handleUpdateQuantity = (newQuantity: number) => {
-    startTransition(async () => {
-      await updateCartItem(id, newQuantity)
-    })
+    updateQuantity(id, newQuantity)
   }
 
   const handleRemove = () => {
-    startTransition(async () => {
-      await removeFromCart(id)
-    })
+    removeItem(id)
   }
 
   return (
-    <div
-      className="flex gap-4 py-4"
-      data-testid="cart-item"
-      aria-busy={isPending}
-    >
+    <div className="flex gap-4 py-4" data-testid="cart-item">
       <Link
         href={`/products/${product.handle}`}
         className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-zinc-100"
@@ -84,7 +75,6 @@ export function CartItem({ item }: CartItemProps) {
             size="icon"
             className="h-6 w-6"
             onClick={handleRemove}
-            disabled={isPending}
             aria-label={__('cart.item.remove', { name: product.title })}
           >
             <X className="h-4 w-4" />
@@ -98,7 +88,7 @@ export function CartItem({ item }: CartItemProps) {
               size="icon"
               className="h-7 w-7"
               onClick={() => handleUpdateQuantity(quantity - 1)}
-              disabled={isPending || quantity <= 1}
+              disabled={quantity <= 1}
               aria-label={__('cart.item.decrease')}
             >
               <Minus className="h-3 w-3" />
@@ -109,7 +99,6 @@ export function CartItem({ item }: CartItemProps) {
               size="icon"
               className="h-7 w-7"
               onClick={() => handleUpdateQuantity(quantity + 1)}
-              disabled={isPending}
               aria-label={__('cart.item.increase')}
             >
               <Plus className="h-3 w-3" />

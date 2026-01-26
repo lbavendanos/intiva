@@ -1,8 +1,9 @@
 import Link from 'next/link'
+import { ShoppingBag } from 'lucide-react'
 
-import { MiniCart } from '@/components/shop/mini-cart'
+import { Button } from '@/components/ui/button'
 
-export function Header() {
+export function HeaderSkeleton() {
   const appName = process.env.NEXT_PUBLIC_APP_NAME
 
   return (
@@ -31,7 +32,14 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <MiniCart />
+          <Button
+            variant="ghost"
+            size="icon"
+            disabled
+            aria-label="Cargando carrito"
+          >
+            <ShoppingBag className="h-5 w-5" />
+          </Button>
         </div>
       </div>
     </header>

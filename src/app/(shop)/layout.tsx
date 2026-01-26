@@ -1,5 +1,9 @@
-import { MiniCartProvider } from '@/hooks/use-mini-cart'
+import { Suspense } from 'react'
+
+import { CartProvider } from '@/hooks/use-cart'
 import { Header } from '@/components/layout/header'
+import { HeaderSkeleton } from '@/components/layout/header-skeleton'
+import { getCart } from '@/actions/cart'
 
 export default function ShopLayout({
   children,
@@ -7,11 +11,25 @@ export default function ShopLayout({
   children: React.ReactNode
 }>) {
   return (
-    <MiniCartProvider>
-      <div className="flex min-h-screen flex-col">
-        <Header />
-        <main className="flex-1">{children}</main>
-      </div>
-    </MiniCartProvider>
+    <div className="flex min-h-screen flex-col">
+      <Suspense fallback={<HeaderSkeleton />}>
+        <CartProviderWrapper>{children}</CartProviderWrapper>
+      </Suspense>
+    </div>
+  )
+}
+
+async function CartProviderWrapper({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const cart = await getCart()
+
+  return (
+    <CartProvider initialCart={cart}>
+      <Header />
+      <main className="flex-1">{children}</main>
+    </CartProvider>
   )
 }

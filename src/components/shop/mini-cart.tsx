@@ -2,9 +2,8 @@
 
 import { ShoppingBag } from 'lucide-react'
 
-import type { Cart } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
-import { useMiniCart } from '@/hooks/use-mini-cart'
+import { useCart } from '@/hooks/use-cart'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -17,12 +16,8 @@ import {
 import { CartItem } from './cart-item'
 import { CartSummary } from './cart-summary'
 
-type MiniCartProps = {
-  cart: Cart | null
-}
-
-export function MiniCart({ cart }: MiniCartProps) {
-  const { isOpen, setIsOpen } = useMiniCart()
+export function MiniCart() {
+  const { cart, isOpen, setIsOpen } = useCart()
 
   const itemCount = cart?.totalQuantity ?? 0
   const isEmpty = !cart || cart.lines.length === 0

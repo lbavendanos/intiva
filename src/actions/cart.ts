@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidateTag } from 'next/cache'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { cookies } from 'next/headers'
 
 import {
@@ -40,6 +40,10 @@ export type CartActionResult = {
 }
 
 export async function getCart(): Promise<Cart | null> {
+  'use cache: private'
+  cacheTag('cart')
+  cacheLife({ stale: 60 }) // 1 minute cache in browser memory
+
   const cartId = await getCartId()
 
   if (!cartId) {
@@ -76,7 +80,7 @@ export async function addToCart(
 
     if (cart) {
       await setCartId(cart.id)
-      revalidateTag('cart', 'max')
+      updateTag('cart')
     }
 
     return {
@@ -98,7 +102,7 @@ export async function addToCart(
     }
   }
 
-  revalidateTag('cart', 'max')
+  updateTag('cart')
 
   return {
     success: true,
@@ -137,7 +141,7 @@ export async function updateCartItem(
     }
   }
 
-  revalidateTag('cart', 'max')
+  updateTag('cart')
 
   return {
     success: true,
@@ -168,7 +172,7 @@ export async function removeFromCart(
     }
   }
 
-  revalidateTag('cart', 'max')
+  updateTag('cart')
 
   return {
     success: true,

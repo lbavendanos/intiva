@@ -8,7 +8,7 @@ import * as z from 'zod'
 
 import type { Product } from '@/lib/shopify/types'
 import { __, cn } from '@/lib/utils'
-import { useMiniCart } from '@/hooks/use-mini-cart'
+import { useCart } from '@/hooks/use-cart'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -66,7 +66,7 @@ export function ProductForm({
   ...props
 }: ProductFormProps) {
   const [isPending, startTransition] = useTransition()
-  const { openMiniCart } = useMiniCart()
+  const { openCart } = useCart()
   const formSchema = createFormSchema(product)
   const defaultValues = createDefaultValues(product)
 
@@ -129,7 +129,7 @@ export function ProductForm({
       const result = await addToCart(selectedVariant.id, 1)
 
       if (result.success) {
-        openMiniCart()
+        openCart()
       }
     })
   }
