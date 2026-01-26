@@ -1,8 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -21,7 +19,6 @@ import {
   FieldTitle,
 } from '@/components/ui/field'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { addToCart } from '@/actions/cart'
 
 type ProductFormProps = React.ComponentProps<'form'> & {
   product: Product
@@ -65,8 +62,7 @@ export function ProductForm({
   className,
   ...props
 }: ProductFormProps) {
-  const [isPending, startTransition] = useTransition()
-  const { openCart } = useCart()
+  const { addItem, openCart } = useCart()
   const formSchema = createFormSchema(product)
   const defaultValues = createDefaultValues(product)
 
@@ -125,13 +121,17 @@ export function ProductForm({
   const handleSubmit = () => {
     if (!selectedVariant) return
 
-    startTransition(async () => {
-      const result = await addToCart(selectedVariant.id, 1)
-
-      if (result.success) {
-        openCart()
-      }
+    addItem({
+      variant: selectedVariant,
+      product: {
+        id: product.id,
+        title: product.title,
+        handle: product.handle,
+        featuredImage: product.featuredImage,
+      },
+      quantity: 1,
     })
+    openCart()
   }
 
   return (
@@ -224,21 +224,8 @@ export function ProductForm({
             </p>
           )}
 
-        <Button
-          type="submit"
-          disabled={!isAvailableForSale || isPending}
-          className="w-full"
-        >
-          {isPending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {__('product.adding')}
-            </>
-          ) : isSoldOut ? (
-            __('product.sold_out')
-          ) : (
-            __('product.add_to_cart')
-          )}
+        <Button type="submit" disabled={!isAvailableForSale} className="w-full">
+          {isSoldOut ? __('product.sold_out') : __('product.add_to_cart')}
         </Button>
       </FieldGroup>
     </form>
