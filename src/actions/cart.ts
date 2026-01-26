@@ -42,7 +42,7 @@ export type CartActionResult = {
 export async function getCart(): Promise<Cart | null> {
   'use cache: private'
   cacheTag('cart')
-  cacheLife({ stale: 60 }) // 1 minute cache in browser memory
+  cacheLife('seconds')
 
   const cartId = await getCartId()
 

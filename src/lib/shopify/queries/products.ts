@@ -1,5 +1,3 @@
-import { cacheLife } from 'next/cache'
-
 import { extractNodesFromEdges, storefrontQuery } from '../client'
 import { computePricing } from '../common'
 import {
@@ -95,9 +93,6 @@ const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
 export async function getProductByHandle(
   handle: string,
 ): Promise<Product | null> {
-  'use cache'
-  cacheLife('hours')
-
   const data = await storefrontQuery<GetProductByHandleQueryResponse>(
     GET_PRODUCT_BY_HANDLE_QUERY,
     {
@@ -143,9 +138,6 @@ export async function getProductRecommendations(
   productId: string,
   intent: ProductRecommendationIntent = 'RELATED',
 ): Promise<ProductListItem[]> {
-  'use cache'
-  cacheLife('hours')
-
   const data = await storefrontQuery<GetProductRecommendationsQueryResponse>(
     GET_PRODUCT_RECOMMENDATIONS_QUERY,
     {
