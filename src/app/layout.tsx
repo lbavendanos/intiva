@@ -1,9 +1,14 @@
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
-import './globals.css'
-
 import { url } from '@/lib/utils'
+import { getCart } from '@/actions/cart'
+import { Header } from '@/components/layout/header'
+import { HeaderSkeleton } from '@/components/layout/header-skeleton'
+import { CartProvider } from '@/components/shop/cart-provider'
+
+import './globals.css'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -78,8 +83,27 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="flex min-h-screen flex-col">
+          <Suspense fallback={<HeaderSkeleton />}>
+            <CartProviderWrapper>{children}</CartProviderWrapper>
+          </Suspense>
+        </div>
       </body>
     </html>
+  )
+}
+
+async function CartProviderWrapper({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const cart = await getCart()
+
+  return (
+    <CartProvider initialCart={cart}>
+      <Header />
+      <main className="flex-1">{children}</main>
+    </CartProvider>
   )
 }
