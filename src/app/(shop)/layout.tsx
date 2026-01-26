@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 
-import { CartProvider } from '@/hooks/use-cart'
+import { CartProvider } from '@/components/shop'
 import { Header } from '@/components/layout/header'
 import { HeaderSkeleton } from '@/components/layout/header-skeleton'
 import { getCart } from '@/actions/cart'

@@ -14,3 +14,9 @@ export { CartContent } from './cart-content'
 export { CartItem } from './cart-item'
 export { CartSummary } from './cart-summary'
 export { MiniCart } from './mini-cart'
+export {
+  CartProvider,
+  CartContext,
+  type AddItemPayload,
+  type CartContextValue,
+} from './cart-provider'
