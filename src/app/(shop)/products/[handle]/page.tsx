@@ -3,13 +3,11 @@ import { notFound } from 'next/navigation'
 
 import { getProductByHandle, getProducts } from '@/lib/shopify/queries'
 import { __, url } from '@/lib/utils'
-import {
-  Price,
-  ProductForm,
-  ProductGallery,
-  ProductJsonLd,
-  RelatedProducts,
-} from '@/components/shop'
+import { Price } from '@/components/shop/price'
+import { ProductForm } from '@/components/shop/product-form'
+import { ProductGallery } from '@/components/shop/product-gallery'
+import { ProductJsonLd } from '@/components/shop/product-json-ld'
+import { RelatedProducts } from '@/components/shop/related-products'
 import { Separator } from '@/components/ui/separator'
 
 type ProductPageProps = {

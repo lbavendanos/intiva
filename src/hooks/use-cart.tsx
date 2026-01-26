@@ -2,7 +2,10 @@
 
 import { useContext } from 'react'
 
-import { CartContext, type CartContextValue } from '@/components/shop/cart-provider'
+import {
+  CartContext,
+  type CartContextValue,
+} from '@/components/shop/cart-provider'
 
 export function useCart(): CartContextValue {
   const context = useContext(CartContext)

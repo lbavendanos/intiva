@@ -6,8 +6,8 @@ import { __ } from '@/lib/utils'
 import {
   CollectionGrid,
   CollectionGridSkeleton,
-  Pagination,
-} from '@/components/shop'
+} from '@/components/shop/collection-grid'
+import { Pagination } from '@/components/shop/pagination'
 
 export const metadata: Metadata = {
   title: __('collections.title'),

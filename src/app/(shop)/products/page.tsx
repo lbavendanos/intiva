@@ -3,7 +3,11 @@ import type { Metadata } from 'next'
 
 import { getProducts } from '@/lib/shopify/queries'
 import { __ } from '@/lib/utils'
-import { Pagination, ProductGrid, ProductGridSkeleton } from '@/components/shop'
+import { Pagination } from '@/components/shop/pagination'
+import {
+  ProductGrid,
+  ProductGridSkeleton,
+} from '@/components/shop/product-grid'
 
 export const metadata: Metadata = {
   title: __('products.title'),

@@ -4,7 +4,11 @@ import { notFound } from 'next/navigation'
 
 import { getCollectionProducts } from '@/lib/shopify/queries'
 import { __ } from '@/lib/utils'
-import { Pagination, ProductGrid, ProductGridSkeleton } from '@/components/shop'
+import { Pagination } from '@/components/shop/pagination'
+import {
+  ProductGrid,
+  ProductGridSkeleton,
+} from '@/components/shop/product-grid'
 
 interface CollectionPageProps {
   params: Promise<{ handle: string }>

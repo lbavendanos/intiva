@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 
-import { CartProvider } from '@/components/shop'
 import { Header } from '@/components/layout/header'
 import { HeaderSkeleton } from '@/components/layout/header-skeleton'
+import { CartProvider } from '@/components/shop/cart-provider'
 import { getCart } from '@/actions/cart'
 
 export default function ShopLayout({
