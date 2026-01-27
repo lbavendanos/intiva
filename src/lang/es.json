@@ -1,4 +1,5 @@
 {
+  "cart.loading": "Cargando carrito",
   "cart.aria_label": "Carrito de compras, :count artículos",
   "cart.title": "Carrito (:count)",
   "cart.page_title": "Carrito de compras",
@@ -19,6 +20,7 @@
   "cart.item.no_image": "Sin imagen",
   "products.title": "Productos",
   "products.description": "Explora nuestra colección completa de productos.",
+  "products.empty": "No se encontraron productos",
   "product.not_found": "Producto no encontrado",
   "product.description": "Descripción",
   "product.no_image": "Sin imagen",
@@ -34,6 +36,7 @@
   "product.invalid_option": ":option inválido",
   "collections.title": "Colecciones",
   "collections.description": "Explora nuestras colecciones de productos.",
+  "collections.empty": "No se encontraron colecciones",
   "collection.not_found": "Colección no encontrada",
   "collection.no_image": "Sin imagen",
   "pagination.aria_label": "Paginación",
