@@ -29,7 +29,6 @@ export type AddItemPayload = {
 }
 
 type OptimisticAction =
-  | { type: 'ADD_ITEM'; payload: AddItemPayload }
   | { type: 'UPDATE_QUANTITY'; lineId: string; quantity: number }
   | { type: 'REMOVE_ITEM'; lineId: string }
 
@@ -54,52 +53,11 @@ function calculateCartTotals(lines: CartLineItem[]): {
   return { subtotalAmount, totalAmount: subtotalAmount }
 }
 
-function createOptimisticCartLineItem(payload: AddItemPayload): CartLineItem {
-  const { variant, product, quantity } = payload
-  const totalAmount = multiplyMoney(variant.price, quantity)
-
-  return {
-    id: `optimistic-${variant.id}-${Date.now()}`,
-    quantity,
-    merchandise: {
-      id: variant.id,
-      title: variant.title,
-      selectedOptions: variant.selectedOptions,
-      product: {
-        id: product.id,
-        title: product.title,
-        handle: product.handle,
-        featuredImage: product.featuredImage,
-      },
-      price: variant.price,
-      compareAtPrice: variant.compareAtPrice,
-    },
-    cost: {
-      totalAmount,
-      amountPerQuantity: variant.price,
-      compareAtAmountPerQuantity: variant.compareAtPrice,
-    },
-  }
-}
-
 function cartReducer(
   state: Cart | null,
   action: OptimisticAction,
 ): Cart | null {
   if (!state) {
-    if (action.type === 'ADD_ITEM') {
-      const newLineItem = createOptimisticCartLineItem(action.payload)
-      return {
-        id: `optimistic-cart-${Date.now()}`,
-        checkoutUrl: '',
-        totalQuantity: action.payload.quantity,
-        lines: [newLineItem],
-        cost: {
-          subtotalAmount: newLineItem.cost.totalAmount,
-          totalAmount: newLineItem.cost.totalAmount,
-        },
-      }
-    }
     return state
   }
 
@@ -135,38 +93,6 @@ function cartReducer(
         newLines.length > 0 ? calculateCartTotals(newLines) : state.cost
       return { ...state, lines: newLines, totalQuantity, cost }
     }
-    case 'ADD_ITEM': {
-      const newLineItem = createOptimisticCartLineItem(action.payload)
-      const existingLineIndex = state.lines.findIndex(
-        (line) => line.merchandise.id === action.payload.variant.id,
-      )
-
-      let newLines: CartLineItem[]
-      if (existingLineIndex >= 0) {
-        newLines = state.lines.map((line, index) => {
-          if (index !== existingLineIndex) return line
-          const newQuantity = line.quantity + action.payload.quantity
-          const newTotalAmount = multiplyMoney(
-            line.cost.amountPerQuantity,
-            newQuantity,
-          )
-          return {
-            ...line,
-            quantity: newQuantity,
-            cost: { ...line.cost, totalAmount: newTotalAmount },
-          }
-        })
-      } else {
-        newLines = [newLineItem, ...state.lines]
-      }
-
-      const totalQuantity = newLines.reduce(
-        (sum, line) => sum + line.quantity,
-        0,
-      )
-      const cost = calculateCartTotals(newLines)
-      return { ...state, lines: newLines, totalQuantity, cost }
-    }
     default:
       return state
   }
@@ -174,10 +100,6 @@ function cartReducer(
 
 export type UseCartReturn = {
   cart: Cart | null
-  isOpen: boolean
-  setIsOpen: (open: boolean) => void
-  openCart: () => void
-  closeCart: () => void
   isPending: boolean
   updateQuantity: (lineId: string, quantity: number) => void
   removeItem: (lineId: string) => void
@@ -191,7 +113,7 @@ export function useCart(): UseCartReturn {
     throw new Error('useCart must be used within a CartProvider')
   }
 
-  const { cartPromise, isOpen, setIsOpen, openCart, closeCart } = context
+  const { cartPromise } = context
 
   const initialCart = use(cartPromise)
   const [isPending, startTransition] = useTransition()
@@ -216,17 +138,12 @@ export function useCart(): UseCartReturn {
 
   const addItem = (payload: AddItemPayload) => {
     startTransition(async () => {
-      addOptimisticUpdate({ type: 'ADD_ITEM', payload })
       await addToCartAction(payload.variant.id, payload.quantity)
     })
   }
 
   return {
     cart: optimisticCart,
-    isOpen,
-    setIsOpen,
-    openCart,
-    closeCart,
     isPending,
     updateQuantity,
     removeItem,

@@ -1,5 +1,7 @@
 'use client'
 
+import { startTransition, useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { ShoppingBag } from 'lucide-react'
 
 import { __ } from '@/lib/utils'
@@ -17,7 +19,25 @@ import { CartItem } from './cart-item'
 import { CartSummary } from './cart-summary'
 
 export function MiniCart() {
-  const { cart, isOpen, setIsOpen, updateQuantity, removeItem } = useCart()
+  const pathname = usePathname()
+  const { cart, updateQuantity, removeItem } = useCart()
+  const [isOpen, setIsOpen] = useState(false)
+  const prevQuantityRef = useRef(cart?.totalQuantity ?? 0)
+
+  const isCartPage = pathname === '/cart'
+
+  useEffect(() => {
+    const currentQuantity = cart?.totalQuantity ?? 0
+    const prevQuantity = prevQuantityRef.current
+
+    if (currentQuantity > prevQuantity && !isCartPage) {
+      startTransition(() => {
+        setIsOpen((open) => (open ? open : true))
+      })
+    }
+
+    prevQuantityRef.current = currentQuantity
+  }, [cart?.totalQuantity, isCartPage])
 
   const itemCount = cart?.totalQuantity ?? 0
   const isEmpty = !cart || cart.lines.length === 0

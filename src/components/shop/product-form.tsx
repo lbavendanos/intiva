@@ -63,7 +63,7 @@ export function ProductForm({
   className,
   ...props
 }: ProductFormProps) {
-  const { addItem, openCart } = useCart()
+  const { addItem } = useCart()
   const formSchema = createFormSchema(product)
   const defaultValues = createDefaultValues(product)
 
@@ -132,7 +132,6 @@ export function ProductForm({
       },
       quantity: 1,
     })
-    openCart()
   }
 
   return (
