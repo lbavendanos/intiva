@@ -1,11 +1,9 @@
-import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
 import { url } from '@/lib/utils'
 import { getCart } from '@/actions/cart'
 import { Header } from '@/components/layout/header'
-import { HeaderSkeleton } from '@/components/layout/header-skeleton'
 import { CartProvider } from '@/components/shop/cart-provider'
 
 import './globals.css'
@@ -77,6 +75,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const appLocale = process.env.NEXT_PUBLIC_APP_LOCALE
+  const cartPromise = getCart()
 
   return (
     <html lang={appLocale}>
@@ -84,26 +83,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex min-h-screen flex-col">
-          <Suspense fallback={<HeaderSkeleton />}>
-            <CartProviderWrapper>{children}</CartProviderWrapper>
-          </Suspense>
+          <CartProvider cartPromise={cartPromise}>
+            <Header />
+            <main className="flex-1">{children}</main>
+          </CartProvider>
         </div>
       </body>
     </html>
-  )
-}
-
-async function CartProviderWrapper({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const cart = await getCart()
-
-  return (
-    <CartProvider initialCart={cart}>
-      <Header />
-      <main className="flex-1">{children}</main>
-    </CartProvider>
   )
 }

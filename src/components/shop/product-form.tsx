@@ -19,6 +19,7 @@ import {
   FieldTitle,
 } from '@/components/ui/field'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type ProductFormProps = React.ComponentProps<'form'> & {
   product: Product
@@ -229,5 +230,21 @@ export function ProductForm({
         </Button>
       </FieldGroup>
     </form>
+  )
+}
+
+export function ProductFormSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="space-y-3">
+        <Skeleton className="h-4 w-16" />
+        <div className="flex flex-wrap gap-3">
+          <Skeleton className="h-10 w-16" />
+          <Skeleton className="h-10 w-16" />
+          <Skeleton className="h-10 w-16" />
+        </div>
+      </div>
+      <Skeleton className="h-10 w-full" />
+    </div>
   )
 }

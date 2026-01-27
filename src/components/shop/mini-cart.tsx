@@ -76,3 +76,16 @@ export function MiniCart() {
     </Sheet>
   )
 }
+
+export function MiniCartSkeleton() {
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      disabled
+      aria-label={__('cart.loading')}
+    >
+      <ShoppingBag className="h-5 w-5" />
+    </Button>
+  )
+}

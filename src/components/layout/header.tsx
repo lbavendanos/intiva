@@ -1,6 +1,7 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
 
-import { MiniCart } from '@/components/shop/mini-cart'
+import { MiniCart, MiniCartSkeleton } from '@/components/shop/mini-cart'
 
 export function Header() {
   const appName = process.env.NEXT_PUBLIC_APP_NAME
@@ -31,7 +32,9 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <MiniCart />
+          <Suspense fallback={<MiniCartSkeleton />}>
+            <MiniCart />
+          </Suspense>
         </div>
       </div>
     </header>
