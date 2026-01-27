@@ -2,31 +2,12 @@
 
 import { use, useContext, useOptimistic, useTransition } from 'react'
 
-import type {
-  Cart,
-  CartLineItem,
-  Image,
-  Maybe,
-  Money,
-  ProductVariant,
-} from '@/lib/shopify/types'
+import type { Cart, CartLineItem, Money } from '@/lib/shopify/types'
 import {
-  addToCart as addToCartAction,
   removeFromCart as removeFromCartAction,
   updateCartItem as updateCartItemAction,
 } from '@/actions/cart'
 import { CartContext } from '@/components/shop/cart-provider'
-
-export type AddItemPayload = {
-  variant: ProductVariant
-  product: {
-    id: string
-    title: string
-    handle: string
-    featuredImage: Maybe<Image>
-  }
-  quantity: number
-}
 
 type OptimisticAction =
   | { type: 'UPDATE_QUANTITY'; lineId: string; quantity: number }
@@ -103,7 +84,6 @@ export type UseCartReturn = {
   isPending: boolean
   updateQuantity: (lineId: string, quantity: number) => void
   removeItem: (lineId: string) => void
-  addItem: (payload: AddItemPayload) => void
 }
 
 export function useCart(): UseCartReturn {
@@ -136,17 +116,10 @@ export function useCart(): UseCartReturn {
     })
   }
 
-  const addItem = (payload: AddItemPayload) => {
-    startTransition(async () => {
-      await addToCartAction(payload.variant.id, payload.quantity)
-    })
-  }
-
   return {
     cart: optimisticCart,
     isPending,
     updateQuantity,
     removeItem,
-    addItem,
   }
 }

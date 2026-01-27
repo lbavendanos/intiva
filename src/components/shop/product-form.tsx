@@ -1,12 +1,13 @@
 'use client'
 
+import { useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import * as z from 'zod'
 
 import type { Product } from '@/lib/shopify/types'
 import { __, cn } from '@/lib/utils'
-import { useCart } from '@/hooks/use-cart'
+import { addToCart } from '@/actions/cart'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -63,7 +64,7 @@ export function ProductForm({
   className,
   ...props
 }: ProductFormProps) {
-  const { addItem } = useCart()
+  const [isPending, startTransition] = useTransition()
   const formSchema = createFormSchema(product)
   const defaultValues = createDefaultValues(product)
 
@@ -122,15 +123,8 @@ export function ProductForm({
   const handleSubmit = () => {
     if (!selectedVariant) return
 
-    addItem({
-      variant: selectedVariant,
-      product: {
-        id: product.id,
-        title: product.title,
-        handle: product.handle,
-        featuredImage: product.featuredImage,
-      },
-      quantity: 1,
+    startTransition(async () => {
+      await addToCart(selectedVariant.id, 1)
     })
   }
 
@@ -224,8 +218,16 @@ export function ProductForm({
             </p>
           )}
 
-        <Button type="submit" disabled={!isAvailableForSale} className="w-full">
-          {isSoldOut ? __('product.sold_out') : __('product.add_to_cart')}
+        <Button
+          type="submit"
+          disabled={!isAvailableForSale || isPending}
+          className="w-full"
+        >
+          {isSoldOut
+            ? __('product.sold_out')
+            : isPending
+              ? __('product.adding')
+              : __('product.add_to_cart')}
         </Button>
       </FieldGroup>
     </form>
