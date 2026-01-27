@@ -9,11 +9,13 @@ import {
 } from '@/lib/shopify/queries'
 import type { Product, ProductListItem } from '@/lib/shopify/types'
 
+const PRODUCTS_CACHE_TAG = 'products'
+
 export async function getProductByHandle(
   handle: string,
 ): Promise<Product | null> {
   'use cache'
-  cacheTag('products', `product-${handle}`)
+  cacheTag(PRODUCTS_CACHE_TAG, `product-${handle}`)
   cacheLife('hours')
 
   return getProductByHandleQuery(handle)
@@ -24,7 +26,7 @@ export async function getProductRecommendations(
   intent: ProductRecommendationIntent = 'RELATED',
 ): Promise<ProductListItem[]> {
   'use cache'
-  cacheTag('products', `product-recommendations-${productId}`)
+  cacheTag(PRODUCTS_CACHE_TAG, `product-recommendations-${productId}`)
   cacheLife('hours')
 
   return getProductRecommendationsQuery(productId, intent)

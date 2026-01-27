@@ -14,6 +14,7 @@ import type { Cart } from '@/lib/shopify/types'
 
 const CART_COOKIE_NAME = 'cartId'
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
+const CART_CACHE_TAG = 'cart'
 
 async function getCartId(): Promise<string | undefined> {
   const cookieStore = await cookies()
@@ -41,7 +42,7 @@ export type CartActionResult = {
 
 export async function getCart(): Promise<Cart | null> {
   'use cache: private'
-  cacheTag('cart')
+  cacheTag(CART_CACHE_TAG)
   cacheLife('seconds')
 
   const cartId = await getCartId()
@@ -80,7 +81,7 @@ export async function addToCart(
 
     if (cart) {
       await setCartId(cart.id)
-      updateTag('cart')
+      updateTag(CART_CACHE_TAG)
     }
 
     return {
@@ -102,7 +103,7 @@ export async function addToCart(
     }
   }
 
-  updateTag('cart')
+  updateTag(CART_CACHE_TAG)
 
   return {
     success: true,
@@ -141,7 +142,7 @@ export async function updateCartItem(
     }
   }
 
-  updateTag('cart')
+  updateTag(CART_CACHE_TAG)
 
   return {
     success: true,
@@ -172,7 +173,7 @@ export async function removeFromCart(
     }
   }
 
-  updateTag('cart')
+  updateTag(CART_CACHE_TAG)
 
   return {
     success: true,
