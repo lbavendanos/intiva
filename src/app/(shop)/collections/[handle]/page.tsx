@@ -10,7 +10,7 @@ import {
   ProductGridSkeleton,
 } from '@/components/shop/product-grid'
 
-interface CollectionPageProps {
+type CollectionPageProps = {
   params: Promise<{ handle: string }>
   searchParams: Promise<{ cursor?: string }>
 }

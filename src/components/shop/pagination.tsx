@@ -5,7 +5,7 @@ import type { PageInfo } from '@/lib/shopify/types'
 import { __, url } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
-interface PaginationProps {
+type PaginationProps = {
   pageInfo: PageInfo
   basePath: string
 }

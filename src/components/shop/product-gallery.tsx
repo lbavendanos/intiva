@@ -6,7 +6,7 @@ import Image from 'next/image'
 import type { Image as ShopifyImage } from '@/lib/shopify/types'
 import { __, cn } from '@/lib/utils'
 
-interface ProductGalleryProps {
+type ProductGalleryProps = {
   images: ShopifyImage[]
   productTitle: string
 }

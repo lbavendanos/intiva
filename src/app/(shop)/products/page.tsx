@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: __('products.description'),
 }
 
-interface ProductsPageProps {
+type ProductsPageProps = {
   searchParams: Promise<{ cursor?: string }>
 }
 

@@ -4,8 +4,9 @@ import Link from 'next/link'
 import type { CollectionCardData } from '@/lib/shopify/queries'
 import { __ } from '@/lib/utils'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
-interface CollectionCardProps {
+type CollectionCardProps = {
   collection: CollectionCardData
 }
 
@@ -20,7 +21,7 @@ export function CollectionCard({ collection }: CollectionCardProps) {
     >
       <Card className="h-full overflow-hidden transition-shadow hover:shadow-lg">
         <CardHeader className="p-0">
-          <div className="relative aspect-[4/3] overflow-hidden bg-zinc-100">
+          <div className="relative aspect-4/3 overflow-hidden bg-zinc-100">
             {image ? (
               <Image
                 src={image.url}
@@ -50,5 +51,20 @@ export function CollectionCard({ collection }: CollectionCardProps) {
         </CardContent>
       </Card>
     </Link>
+  )
+}
+
+export function CollectionCardSkeleton() {
+  return (
+    <Card className="h-full overflow-hidden">
+      <CardHeader className="p-0">
+        <Skeleton className="aspect-4/3 w-full" />
+      </CardHeader>
+      <CardContent className="p-4">
+        <Skeleton className="h-6 w-3/4" />
+        <Skeleton className="mt-2 h-4 w-full" />
+        <Skeleton className="mt-1 h-4 w-2/3" />
+      </CardContent>
+    </Card>
   )
 }

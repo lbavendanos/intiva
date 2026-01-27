@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: __('collections.description'),
 }
 
-interface CollectionsPageProps {
+type CollectionsPageProps = {
   searchParams: Promise<{ cursor?: string }>
 }
 

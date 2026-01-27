@@ -1,9 +1,9 @@
 import type { CollectionCardData } from '@/lib/shopify/queries'
+import { __ } from '@/lib/utils'
 
-import { CollectionCard } from './collection-card'
-import { CollectionCardSkeleton } from './collection-card-skeleton'
+import { CollectionCard, CollectionCardSkeleton } from './collection-card'
 
-interface CollectionGridProps {
+type CollectionGridProps = {
   collections: CollectionCardData[]
 }
 
@@ -11,7 +11,7 @@ export function CollectionGrid({ collections }: CollectionGridProps) {
   if (collections.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <p className="text-lg text-zinc-500">No se encontraron colecciones</p>
+        <p className="text-lg text-zinc-500">{__('collections.empty')}</p>
       </div>
     )
   }
@@ -25,7 +25,7 @@ export function CollectionGrid({ collections }: CollectionGridProps) {
   )
 }
 
-interface CollectionGridSkeletonProps {
+type CollectionGridSkeletonProps = {
   count?: number
 }
 
