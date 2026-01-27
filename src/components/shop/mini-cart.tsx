@@ -17,7 +17,7 @@ import { CartItem } from './cart-item'
 import { CartSummary } from './cart-summary'
 
 export function MiniCart() {
-  const { cart, isOpen, setIsOpen } = useCart()
+  const { cart, isOpen, setIsOpen, updateQuantity, removeItem } = useCart()
 
   const itemCount = cart?.totalQuantity ?? 0
   const isEmpty = !cart || cart.lines.length === 0
@@ -65,7 +65,12 @@ export function MiniCart() {
             <div className="flex-1 overflow-y-auto" data-testid="cart-items">
               <div className="divide-y divide-zinc-200">
                 {cart.lines.map((item) => (
-                  <CartItem key={item.id} item={item} />
+                  <CartItem
+                    key={item.id}
+                    item={item}
+                    updateQuantity={updateQuantity}
+                    removeItem={removeItem}
+                  />
                 ))}
               </div>
             </div>

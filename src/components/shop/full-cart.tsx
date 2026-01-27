@@ -12,7 +12,7 @@ import { CartItem } from './cart-item'
 import { CartSummary } from './cart-summary'
 
 export function FullCart() {
-  const { cart } = useCart()
+  const { cart, updateQuantity, removeItem } = useCart()
 
   const isEmpty = !cart || cart.lines.length === 0
 
@@ -33,7 +33,12 @@ export function FullCart() {
       <div className="lg:col-span-2">
         <div className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 p-4">
           {cart.lines.map((item) => (
-            <CartItem key={item.id} item={item} />
+            <CartItem
+              key={item.id}
+              item={item}
+              updateQuantity={updateQuantity}
+              removeItem={removeItem}
+            />
           ))}
         </div>
       </div>

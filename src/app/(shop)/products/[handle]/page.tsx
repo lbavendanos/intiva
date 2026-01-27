@@ -6,7 +6,10 @@ import { getProducts } from '@/lib/shopify/queries'
 import { __, url } from '@/lib/utils'
 import { getProductByHandle } from '@/actions/products'
 import { Price } from '@/components/shop/price'
-import { ProductForm, ProductFormSkeleton } from '@/components/shop/product-form'
+import {
+  ProductForm,
+  ProductFormSkeleton,
+} from '@/components/shop/product-form'
 import { ProductGallery } from '@/components/shop/product-gallery'
 import { ProductJsonLd } from '@/components/shop/product-json-ld'
 import { RelatedProducts } from '@/components/shop/related-products'

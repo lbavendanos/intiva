@@ -1,23 +1,20 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
 import { Minus, Plus, X } from 'lucide-react'
 
 import type { CartLineItem } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
-import { useCart } from '@/hooks/use-cart'
 import { Button } from '@/components/ui/button'
 
 import { Price } from './price'
 
 type CartItemProps = {
   item: CartLineItem
+  updateQuantity: (lineId: string, quantity: number) => void
+  removeItem: (lineId: string) => void
 }
 
-export function CartItem({ item }: CartItemProps) {
-  const { updateQuantity, removeItem } = useCart()
-
+export function CartItem({ item, updateQuantity, removeItem }: CartItemProps) {
   const { id, quantity, merchandise, cost } = item
   const { product, selectedOptions } = merchandise
 
