@@ -15,6 +15,12 @@ import type { Customer, CustomerAccessToken } from '@/lib/shopify/types'
 const CUSTOMER_ACCESS_TOKEN_COOKIE = 'customerAccessToken'
 const CUSTOMER_ACCESS_TOKEN_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 
+const CUSTOMER_ERROR_CODE = {
+  UNIDENTIFIED_CUSTOMER: 'UNIDENTIFIED_CUSTOMER',
+  TAKEN: 'TAKEN',
+  CUSTOMER_DISABLED: 'CUSTOMER_DISABLED',
+} as const
+
 async function getCustomerAccessToken(): Promise<string | undefined> {
   const cookieStore = await cookies()
   return cookieStore.get(CUSTOMER_ACCESS_TOKEN_COOKIE)?.value
@@ -69,7 +75,7 @@ export async function login(
   if (customerUserErrors.length > 0) {
     const error = customerUserErrors[0]
 
-    if (error.code === 'UNIDENTIFIED_CUSTOMER') {
+    if (error.code === CUSTOMER_ERROR_CODE.UNIDENTIFIED_CUSTOMER) {
       return {
         success: false,
         error: 'auth.login.error.invalid_credentials',
@@ -117,7 +123,10 @@ export async function register(
   if (customerUserErrors.length > 0) {
     const error = customerUserErrors[0]
 
-    if (error.code === 'TAKEN' || error.code === 'CUSTOMER_DISABLED') {
+    if (
+      error.code === CUSTOMER_ERROR_CODE.TAKEN ||
+      error.code === CUSTOMER_ERROR_CODE.CUSTOMER_DISABLED
+    ) {
       return {
         success: false,
         error: 'auth.register.error.email_taken',
