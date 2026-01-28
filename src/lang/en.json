@@ -1,10 +1,5 @@
 {
   "checkout.redirecting": "Redirecting to checkout...",
-  "checkout.empty_cart_title": "Your cart is empty",
-  "checkout.empty_cart_description": "Add some products to your cart before proceeding to checkout.",
-  "checkout.success.title": "Order completed!",
-  "checkout.success.description": "Thank you for your purchase. You will receive a confirmation email shortly.",
-  "checkout.success.continue_shopping": "Continue shopping",
   "cart.loading": "Loading cart",
   "cart.aria_label": "Shopping cart, :count items",
   "cart.title": "Cart (:count)",
