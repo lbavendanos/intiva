@@ -1,4 +1,10 @@
 {
+  "checkout.redirecting": "Redirigiendo al checkout...",
+  "checkout.empty_cart_title": "Tu carrito está vacío",
+  "checkout.empty_cart_description": "Agrega algunos productos a tu carrito antes de proceder al checkout.",
+  "checkout.success.title": "¡Pedido completado!",
+  "checkout.success.description": "Gracias por tu compra. Recibirás un email de confirmación en breve.",
+  "checkout.success.continue_shopping": "Continuar comprando",
   "cart.loading": "Cargando carrito",
   "cart.aria_label": "Carrito de compras, :count artículos",
   "cart.title": "Carrito (:count)",
