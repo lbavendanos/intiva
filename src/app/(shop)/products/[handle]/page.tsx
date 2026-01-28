@@ -1,4 +1,3 @@
-import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
@@ -6,10 +5,7 @@ import { getProducts } from '@/lib/shopify/queries'
 import { __, url } from '@/lib/utils'
 import { getProductByHandle } from '@/actions/products'
 import { Price } from '@/components/shop/price'
-import {
-  ProductForm,
-  ProductFormSkeleton,
-} from '@/components/shop/product-form'
+import { ProductForm } from '@/components/shop/product-form'
 import { ProductGallery } from '@/components/shop/product-gallery'
 import { ProductJsonLd } from '@/components/shop/product-json-ld'
 import { RelatedProducts } from '@/components/shop/related-products'
@@ -99,9 +95,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
           </div>
           <Separator className="my-6" />
-          <Suspense fallback={<ProductFormSkeleton />}>
-            <ProductForm product={product} />
-          </Suspense>
+          <ProductForm product={product} />
           {product.descriptionHtml && (
             <>
               <Separator className="my-6" />
