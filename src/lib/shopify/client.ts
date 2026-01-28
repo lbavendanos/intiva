@@ -12,7 +12,7 @@ export class ShopifyClientError extends Error {
   }
 }
 
-export interface ShopifyClientConfig {
+export type ShopifyClientConfig = {
   storeDomain: string
   storefrontAccessToken: string
   apiVersion?: string
@@ -55,7 +55,7 @@ function getHeaders(config: ShopifyClientConfig): HeadersInit {
   }
 }
 
-export interface StorefrontQueryOptions {
+export type StorefrontQueryOptions = {
   variables?: Record<string, unknown>
 }
 

@@ -9,7 +9,7 @@ import {
 } from '../fragments'
 import type { Collection, Image, PageInfo, ProductListItem } from '../types'
 
-export interface CollectionCardData {
+export type CollectionCardData = {
   id: string
   title: string
   handle: string
@@ -17,12 +17,12 @@ export interface CollectionCardData {
   image: Image | null
 }
 
-export interface GetCollectionsResult {
+export type GetCollectionsResult = {
   collections: CollectionCardData[]
   pageInfo: PageInfo
 }
 
-interface GetCollectionsQueryResponse {
+type GetCollectionsQueryResponse = {
   collections: {
     edges: Array<{ node: CollectionCardData }>
     pageInfo: PageInfo
@@ -71,7 +71,7 @@ export async function getCollections(
   }
 }
 
-interface GetCollectionByHandleQueryResponse {
+type GetCollectionByHandleQueryResponse = {
   collection: Collection | null
 }
 
@@ -99,13 +99,13 @@ export async function getCollectionByHandle(
   return data.collection
 }
 
-export interface GetCollectionProductsResult {
+export type GetCollectionProductsResult = {
   collection: Collection | null
   products: ProductListItem[]
   pageInfo: PageInfo
 }
 
-interface GetCollectionProductsQueryResponse {
+type GetCollectionProductsQueryResponse = {
   collection: {
     id: string
     title: string
