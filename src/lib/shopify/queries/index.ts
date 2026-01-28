@@ -16,3 +16,5 @@ export {
 } from './collections'
 
 export { getCart } from './cart'
+
+export { getCustomer } from './customer'
