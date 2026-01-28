@@ -13,6 +13,7 @@
   "cart.shipping_calculated": "Calculated at checkout",
   "cart.total": "Total",
   "cart.checkout": "Checkout",
+  "cart.checkout_redirecting": "Redirecting...",
   "cart.taxes_note": "Taxes and shipping calculated at checkout",
   "cart.item.remove": "Remove :name from cart",
   "cart.item.decrease": "Decrease quantity",

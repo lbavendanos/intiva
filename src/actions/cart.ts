@@ -2,6 +2,7 @@
 
 import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 import {
   addToCart as addToCartMutation,
@@ -179,4 +180,8 @@ export async function removeFromCart(
     success: true,
     cart,
   }
+}
+
+export async function redirectToCheckout(checkoutUrl: string): Promise<never> {
+  redirect(checkoutUrl)
 }

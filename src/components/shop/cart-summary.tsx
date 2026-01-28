@@ -1,8 +1,8 @@
 import type { Cart } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
+import { CheckoutButton } from './checkout-button'
 import { Price } from './price'
 
 type CartSummaryProps = {
@@ -43,9 +43,7 @@ export function CartSummary({ cart }: CartSummaryProps) {
         />
       </div>
 
-      <Button asChild className="w-full" size="lg">
-        <a href={checkoutUrl}>{__('cart.checkout')}</a>
-      </Button>
+      <CheckoutButton checkoutUrl={checkoutUrl} />
 
       <p className="text-center text-xs text-zinc-500">
         {__('cart.taxes_note')}

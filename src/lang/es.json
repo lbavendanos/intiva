@@ -13,6 +13,7 @@
   "cart.shipping_calculated": "Calculado en checkout",
   "cart.total": "Total",
   "cart.checkout": "Finalizar compra",
+  "cart.checkout_redirecting": "Redirigiendo...",
   "cart.taxes_note": "Impuestos y envío calculados en el checkout",
   "cart.item.remove": "Eliminar :name del carrito",
   "cart.item.decrease": "Disminuir cantidad",
