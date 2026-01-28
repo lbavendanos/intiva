@@ -8,8 +8,8 @@ import {
 import type {
   Cart,
   CartLineItem,
+  CartUserError,
   Connection,
-  UserError,
 } from '@/lib/shopify/types'
 
 type CartLineNode = Omit<CartLineItem, 'merchandise'> & {
@@ -23,28 +23,28 @@ type CartResponse = Omit<Cart, 'lines'> & {
 type CartCreateResponse = {
   cartCreate: {
     cart: CartResponse | null
-    userErrors: UserError[]
+    userErrors: CartUserError[]
   }
 }
 
 type CartLinesAddResponse = {
   cartLinesAdd: {
     cart: CartResponse | null
-    userErrors: UserError[]
+    userErrors: CartUserError[]
   }
 }
 
 type CartLinesUpdateResponse = {
   cartLinesUpdate: {
     cart: CartResponse | null
-    userErrors: UserError[]
+    userErrors: CartUserError[]
   }
 }
 
 type CartLinesRemoveResponse = {
   cartLinesRemove: {
     cart: CartResponse | null
-    userErrors: UserError[]
+    userErrors: CartUserError[]
   }
 }
 
@@ -143,7 +143,7 @@ export type CartLineUpdateInput = {
 
 export type CartCreateResult = {
   cart: Cart | null
-  userErrors: UserError[]
+  userErrors: CartUserError[]
 }
 
 export async function createCart(

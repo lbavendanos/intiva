@@ -8,12 +8,8 @@ import type {
   Customer,
   CustomerAccessToken,
   CustomerAddress,
-  UserError,
+  CustomerUserError,
 } from '@/lib/shopify/types'
-
-type CustomerUserError = UserError & {
-  code?: string
-}
 
 type CustomerResponse = Omit<Customer, 'addresses'> & {
   addresses: Connection<CustomerAddress>

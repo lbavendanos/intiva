@@ -210,6 +210,13 @@ export type ShopifyError = {
 export type UserError = {
   field: Maybe<string[]>
   message: string
+}
+
+export type CartUserError = UserError & {
+  code?: string
+}
+
+export type CustomerUserError = UserError & {
   code?: string
 }
 
