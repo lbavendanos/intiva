@@ -13,6 +13,13 @@ type OptimisticAction =
   | { type: 'UPDATE_QUANTITY'; lineId: string; quantity: number }
   | { type: 'REMOVE_ITEM'; lineId: string }
 
+type UseCartReturn = {
+  cart: Cart | null
+  isPending: boolean
+  updateQuantity: (lineId: string, quantity: number) => void
+  removeItem: (lineId: string) => void
+}
+
 function multiplyMoney(money: Money, quantity: number): Money {
   const amount = (parseFloat(money.amount) * quantity).toFixed(2)
   return { amount, currencyCode: money.currencyCode }
@@ -77,13 +84,6 @@ function cartReducer(
     default:
       return state
   }
-}
-
-export type UseCartReturn = {
-  cart: Cart | null
-  isPending: boolean
-  updateQuantity: (lineId: string, quantity: number) => void
-  removeItem: (lineId: string) => void
 }
 
 export function useCart(): UseCartReturn {
