@@ -96,5 +96,7 @@
   "collection.no_image": "Sin imagen",
   "pagination.aria_label": "Paginación",
   "pagination.previous": "Anterior",
-  "pagination.next": "Siguiente"
+  "pagination.next": "Siguiente",
+  "account.aria_label": "Cuenta",
+  "account.login_aria_label": "Iniciar sesión"
 }
