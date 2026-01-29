@@ -6,7 +6,7 @@ import {
   getProductByHandle as getProductByHandleQuery,
   getProductRecommendations as getProductRecommendationsQuery,
   type ProductRecommendationIntent,
-} from '@/lib/shopify/queries'
+} from '@/lib/shopify/queries/products'
 import type { Product, ProductListItem } from '@/lib/shopify/types'
 
 const PRODUCTS_CACHE_TAG = 'products'

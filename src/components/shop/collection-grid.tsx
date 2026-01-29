@@ -1,4 +1,4 @@
-import type { CollectionCardData } from '@/lib/shopify/queries'
+import type { CollectionCardData } from '@/lib/shopify/queries/collections'
 import { __ } from '@/lib/utils'
 
 import { CollectionCard, CollectionCardSkeleton } from './collection-card'

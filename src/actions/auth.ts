@@ -8,8 +8,8 @@ import {
   createCustomerAccessToken,
   deleteCustomerAccessToken,
   recoverCustomer,
-} from '@/lib/shopify/mutations'
-import { getCustomer } from '@/lib/shopify/queries'
+} from '@/lib/shopify/mutations/customer'
+import { getCustomer } from '@/lib/shopify/queries/customer'
 import type { Customer, CustomerAccessToken } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
 
