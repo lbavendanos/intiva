@@ -18,13 +18,13 @@ import {
 import { Input } from '@/components/ui/input'
 
 const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, { error: __('auth.validation.email_required') })
-    .email({ error: __('auth.validation.email_invalid') }),
-  password: z
-    .string()
-    .min(1, { error: __('auth.validation.password_required') }),
+  email: z.email({
+    error: (issue) =>
+      issue.input === undefined || issue.input === ''
+        ? __('auth.validation.email_required')
+        : __('auth.validation.email_invalid'),
+  }),
+  password: z.string().min(1, __('auth.validation.password_required')),
 })
 
 type LoginFormValues = z.infer<typeof loginSchema>

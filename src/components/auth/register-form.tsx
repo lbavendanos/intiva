@@ -21,20 +21,16 @@ import { Input } from '@/components/ui/input'
 
 const registerSchema = z
   .object({
-    firstName: z
-      .string()
-      .min(1, { error: __('auth.validation.first_name_required') }),
-    lastName: z
-      .string()
-      .min(1, { error: __('auth.validation.last_name_required') }),
-    email: z
-      .string()
-      .min(1, { error: __('auth.validation.email_required') })
-      .email({ error: __('auth.validation.email_invalid') }),
-    password: z.string().min(8, { error: __('auth.validation.password_min') }),
-    confirmPassword: z
-      .string()
-      .min(1, { error: __('auth.validation.password_required') }),
+    firstName: z.string().min(1, __('auth.validation.first_name_required')),
+    lastName: z.string().min(1, __('auth.validation.last_name_required')),
+    email: z.email({
+      error: (issue) =>
+        issue.input === undefined || issue.input === ''
+          ? __('auth.validation.email_required')
+          : __('auth.validation.email_invalid'),
+    }),
+    password: z.string().min(8, __('auth.validation.password_min')),
+    confirmPassword: z.string().min(1, __('auth.validation.password_required')),
     acceptsMarketing: z.boolean(),
   })
   .refine((data) => data.password === data.confirmPassword, {

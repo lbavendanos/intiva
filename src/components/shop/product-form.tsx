@@ -38,7 +38,7 @@ function createFormSchema(product: Product) {
             ? __('product.select_option', { option: optionName })
             : __('product.invalid_option', { option: optionName }),
       })
-      .min(1, { error: __('product.select_option', { option: optionName }) })
+      .min(1, __('product.select_option', { option: optionName }))
   })
 
   return z.object(schemaShape)

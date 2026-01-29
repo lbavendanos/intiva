@@ -17,10 +17,12 @@ import {
 import { Input } from '@/components/ui/input'
 
 const forgotPasswordSchema = z.object({
-  email: z
-    .string()
-    .min(1, { error: __('auth.validation.email_required') })
-    .email({ error: __('auth.validation.email_invalid') }),
+  email: z.email({
+    error: (issue) =>
+      issue.input === undefined || issue.input === ''
+        ? __('auth.validation.email_required')
+        : __('auth.validation.email_invalid'),
+  }),
 })
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
