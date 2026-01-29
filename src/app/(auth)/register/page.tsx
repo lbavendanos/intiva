@@ -8,15 +8,7 @@ export const metadata: Metadata = {
   description: __('auth.register.description'),
 }
 
-type RegisterPageProps = {
-  searchParams: Promise<{ redirect?: string }>
-}
-
-export default async function RegisterPage({
-  searchParams,
-}: RegisterPageProps) {
-  const { redirect } = await searchParams
-
+export default function RegisterPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
@@ -25,7 +17,7 @@ export default async function RegisterPage({
           {__('auth.register.description')}
         </p>
       </div>
-      <RegisterForm redirectTo={redirect || '/account'} />
+      <RegisterForm />
     </div>
   )
 }
