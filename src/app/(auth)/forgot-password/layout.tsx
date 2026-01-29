@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 
-import { isAuthenticated } from '@/actions/auth'
+import { isAuthenticated } from '@/actions/session'
 
 type AuthFormLayoutProps = {
   children: React.ReactNode

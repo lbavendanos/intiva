@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 
 import { __ } from '@/lib/utils'
-import { getCustomerSession } from '@/actions/auth'
+import { getCustomerSession } from '@/actions/session'
 import { AccountNav } from '@/components/account/account-nav'
 import { Skeleton } from '@/components/ui/skeleton'
 

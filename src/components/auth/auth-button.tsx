@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { User } from 'lucide-react'
 
 import { __ } from '@/lib/utils'
-import { isAuthenticated } from '@/actions/auth'
+import { isAuthenticated } from '@/actions/session'
 import { Button } from '@/components/ui/button'
 
 export async function AuthButton() {

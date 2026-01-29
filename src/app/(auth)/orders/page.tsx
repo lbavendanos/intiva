@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 
 import { __ } from '@/lib/utils'
 import { getOrders } from '@/actions/account'
-import { isAuthenticated } from '@/actions/auth'
+import { isAuthenticated } from '@/actions/session'
 import { OrderList } from '@/components/account/order-list'
 
 export const metadata: Metadata = {

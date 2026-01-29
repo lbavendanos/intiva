@@ -1,17 +1,21 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import {
   createCustomer,
   createCustomerAccessToken,
-  deleteCustomerAccessToken,
   recoverCustomer,
+  deleteCustomerAccessToken as revokeCustomerAccessToken,
 } from '@/lib/shopify/mutations/customer'
-import { getCustomer } from '@/lib/shopify/queries/customer'
-import type { Customer, CustomerAccessToken } from '@/lib/shopify/types'
+import type { Customer } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
+
+import {
+  deleteCustomerAccessToken,
+  getCustomerAccessToken,
+  setCustomerAccessToken,
+} from './session'
 
 type AuthActionResult = {
   success: boolean
@@ -26,42 +30,11 @@ type RegisterActionResult = AuthActionResult & {
   customer?: Customer | null
 }
 
-const CUSTOMER_ACCESS_TOKEN_COOKIE = 'customerAccessToken'
-const CUSTOMER_ACCESS_TOKEN_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
-
 const CUSTOMER_ERROR_CODE = {
   UNIDENTIFIED_CUSTOMER: 'UNIDENTIFIED_CUSTOMER',
   TAKEN: 'TAKEN',
   CUSTOMER_DISABLED: 'CUSTOMER_DISABLED',
 } as const
-
-async function getCustomerAccessToken(): Promise<string | undefined> {
-  const cookieStore = await cookies()
-  return cookieStore.get(CUSTOMER_ACCESS_TOKEN_COOKIE)?.value
-}
-
-async function setCustomerAccessToken(
-  accessToken: CustomerAccessToken,
-): Promise<void> {
-  const cookieStore = await cookies()
-  const expiresAt = new Date(accessToken.expiresAt)
-
-  cookieStore.set({
-    name: CUSTOMER_ACCESS_TOKEN_COOKIE,
-    value: accessToken.accessToken,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    expires: expiresAt,
-    maxAge: CUSTOMER_ACCESS_TOKEN_MAX_AGE,
-  })
-}
-
-async function deleteCustomerAccessTokenCookie(): Promise<void> {
-  const cookieStore = await cookies()
-  cookieStore.delete(CUSTOMER_ACCESS_TOKEN_COOKIE)
-}
 
 export async function login(
   email: string,
@@ -154,8 +127,8 @@ export async function logout(): Promise<void> {
   const accessToken = await getCustomerAccessToken()
 
   if (accessToken) {
-    await deleteCustomerAccessToken(accessToken)
-    await deleteCustomerAccessTokenCookie()
+    await revokeCustomerAccessToken(accessToken)
+    await deleteCustomerAccessToken()
   }
 
   redirect('/login')
@@ -177,27 +150,4 @@ export async function recoverPassword(
   return {
     success: true,
   }
-}
-
-export async function getCustomerSession(): Promise<Customer | null> {
-  const accessToken = await getCustomerAccessToken()
-
-  if (!accessToken) {
-    return null
-  }
-
-  const customer = await getCustomer(accessToken)
-
-  // If customer is null, the token might be expired or invalid
-  if (!customer) {
-    await deleteCustomerAccessTokenCookie()
-    return null
-  }
-
-  return customer
-}
-
-export async function isAuthenticated(): Promise<boolean> {
-  const customer = await getCustomerSession()
-  return customer !== null
 }

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { __ } from '@/lib/utils'
-import { getCustomerSession } from '@/actions/auth'
+import { getCustomerSession } from '@/actions/session'
 import { ProfileForm } from '@/components/account/profile-form'
 import {
   Card,

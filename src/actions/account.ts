@@ -1,7 +1,6 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
 
 import { updateCustomer } from '@/lib/shopify/mutations/customer'
 import {
@@ -10,6 +9,8 @@ import {
 } from '@/lib/shopify/queries/customer'
 import type { Customer, Order, PageInfo } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
+
+import { getCustomerAccessToken } from './session'
 
 type ProfileUpdateInput = {
   firstName?: string
@@ -30,13 +31,6 @@ type AccountActionResult = {
 
 type UpdateProfileResult = AccountActionResult & {
   customer?: Customer | null
-}
-
-const CUSTOMER_ACCESS_TOKEN_COOKIE = 'customerAccessToken'
-
-async function getCustomerAccessToken(): Promise<string | undefined> {
-  const cookieStore = await cookies()
-  return cookieStore.get(CUSTOMER_ACCESS_TOKEN_COOKIE)?.value
 }
 
 export async function updateProfile(

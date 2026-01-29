@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 
 import { __ } from '@/lib/utils'
 import { getOrder } from '@/actions/account'
-import { isAuthenticated } from '@/actions/auth'
+import { isAuthenticated } from '@/actions/session'
 import { OrderDetail } from '@/components/account/order-detail'
 
 type OrderDetailPageProps = {
