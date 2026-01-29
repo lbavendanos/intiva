@@ -23,40 +23,6 @@ type GetCustomerResponse = {
   customer: CustomerResponse | null
 }
 
-const GET_CUSTOMER_QUERY = /* GraphQL */ `
-  query getCustomer($customerAccessToken: String!) {
-    customer(customerAccessToken: $customerAccessToken) {
-      ...CustomerFragment
-    }
-  }
-  ${CUSTOMER_FRAGMENT}
-  ${CUSTOMER_ADDRESS_FRAGMENT}
-`
-
-function transformCustomer(customer: CustomerResponse): Customer {
-  return {
-    ...customer,
-    addresses: extractNodesFromEdges(customer.addresses),
-  }
-}
-
-export async function getCustomer(
-  customerAccessToken: string,
-): Promise<Customer | null> {
-  const response = await storefrontQuery<GetCustomerResponse>(
-    GET_CUSTOMER_QUERY,
-    {
-      variables: { customerAccessToken },
-    },
-  )
-
-  if (!response.customer) {
-    return null
-  }
-
-  return transformCustomer(response.customer)
-}
-
 type OrderLineItemResponse = Omit<OrderLineItem, 'variant'> & {
   variant: OrderLineItem['variant']
 }
@@ -70,6 +36,27 @@ type GetCustomerOrdersResponse = {
     orders: Connection<OrderResponse>
   } | null
 }
+
+type GetCustomerOrderResponse = {
+  customer: {
+    orders: Connection<OrderResponse>
+  } | null
+}
+
+export type GetCustomerOrdersResult = {
+  orders: Order[]
+  pageInfo: PageInfo
+}
+
+const GET_CUSTOMER_QUERY = /* GraphQL */ `
+  query getCustomer($customerAccessToken: String!) {
+    customer(customerAccessToken: $customerAccessToken) {
+      ...CustomerFragment
+    }
+  }
+  ${CUSTOMER_FRAGMENT}
+  ${CUSTOMER_ADDRESS_FRAGMENT}
+`
 
 const GET_CUSTOMER_ORDERS_QUERY = /* GraphQL */ `
   query getCustomerOrders(
@@ -104,6 +91,31 @@ const GET_CUSTOMER_ORDERS_QUERY = /* GraphQL */ `
   ${IMAGE_FRAGMENT}
 `
 
+const GET_CUSTOMER_ORDER_QUERY = /* GraphQL */ `
+  query getCustomerOrder($customerAccessToken: String!, $orderId: ID!) {
+    customer(customerAccessToken: $customerAccessToken) {
+      orders(first: 1, query: $orderId) {
+        edges {
+          node {
+            ...OrderFragment
+          }
+        }
+      }
+    }
+  }
+  ${ORDER_FRAGMENT}
+  ${CUSTOMER_ADDRESS_FRAGMENT}
+  ${MONEY_FRAGMENT}
+  ${IMAGE_FRAGMENT}
+`
+
+function transformCustomer(customer: CustomerResponse): Customer {
+  return {
+    ...customer,
+    addresses: extractNodesFromEdges(customer.addresses),
+  }
+}
+
 function transformOrder(order: OrderResponse): Order {
   return {
     ...order,
@@ -111,9 +123,21 @@ function transformOrder(order: OrderResponse): Order {
   }
 }
 
-export type GetCustomerOrdersResult = {
-  orders: Order[]
-  pageInfo: PageInfo
+export async function getCustomer(
+  customerAccessToken: string,
+): Promise<Customer | null> {
+  const response = await storefrontQuery<GetCustomerResponse>(
+    GET_CUSTOMER_QUERY,
+    {
+      variables: { customerAccessToken },
+    },
+  )
+
+  if (!response.customer) {
+    return null
+  }
+
+  return transformCustomer(response.customer)
 }
 
 export async function getCustomerOrders(
@@ -141,30 +165,6 @@ export async function getCustomerOrders(
     pageInfo: response.customer.orders.pageInfo,
   }
 }
-
-type GetCustomerOrderResponse = {
-  customer: {
-    orders: Connection<OrderResponse>
-  } | null
-}
-
-const GET_CUSTOMER_ORDER_QUERY = /* GraphQL */ `
-  query getCustomerOrder($customerAccessToken: String!, $orderId: ID!) {
-    customer(customerAccessToken: $customerAccessToken) {
-      orders(first: 1, query: $orderId) {
-        edges {
-          node {
-            ...OrderFragment
-          }
-        }
-      }
-    }
-  }
-  ${ORDER_FRAGMENT}
-  ${CUSTOMER_ADDRESS_FRAGMENT}
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
-`
 
 export async function getCustomerOrder(
   customerAccessToken: string,

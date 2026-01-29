@@ -70,6 +70,17 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 
 - See `prettier.config.mjs` for import ordering configuration
 
+**File organization:**
+
+Organize module contents in this order:
+
+1. Types (private first, then public exports)
+2. Constants
+3. Private functions
+4. Public functions (exports)
+
+Only export types and functions that are used externally. Keep internal implementation details private.
+
 **TypeScript conventions:**
 
 - See `tsconfig.json` for compiler options

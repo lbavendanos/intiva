@@ -18,14 +18,29 @@ import type {
   ProductVariant,
 } from '../types'
 
-export type GetProductsResult = {
+type GetProductsQueryResponse = {
+  products: Connection<ProductListItem>
+}
+
+type ProductResponse = Omit<Product, 'images' | 'variants'> & {
+  images: Connection<Image>
+  variants: Connection<ProductVariant>
+}
+
+type GetProductByHandleQueryResponse = {
+  product: ProductResponse | null
+}
+
+type GetProductRecommendationsQueryResponse = {
+  productRecommendations: ProductListItem[] | null
+}
+
+type GetProductsResult = {
   products: ProductListItem[]
   pageInfo: PageInfo
 }
 
-type GetProductsQueryResponse = {
-  products: Connection<ProductListItem>
-}
+export type ProductRecommendationIntent = 'RELATED' | 'COMPLEMENTARY'
 
 const GET_PRODUCTS_QUERY = /* GraphQL */ `
   query getProducts($first: Int!, $after: String) {
@@ -42,6 +57,33 @@ const GET_PRODUCTS_QUERY = /* GraphQL */ `
   }
   ${PRODUCT_CARD_FRAGMENT}
   ${PAGE_INFO_FRAGMENT}
+  ${MONEY_FRAGMENT}
+  ${IMAGE_FRAGMENT}
+`
+
+const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
+  query getProductByHandle($handle: String!) {
+    product(handle: $handle) {
+      ...ProductFragment
+    }
+  }
+  ${PRODUCT_FRAGMENT}
+  ${PRODUCT_VARIANT_FRAGMENT}
+  ${SEO_FRAGMENT}
+  ${MONEY_FRAGMENT}
+  ${IMAGE_FRAGMENT}
+`
+
+const GET_PRODUCT_RECOMMENDATIONS_QUERY = /* GraphQL */ `
+  query getProductRecommendations(
+    $productId: ID!
+    $intent: ProductRecommendationIntent
+  ) {
+    productRecommendations(productId: $productId, intent: $intent) {
+      ...ProductCardFragment
+    }
+  }
+  ${PRODUCT_CARD_FRAGMENT}
   ${MONEY_FRAGMENT}
   ${IMAGE_FRAGMENT}
 `
@@ -68,28 +110,6 @@ export async function getProducts(
   }
 }
 
-type ProductResponse = Omit<Product, 'images' | 'variants'> & {
-  images: Connection<Image>
-  variants: Connection<ProductVariant>
-}
-
-type GetProductByHandleQueryResponse = {
-  product: ProductResponse | null
-}
-
-const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
-  query getProductByHandle($handle: String!) {
-    product(handle: $handle) {
-      ...ProductFragment
-    }
-  }
-  ${PRODUCT_FRAGMENT}
-  ${PRODUCT_VARIANT_FRAGMENT}
-  ${SEO_FRAGMENT}
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
-`
-
 export async function getProductByHandle(
   handle: string,
 ): Promise<Product | null> {
@@ -113,26 +133,6 @@ export async function getProductByHandle(
     ...computePricing(product),
   }
 }
-
-export type ProductRecommendationIntent = 'RELATED' | 'COMPLEMENTARY'
-
-type GetProductRecommendationsQueryResponse = {
-  productRecommendations: ProductListItem[] | null
-}
-
-const GET_PRODUCT_RECOMMENDATIONS_QUERY = /* GraphQL */ `
-  query getProductRecommendations(
-    $productId: ID!
-    $intent: ProductRecommendationIntent
-  ) {
-    productRecommendations(productId: $productId, intent: $intent) {
-      ...ProductCardFragment
-    }
-  }
-  ${PRODUCT_CARD_FRAGMENT}
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
-`
 
 export async function getProductRecommendations(
   productId: string,

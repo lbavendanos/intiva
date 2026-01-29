@@ -48,6 +48,21 @@ type CartLinesRemoveResponse = {
   }
 }
 
+type CartLineInput = {
+  merchandiseId: string
+  quantity?: number
+}
+
+type CartLineUpdateInput = {
+  id: string
+  quantity: number
+}
+
+type CartCreateResult = {
+  cart: Cart | null
+  userErrors: CartUserError[]
+}
+
 const CART_CREATE_MUTATION = /* GraphQL */ `
   mutation cartCreate($input: CartInput) {
     cartCreate(input: $input) {
@@ -129,21 +144,6 @@ function transformCart(cart: CartResponse): Cart {
     ...cart,
     lines: extractNodesFromEdges(cart.lines),
   }
-}
-
-export type CartLineInput = {
-  merchandiseId: string
-  quantity?: number
-}
-
-export type CartLineUpdateInput = {
-  id: string
-  quantity: number
-}
-
-export type CartCreateResult = {
-  cart: Cart | null
-  userErrors: CartUserError[]
 }
 
 export async function createCart(

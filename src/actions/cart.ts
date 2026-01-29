@@ -14,6 +14,12 @@ import { getCart as getCartQuery } from '@/lib/shopify/queries/cart'
 import type { Cart } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
 
+type CartActionResult = {
+  success: boolean
+  cart: Cart | null
+  error?: string
+}
+
 const CART_COOKIE_NAME = 'cartId'
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 const CART_CACHE_TAG = 'cart'
@@ -41,12 +47,6 @@ async function setCartId(cartId: string): Promise<void> {
     path: '/',
     maxAge: CART_COOKIE_MAX_AGE,
   })
-}
-
-export type CartActionResult = {
-  success: boolean
-  cart: Cart | null
-  error?: string
 }
 
 export async function getCart(): Promise<Cart | null> {

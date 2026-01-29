@@ -43,6 +43,58 @@ type CustomerRecoverPayload = {
   }
 }
 
+type CustomerUpdatePayload = {
+  customerUpdate: {
+    customer: CustomerResponse | null
+    customerUserErrors: CustomerUserError[]
+  }
+}
+
+type CustomerCreateInput = {
+  email: string
+  password: string
+  firstName?: string
+  lastName?: string
+  phone?: string
+  acceptsMarketing?: boolean
+}
+
+type CustomerAccessTokenCreateInput = {
+  email: string
+  password: string
+}
+
+export type CustomerUpdateInput = {
+  firstName?: string
+  lastName?: string
+  phone?: string
+  acceptsMarketing?: boolean
+}
+
+type CustomerCreateResult = {
+  customer: Customer | null
+  customerUserErrors: CustomerUserError[]
+}
+
+type CustomerAccessTokenCreateResult = {
+  customerAccessToken: CustomerAccessToken | null
+  customerUserErrors: CustomerUserError[]
+}
+
+type CustomerAccessTokenDeleteResult = {
+  deletedAccessToken: string | null
+  userErrors: CustomerUserError[]
+}
+
+type CustomerRecoverResult = {
+  customerUserErrors: CustomerUserError[]
+}
+
+type CustomerUpdateResult = {
+  customer: Customer | null
+  customerUserErrors: CustomerUserError[]
+}
+
 const CUSTOMER_CREATE_MUTATION = /* GraphQL */ `
   mutation customerCreate($input: CustomerCreateInput!) {
     customerCreate(input: $input) {
@@ -101,38 +153,28 @@ const CUSTOMER_RECOVER_MUTATION = /* GraphQL */ `
   }
 `
 
-export type CustomerCreateInput = {
-  email: string
-  password: string
-  firstName?: string
-  lastName?: string
-  phone?: string
-  acceptsMarketing?: boolean
-}
-
-export type CustomerAccessTokenCreateInput = {
-  email: string
-  password: string
-}
-
-export type CustomerCreateResult = {
-  customer: Customer | null
-  customerUserErrors: CustomerUserError[]
-}
-
-export type CustomerAccessTokenCreateResult = {
-  customerAccessToken: CustomerAccessToken | null
-  customerUserErrors: CustomerUserError[]
-}
-
-export type CustomerAccessTokenDeleteResult = {
-  deletedAccessToken: string | null
-  userErrors: CustomerUserError[]
-}
-
-export type CustomerRecoverResult = {
-  customerUserErrors: CustomerUserError[]
-}
+const CUSTOMER_UPDATE_MUTATION = /* GraphQL */ `
+  mutation customerUpdate(
+    $customerAccessToken: String!
+    $customer: CustomerUpdateInput!
+  ) {
+    customerUpdate(
+      customerAccessToken: $customerAccessToken
+      customer: $customer
+    ) {
+      customer {
+        ...CustomerFragment
+      }
+      customerUserErrors {
+        field
+        message
+        code
+      }
+    }
+  }
+  ${CUSTOMER_FRAGMENT}
+  ${CUSTOMER_ADDRESS_FRAGMENT}
+`
 
 function transformCustomer(customer: CustomerResponse): Customer {
   return {
@@ -209,48 +251,6 @@ export async function recoverCustomer(
   return {
     customerUserErrors: response.customerRecover.customerUserErrors,
   }
-}
-
-type CustomerUpdatePayload = {
-  customerUpdate: {
-    customer: CustomerResponse | null
-    customerUserErrors: CustomerUserError[]
-  }
-}
-
-const CUSTOMER_UPDATE_MUTATION = /* GraphQL */ `
-  mutation customerUpdate(
-    $customerAccessToken: String!
-    $customer: CustomerUpdateInput!
-  ) {
-    customerUpdate(
-      customerAccessToken: $customerAccessToken
-      customer: $customer
-    ) {
-      customer {
-        ...CustomerFragment
-      }
-      customerUserErrors {
-        field
-        message
-        code
-      }
-    }
-  }
-  ${CUSTOMER_FRAGMENT}
-  ${CUSTOMER_ADDRESS_FRAGMENT}
-`
-
-export type CustomerUpdateInput = {
-  firstName?: string
-  lastName?: string
-  phone?: string
-  acceptsMarketing?: boolean
-}
-
-export type CustomerUpdateResult = {
-  customer: Customer | null
-  customerUserErrors: CustomerUserError[]
 }
 
 export async function updateCustomer(

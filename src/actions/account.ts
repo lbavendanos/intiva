@@ -15,20 +15,20 @@ import {
 import type { Customer, Order } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
 
+type AccountActionResult = {
+  success: boolean
+  error?: string
+}
+
+type UpdateProfileResult = AccountActionResult & {
+  customer?: Customer | null
+}
+
 const CUSTOMER_ACCESS_TOKEN_COOKIE = 'customerAccessToken'
 
 async function getCustomerAccessToken(): Promise<string | undefined> {
   const cookieStore = await cookies()
   return cookieStore.get(CUSTOMER_ACCESS_TOKEN_COOKIE)?.value
-}
-
-export type AccountActionResult = {
-  success: boolean
-  error?: string
-}
-
-export type UpdateProfileResult = AccountActionResult & {
-  customer?: Customer | null
 }
 
 export async function updateProfile(

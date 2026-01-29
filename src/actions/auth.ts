@@ -13,6 +13,19 @@ import { getCustomer } from '@/lib/shopify/queries/customer'
 import type { Customer, CustomerAccessToken } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
 
+type AuthActionResult = {
+  success: boolean
+  error?: string
+}
+
+type LoginActionResult = AuthActionResult & {
+  customer?: Customer | null
+}
+
+type RegisterActionResult = AuthActionResult & {
+  customer?: Customer | null
+}
+
 const CUSTOMER_ACCESS_TOKEN_COOKIE = 'customerAccessToken'
 const CUSTOMER_ACCESS_TOKEN_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 
@@ -48,19 +61,6 @@ async function setCustomerAccessToken(
 async function deleteCustomerAccessTokenCookie(): Promise<void> {
   const cookieStore = await cookies()
   cookieStore.delete(CUSTOMER_ACCESS_TOKEN_COOKIE)
-}
-
-export type AuthActionResult = {
-  success: boolean
-  error?: string
-}
-
-export type LoginActionResult = AuthActionResult & {
-  customer?: Customer | null
-}
-
-export type RegisterActionResult = AuthActionResult & {
-  customer?: Customer | null
 }
 
 export async function login(

@@ -1,7 +1,5 @@
 import type { ShopifyError, ShopifyResponse } from './types'
 
-const SHOPIFY_STOREFRONT_API_VERSION = '2025-10'
-
 export class ShopifyClientError extends Error {
   constructor(
     message: string,
@@ -17,6 +15,12 @@ export type ShopifyClientConfig = {
   storefrontAccessToken: string
   apiVersion?: string
 }
+
+export type StorefrontQueryOptions = {
+  variables?: Record<string, unknown>
+}
+
+const SHOPIFY_STOREFRONT_API_VERSION = '2025-10'
 
 function getConfig(): ShopifyClientConfig {
   const storeDomain = process.env.SHOPIFY_STORE_DOMAIN
@@ -53,10 +57,6 @@ function getHeaders(config: ShopifyClientConfig): HeadersInit {
     'Content-Type': 'application/json',
     'X-Shopify-Storefront-Access-Token': config.storefrontAccessToken,
   }
-}
-
-export type StorefrontQueryOptions = {
-  variables?: Record<string, unknown>
 }
 
 export async function storefrontQuery<T = unknown>(
