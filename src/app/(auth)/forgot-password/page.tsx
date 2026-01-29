@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 import { __ } from '@/lib/utils'
-import { ForgotPasswordForm } from '@/components/auth'
+import { ForgotPasswordForm } from '@/components/auth/forgot-password-form'
 
 export const metadata: Metadata = {
   title: __('auth.forgot_password.title'),

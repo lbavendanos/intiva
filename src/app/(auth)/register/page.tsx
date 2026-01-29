@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 import { __ } from '@/lib/utils'
-import { RegisterForm } from '@/components/auth'
+import { RegisterForm } from '@/components/auth/register-form'
 
 export const metadata: Metadata = {
   title: __('auth.register.title'),
