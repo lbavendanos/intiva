@@ -15,6 +15,7 @@ import type {
   PageInfo,
   Product,
   ProductListItem,
+  ProductRecommendationIntent,
   ProductVariant,
 } from '../types'
 
@@ -39,8 +40,6 @@ type GetProductsResult = {
   products: ProductListItem[]
   pageInfo: PageInfo
 }
-
-export type ProductRecommendationIntent = 'RELATED' | 'COMPLEMENTARY'
 
 const GET_PRODUCTS_QUERY = /* GraphQL */ `
   query getProducts($first: Int!, $after: String) {

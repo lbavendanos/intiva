@@ -43,7 +43,7 @@ type GetCustomerOrderResponse = {
   } | null
 }
 
-export type GetCustomerOrdersResult = {
+type GetCustomerOrdersResult = {
   orders: Order[]
   pageInfo: PageInfo
 }

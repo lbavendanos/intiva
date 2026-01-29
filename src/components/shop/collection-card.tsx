@@ -1,13 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import type { CollectionCardData } from '@/lib/shopify/queries/collections'
+import type { CollectionListItem } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 type CollectionCardProps = {
-  collection: CollectionCardData
+  collection: CollectionListItem
 }
 
 export function CollectionCard({ collection }: CollectionCardProps) {

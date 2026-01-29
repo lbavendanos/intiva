@@ -3,17 +3,25 @@
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 
-import {
-  updateCustomer,
-  type CustomerUpdateInput,
-} from '@/lib/shopify/mutations/customer'
+import { updateCustomer } from '@/lib/shopify/mutations/customer'
 import {
   getCustomerOrder,
   getCustomerOrders,
-  type GetCustomerOrdersResult,
 } from '@/lib/shopify/queries/customer'
-import type { Customer, Order } from '@/lib/shopify/types'
+import type { Customer, Order, PageInfo } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
+
+type ProfileUpdateInput = {
+  firstName?: string
+  lastName?: string
+  phone?: string
+  acceptsMarketing?: boolean
+}
+
+type OrdersListResult = {
+  orders: Order[]
+  pageInfo: PageInfo
+}
 
 type AccountActionResult = {
   success: boolean
@@ -32,7 +40,7 @@ async function getCustomerAccessToken(): Promise<string | undefined> {
 }
 
 export async function updateProfile(
-  input: CustomerUpdateInput,
+  input: ProfileUpdateInput,
 ): Promise<UpdateProfileResult> {
   const accessToken = await getCustomerAccessToken()
 
@@ -75,7 +83,7 @@ export async function updateProfile(
 export async function getOrders(
   first: number = 10,
   after?: string,
-): Promise<GetCustomerOrdersResult | null> {
+): Promise<OrdersListResult | null> {
   const accessToken = await getCustomerAccessToken()
 
   if (!accessToken) {

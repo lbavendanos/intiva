@@ -94,6 +94,8 @@ export type ProductListItem = {
   featuredImage: Image | null
 } & ProductPricing
 
+export type ProductRecommendationIntent = 'RELATED' | 'COMPLEMENTARY'
+
 export type Collection = {
   id: string
   title: string
@@ -103,6 +105,14 @@ export type Collection = {
   image: Maybe<Image>
   seo: SEO
   products?: Product[]
+}
+
+export type CollectionListItem = {
+  id: string
+  title: string
+  handle: string
+  description: string
+  image: Image | null
 }
 
 export type CartLineItem = {

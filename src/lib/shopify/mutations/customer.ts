@@ -64,7 +64,7 @@ type CustomerAccessTokenCreateInput = {
   password: string
 }
 
-export type CustomerUpdateInput = {
+type CustomerUpdateInput = {
   firstName?: string
   lastName?: string
   phone?: string

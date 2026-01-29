@@ -1,10 +1,10 @@
-import type { CollectionCardData } from '@/lib/shopify/queries/collections'
+import type { CollectionListItem } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
 
 import { CollectionCard, CollectionCardSkeleton } from './collection-card'
 
 type CollectionGridProps = {
-  collections: CollectionCardData[]
+  collections: CollectionListItem[]
 }
 
 export function CollectionGrid({ collections }: CollectionGridProps) {

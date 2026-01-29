@@ -7,11 +7,17 @@ import {
   PRODUCT_CARD_FRAGMENT,
   SEO_FRAGMENT,
 } from '../fragments'
-import type { Collection, Image, PageInfo, ProductListItem } from '../types'
+import type {
+  Collection,
+  CollectionListItem,
+  Image,
+  PageInfo,
+  ProductListItem,
+} from '../types'
 
 type GetCollectionsQueryResponse = {
   collections: {
-    edges: Array<{ node: CollectionCardData }>
+    edges: Array<{ node: CollectionListItem }>
     pageInfo: PageInfo
   }
 }
@@ -37,7 +43,7 @@ type GetCollectionProductsQueryResponse = {
 }
 
 type GetCollectionsResult = {
-  collections: CollectionCardData[]
+  collections: CollectionListItem[]
   pageInfo: PageInfo
 }
 
@@ -45,14 +51,6 @@ type GetCollectionProductsResult = {
   collection: Collection | null
   products: ProductListItem[]
   pageInfo: PageInfo
-}
-
-export type CollectionCardData = {
-  id: string
-  title: string
-  handle: string
-  description: string
-  image: Image | null
 }
 
 const GET_COLLECTIONS_QUERY = /* GraphQL */ `
