@@ -1,7 +1,6 @@
 'use client'
 
 import { useTransition } from 'react'
-import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -35,7 +34,6 @@ type LoginFormProps = {
 }
 
 export function LoginForm({ redirectTo = '/account' }: LoginFormProps) {
-  const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<LoginFormValues>({
@@ -48,15 +46,11 @@ export function LoginForm({ redirectTo = '/account' }: LoginFormProps) {
 
   const handleSubmit = (data: LoginFormValues) => {
     startTransition(async () => {
-      const result = await login(data.email, data.password)
+      const result = await login(data.email, data.password, redirectTo)
 
       if (!result.success) {
         form.setError('root', { message: result.error })
-        return
       }
-
-      router.push(redirectTo)
-      router.refresh()
     })
   }
 

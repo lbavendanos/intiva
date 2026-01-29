@@ -66,6 +66,7 @@ export type RegisterActionResult = AuthActionResult & {
 export async function login(
   email: string,
   password: string,
+  redirectTo: string = '/account',
 ): Promise<LoginActionResult> {
   const { customerAccessToken, customerUserErrors } =
     await createCustomerAccessToken({
@@ -98,12 +99,7 @@ export async function login(
 
   await setCustomerAccessToken(customerAccessToken)
 
-  const customer = await getCustomer(customerAccessToken.accessToken)
-
-  return {
-    success: true,
-    customer,
-  }
+  redirect(redirectTo)
 }
 
 export async function register(
@@ -148,19 +144,10 @@ export async function register(
   }
 
   // Auto-login after registration
-  const loginResult = await login(email, password)
+  const loginResult = await login(email, password, '/account')
 
-  if (!loginResult.success) {
-    return {
-      success: true,
-      customer,
-    }
-  }
-
-  return {
-    success: true,
-    customer: loginResult.customer,
-  }
+  // If login fails, return the error (redirect happens in login on success)
+  return loginResult
 }
 
 export async function logout(): Promise<void> {

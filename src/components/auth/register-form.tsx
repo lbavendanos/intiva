@@ -1,7 +1,6 @@
 'use client'
 
 import { useTransition } from 'react'
-import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -45,12 +44,7 @@ const registerSchema = z
 
 type RegisterFormValues = z.infer<typeof registerSchema>
 
-type RegisterFormProps = {
-  redirectTo?: string
-}
-
-export function RegisterForm({ redirectTo = '/account' }: RegisterFormProps) {
-  const router = useRouter()
+export function RegisterForm() {
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<RegisterFormValues>({
@@ -77,11 +71,7 @@ export function RegisterForm({ redirectTo = '/account' }: RegisterFormProps) {
 
       if (!result.success) {
         form.setError('root', { message: result.error })
-        return
       }
-
-      router.push(redirectTo)
-      router.refresh()
     })
   }
 

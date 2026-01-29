@@ -1,21 +1,18 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 
-import { getCustomerSession } from '@/actions/auth'
+import { isAuthenticated } from '@/actions/auth'
 
 type AuthLayoutProps = {
   children: React.ReactNode
 }
 
 async function AuthCheck({ children }: { children: React.ReactNode }) {
-  const customer = await getCustomerSession()
-
-  // Redirect to account if already authenticated
-  if (customer) {
+  if (await isAuthenticated()) {
     redirect('/account')
   }
 
-  return <>{children}</>
+  return children
 }
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
