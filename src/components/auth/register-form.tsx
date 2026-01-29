@@ -76,12 +76,7 @@ export function RegisterForm({ redirectTo = '/account' }: RegisterFormProps) {
       )
 
       if (!result.success) {
-        const errorMessage =
-          result.error === 'auth.register.error.email_taken'
-            ? __('auth.register.error.email_taken')
-            : __('auth.register.error.generic')
-
-        form.setError('root', { message: errorMessage })
+        form.setError('root', { message: result.error })
         return
       }
 

@@ -123,7 +123,11 @@ export function ProductForm({
     if (!selectedVariant) return
 
     startTransition(async () => {
-      await addToCart(selectedVariant.id, 1)
+      const result = await addToCart(selectedVariant.id, 1)
+
+      if (!result.success) {
+        form.setError('root', { message: result.error })
+      }
     })
   }
 
@@ -135,6 +139,10 @@ export function ProductForm({
       {...props}
     >
       <FieldGroup>
+        {form.formState.errors.root && (
+          <FieldError>{form.formState.errors.root.message}</FieldError>
+        )}
+
         {hasRealOptions &&
           product.options.map((option) => (
             <Controller

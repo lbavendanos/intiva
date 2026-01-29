@@ -12,10 +12,18 @@ import {
 } from '@/lib/shopify/mutations'
 import { getCart as getCartQuery } from '@/lib/shopify/queries'
 import type { Cart } from '@/lib/shopify/types'
+import { __ } from '@/lib/utils'
 
 const CART_COOKIE_NAME = 'cartId'
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 const CART_CACHE_TAG = 'cart'
+
+const CART_ERROR_CODE = {
+  INVALID: 'INVALID',
+  INVALID_MERCHANDISE_LINE: 'INVALID_MERCHANDISE_LINE',
+  LESS_THAN: 'LESS_THAN',
+  GREATER_THAN: 'GREATER_THAN',
+} as const
 
 async function getCartId(): Promise<string | undefined> {
   const cookieStore = await cookies()
@@ -73,10 +81,20 @@ export async function addToCart(
     const { cart, userErrors } = await createCart([{ merchandiseId, quantity }])
 
     if (userErrors.length > 0) {
+      const error = userErrors[0]
+
+      if (error.code === CART_ERROR_CODE.INVALID_MERCHANDISE_LINE) {
+        return {
+          success: false,
+          cart: null,
+          error: __('cart.error.invalid_product'),
+        }
+      }
+
       return {
         success: false,
         cart: null,
-        error: userErrors[0].message,
+        error: error.message || __('cart.error.generic'),
       }
     }
 
@@ -97,10 +115,20 @@ export async function addToCart(
   ])
 
   if (userErrors.length > 0) {
+    const error = userErrors[0]
+
+    if (error.code === CART_ERROR_CODE.INVALID_MERCHANDISE_LINE) {
+      return {
+        success: false,
+        cart: null,
+        error: __('cart.error.invalid_product'),
+      }
+    }
+
     return {
       success: false,
       cart: null,
-      error: userErrors[0].message,
+      error: error.message || __('cart.error.generic'),
     }
   }
 
@@ -122,7 +150,7 @@ export async function updateCartItem(
     return {
       success: false,
       cart: null,
-      error: 'No cart found',
+      error: __('cart.error.not_found'),
     }
   }
 
@@ -136,10 +164,31 @@ export async function updateCartItem(
   ])
 
   if (userErrors.length > 0) {
+    const error = userErrors[0]
+
+    if (
+      error.code === CART_ERROR_CODE.LESS_THAN ||
+      error.code === CART_ERROR_CODE.GREATER_THAN
+    ) {
+      return {
+        success: false,
+        cart: null,
+        error: __('cart.error.invalid_quantity'),
+      }
+    }
+
+    if (error.code === CART_ERROR_CODE.INVALID) {
+      return {
+        success: false,
+        cart: null,
+        error: __('cart.error.item_not_found'),
+      }
+    }
+
     return {
       success: false,
       cart: null,
-      error: userErrors[0].message,
+      error: error.message || __('cart.error.generic'),
     }
   }
 
@@ -160,17 +209,27 @@ export async function removeFromCart(
     return {
       success: false,
       cart: null,
-      error: 'No cart found',
+      error: __('cart.error.not_found'),
     }
   }
 
   const { cart, userErrors } = await removeFromCartMutation(cartId, [lineId])
 
   if (userErrors.length > 0) {
+    const error = userErrors[0]
+
+    if (error.code === CART_ERROR_CODE.INVALID) {
+      return {
+        success: false,
+        cart: null,
+        error: __('cart.error.item_not_found'),
+      }
+    }
+
     return {
       success: false,
       cart: null,
-      error: userErrors[0].message,
+      error: error.message || __('cart.error.generic'),
     }
   }
 

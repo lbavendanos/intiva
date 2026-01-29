@@ -11,6 +11,7 @@ import {
 } from '@/lib/shopify/mutations'
 import { getCustomer } from '@/lib/shopify/queries'
 import type { Customer, CustomerAccessToken } from '@/lib/shopify/types'
+import { __ } from '@/lib/utils'
 
 const CUSTOMER_ACCESS_TOKEN_COOKIE = 'customerAccessToken'
 const CUSTOMER_ACCESS_TOKEN_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
@@ -78,20 +79,20 @@ export async function login(
     if (error.code === CUSTOMER_ERROR_CODE.UNIDENTIFIED_CUSTOMER) {
       return {
         success: false,
-        error: 'auth.login.error.invalid_credentials',
+        error: __('auth.login.error.invalid_credentials'),
       }
     }
 
     return {
       success: false,
-      error: error.message || 'auth.login.error.generic',
+      error: error.message || __('auth.login.error.generic'),
     }
   }
 
   if (!customerAccessToken) {
     return {
       success: false,
-      error: 'auth.login.error.generic',
+      error: __('auth.login.error.generic'),
     }
   }
 
@@ -129,20 +130,20 @@ export async function register(
     ) {
       return {
         success: false,
-        error: 'auth.register.error.email_taken',
+        error: __('auth.register.error.email_taken'),
       }
     }
 
     return {
       success: false,
-      error: error.message || 'auth.register.error.generic',
+      error: error.message || __('auth.register.error.generic'),
     }
   }
 
   if (!customer) {
     return {
       success: false,
-      error: 'auth.register.error.generic',
+      error: __('auth.register.error.generic'),
     }
   }
 

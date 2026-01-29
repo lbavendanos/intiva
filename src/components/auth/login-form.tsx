@@ -51,12 +51,7 @@ export function LoginForm({ redirectTo = '/account' }: LoginFormProps) {
       const result = await login(data.email, data.password)
 
       if (!result.success) {
-        const errorMessage =
-          result.error === 'auth.login.error.invalid_credentials'
-            ? __('auth.login.error.invalid_credentials')
-            : __('auth.login.error.generic')
-
-        form.setError('root', { message: errorMessage })
+        form.setError('root', { message: result.error })
         return
       }
 
