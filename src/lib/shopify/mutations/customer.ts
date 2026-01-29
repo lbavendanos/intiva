@@ -210,3 +210,64 @@ export async function recoverCustomer(
     customerUserErrors: response.customerRecover.customerUserErrors,
   }
 }
+
+type CustomerUpdatePayload = {
+  customerUpdate: {
+    customer: CustomerResponse | null
+    customerUserErrors: CustomerUserError[]
+  }
+}
+
+const CUSTOMER_UPDATE_MUTATION = /* GraphQL */ `
+  mutation customerUpdate(
+    $customerAccessToken: String!
+    $customer: CustomerUpdateInput!
+  ) {
+    customerUpdate(
+      customerAccessToken: $customerAccessToken
+      customer: $customer
+    ) {
+      customer {
+        ...CustomerFragment
+      }
+      customerUserErrors {
+        field
+        message
+        code
+      }
+    }
+  }
+  ${CUSTOMER_FRAGMENT}
+  ${CUSTOMER_ADDRESS_FRAGMENT}
+`
+
+export type CustomerUpdateInput = {
+  firstName?: string
+  lastName?: string
+  phone?: string
+  acceptsMarketing?: boolean
+}
+
+export type CustomerUpdateResult = {
+  customer: Customer | null
+  customerUserErrors: CustomerUserError[]
+}
+
+export async function updateCustomer(
+  customerAccessToken: string,
+  input: CustomerUpdateInput,
+): Promise<CustomerUpdateResult> {
+  const response = await storefrontQuery<CustomerUpdatePayload>(
+    CUSTOMER_UPDATE_MUTATION,
+    {
+      variables: { customerAccessToken, customer: input },
+    },
+  )
+
+  const { customer, customerUserErrors } = response.customerUpdate
+
+  return {
+    customer: customer ? transformCustomer(customer) : null,
+    customerUserErrors,
+  }
+}
