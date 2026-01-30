@@ -131,7 +131,7 @@ export async function logout(): Promise<void> {
     await deleteCustomerAccessToken()
   }
 
-  redirect('/login')
+  redirect('/')
 }
 
 export async function recoverPassword(
