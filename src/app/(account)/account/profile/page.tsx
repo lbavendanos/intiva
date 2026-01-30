@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
 
 import { __ } from '@/lib/utils'
 import { getCustomerSession } from '@/actions/session'
@@ -21,7 +20,7 @@ export default async function ProfilePage() {
   const customer = await getCustomerSession()
 
   if (!customer) {
-    redirect('/login?redirect=/account/profile')
+    return null
   }
 
   return (

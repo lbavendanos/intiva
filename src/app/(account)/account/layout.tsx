@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import { redirect } from 'next/navigation'
 
 import { __ } from '@/lib/utils'
 import { getCustomerSession } from '@/actions/session'
@@ -12,12 +11,7 @@ type AccountLayoutProps = {
 
 async function AccountContent({ children }: { children: React.ReactNode }) {
   const customer = await getCustomerSession()
-
-  if (!customer) {
-    redirect('/login?redirect=/account')
-  }
-
-  const displayName = customer.firstName || customer.displayName || ''
+  const displayName = customer?.firstName || customer?.displayName || ''
 
   return (
     <div className="container mx-auto px-4 py-8">

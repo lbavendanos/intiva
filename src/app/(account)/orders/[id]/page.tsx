@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 import { __ } from '@/lib/utils'
 import { getCustomerOrder } from '@/actions/customer'
-import { isAuthenticated } from '@/actions/session'
 import { OrderDetail } from '@/components/account/order-detail'
 
 type OrderDetailPageProps = {
@@ -25,13 +24,6 @@ export async function generateMetadata({
 export default async function OrderDetailPage({
   params,
 }: OrderDetailPageProps) {
-  const authenticated = await isAuthenticated()
-
-  if (!authenticated) {
-    const { id } = await params
-    redirect(`/login?redirect=/orders/${id}`)
-  }
-
   const { id } = await params
   const orderNumber = parseInt(id, 10)
 
