@@ -43,6 +43,7 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 - `src/app/` - App Router pages, layouts, and global styles
 - `src/app/(shop)/` - Shop route group
 - `src/components/ui/` - shadcn/ui components (installed via CLI)
+- `src/components/common/` - Shared reusable components
 - `src/components/layout/` - Layout components
 - `src/components/shop/` - Shop-specific components
 - `src/actions/` - Server Actions

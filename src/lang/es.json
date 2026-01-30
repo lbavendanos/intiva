@@ -158,7 +158,7 @@
   "order.description": "Detalles del pedido #:number",
   "order.not_found": "Pedido no encontrado",
   "order.back_to_orders": "Volver a mis pedidos",
-  "order.placed_on": "Realizado el :date",
+  "order.placed_on": "Realizado el",
   "order.summary": "Resumen del pedido",
   "order.product": "Producto",
   "order.quantity": "Cantidad",

@@ -5,30 +5,14 @@ import { ArrowLeft } from 'lucide-react'
 import type { TranslationKeys } from '@/lib/foundation/translation/translator'
 import type { Order } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
+import { DateTime } from '@/components/common/datetime'
+import { Price } from '@/components/common/price'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
 type OrderDetailProps = {
   order: Order
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString(process.env.NEXT_PUBLIC_APP_LOCALE, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
-
-function formatPrice(amount: string, currencyCode: string): string {
-  return new Intl.NumberFormat(process.env.NEXT_PUBLIC_APP_LOCALE, {
-    style: 'currency',
-    currency: currencyCode,
-  }).format(parseFloat(amount))
 }
 
 function getFinancialStatusVariant(
@@ -97,7 +81,8 @@ export function OrderDetail({ order }: OrderDetailProps) {
             {__('order.title', { number: order.orderNumber })}
           </h1>
           <p className="text-muted-foreground text-sm">
-            {__('order.placed_on', { date: formatDate(order.processedAt) })}
+            {__('order.placed_on')}{' '}
+            <DateTime as="span" value={order.processedAt} includeTime />
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -169,8 +154,13 @@ export function OrderDetail({ order }: OrderDetailProps) {
                       {item.quantity}
                     </div>
                     <div className="col-span-4 flex items-center justify-end">
-                      {item.variant?.price &&
-                        formatPrice(item.variant.price.amount, currencyCode)}
+                      {item.variant?.price && (
+                        <Price
+                          as="span"
+                          amount={item.variant.price.amount}
+                          currencyCode={currencyCode}
+                        />
+                      )}
                     </div>
                   </div>
                 ))}
@@ -182,37 +172,42 @@ export function OrderDetail({ order }: OrderDetailProps) {
                     <span className="text-muted-foreground">
                       {__('order.subtotal')}
                     </span>
-                    <span>
-                      {formatPrice(order.subtotalPrice.amount, currencyCode)}
-                    </span>
+                    <Price
+                      as="span"
+                      amount={order.subtotalPrice.amount}
+                      currencyCode={currencyCode}
+                    />
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
                       {__('order.shipping')}
                     </span>
-                    <span>
-                      {formatPrice(
-                        order.totalShippingPrice.amount,
-                        currencyCode,
-                      )}
-                    </span>
+                    <Price
+                      as="span"
+                      amount={order.totalShippingPrice.amount}
+                      currencyCode={currencyCode}
+                    />
                   </div>
                   {order.totalTax && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">
                         {__('order.tax')}
                       </span>
-                      <span>
-                        {formatPrice(order.totalTax.amount, currencyCode)}
-                      </span>
+                      <Price
+                        as="span"
+                        amount={order.totalTax.amount}
+                        currencyCode={currencyCode}
+                      />
                     </div>
                   )}
                   <Separator />
                   <div className="flex justify-between font-medium">
                     <span>{__('order.total')}</span>
-                    <span>
-                      {formatPrice(order.totalPrice.amount, currencyCode)}
-                    </span>
+                    <Price
+                      as="span"
+                      amount={order.totalPrice.amount}
+                      currencyCode={currencyCode}
+                    />
                   </div>
                 </div>
               </div>

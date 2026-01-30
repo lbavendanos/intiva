@@ -4,6 +4,8 @@ import { ChevronRight } from 'lucide-react'
 import type { TranslationKeys } from '@/lib/foundation/translation/translator'
 import type { Order } from '@/lib/shopify/types'
 import { __, cn } from '@/lib/utils'
+import { DateTime } from '@/components/common/datetime'
+import { Price } from '@/components/common/price'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -15,22 +17,6 @@ import {
 
 type OrderListProps = {
   orders: Order[]
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString(process.env.NEXT_PUBLIC_APP_LOCALE, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
-
-function formatPrice(amount: string, currencyCode: string): string {
-  return new Intl.NumberFormat(process.env.NEXT_PUBLIC_APP_LOCALE, {
-    style: 'currency',
-    currency: currencyCode,
-  }).format(parseFloat(amount))
 }
 
 function getFinancialStatusVariant(
@@ -126,7 +112,9 @@ export function OrderCard({ order, compact = false }: OrderCardProps) {
             <CardTitle className="text-base">
               {__('orders.order_number', { number: order.orderNumber })}
             </CardTitle>
-            <CardDescription>{formatDate(order.processedAt)}</CardDescription>
+            <CardDescription>
+              <DateTime as="span" value={order.processedAt} />
+            </CardDescription>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant={getFinancialStatusVariant(order.financialStatus)}>
@@ -146,12 +134,11 @@ export function OrderCard({ order, compact = false }: OrderCardProps) {
             <p className="text-muted-foreground text-sm">
               {__('orders.items', { count: totalItems })}
             </p>
-            <p className="font-medium">
-              {formatPrice(
-                order.totalPrice.amount,
-                order.totalPrice.currencyCode,
-              )}
-            </p>
+            <Price
+              className="font-medium"
+              amount={order.totalPrice.amount}
+              currencyCode={order.totalPrice.currencyCode}
+            />
           </div>
           <Link
             href={`/orders/${order.orderNumber}`}

@@ -158,7 +158,7 @@
   "order.description": "Details of order #:number",
   "order.not_found": "Order not found",
   "order.back_to_orders": "Back to my orders",
-  "order.placed_on": "Placed on :date",
+  "order.placed_on": "Placed on",
   "order.summary": "Order summary",
   "order.product": "Product",
   "order.quantity": "Quantity",
