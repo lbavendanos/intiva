@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 
 import { __ } from '@/lib/utils'
-import { getOrders } from '@/actions/account'
+import { getCustomerOrders } from '@/actions/customer'
 import { OrderCard } from '@/components/account/order-list'
 import {
   Card,
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 }
 
 export default async function AccountPage() {
-  const ordersResult = await getOrders(3)
+  const ordersResult = await getCustomerOrders(3)
   const recentOrders = ordersResult?.orders ?? []
 
   return (

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
 import { __ } from '@/lib/utils'
-import { getOrder } from '@/actions/account'
+import { getCustomerOrder } from '@/actions/customer'
 import { isAuthenticated } from '@/actions/session'
 import { OrderDetail } from '@/components/account/order-detail'
 
@@ -39,7 +39,7 @@ export default async function OrderDetailPage({
     notFound()
   }
 
-  const order = await getOrder(orderNumber)
+  const order = await getCustomerOrder(orderNumber)
 
   if (!order) {
     notFound()

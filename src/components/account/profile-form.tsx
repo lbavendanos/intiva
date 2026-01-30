@@ -7,7 +7,7 @@ import * as z from 'zod'
 
 import type { Customer } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
-import { updateProfile } from '@/actions/account'
+import { updateCustomer } from '@/actions/customer'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -77,7 +77,7 @@ export function ProfileForm({ customer }: ProfileFormProps) {
     setSuccessMessage(null)
 
     startTransition(async () => {
-      const result = await updateProfile({
+      const result = await updateCustomer({
         firstName: data.firstName || undefined,
         lastName: data.lastName || undefined,
         phone: data.phone || undefined,

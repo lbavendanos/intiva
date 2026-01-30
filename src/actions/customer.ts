@@ -2,40 +2,37 @@
 
 import { revalidatePath } from 'next/cache'
 
-import { updateCustomer } from '@/lib/shopify/mutations/customer'
+import { updateCustomer as updateCustomerMutation } from '@/lib/shopify/mutations/customer'
 import {
-  getCustomerOrder,
-  getCustomerOrders,
+  getCustomerOrder as getCustomerOrderQuery,
+  getCustomerOrders as getCustomerOrdersQuery,
 } from '@/lib/shopify/queries/customer'
 import type { Customer, Order, PageInfo } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
 
 import { getCustomerAccessToken } from './session'
 
-type ProfileUpdateInput = {
+type UpdateProfileInput = {
   firstName?: string
   lastName?: string
   phone?: string
   acceptsMarketing?: boolean
 }
 
-type OrdersListResult = {
+type UpdateCustomerResult = {
+  success: boolean
+  error?: string
+  customer?: Customer | null
+}
+
+type GetCustomerOrdersResult = {
   orders: Order[]
   pageInfo: PageInfo
 }
 
-type AccountActionResult = {
-  success: boolean
-  error?: string
-}
-
-type UpdateProfileResult = AccountActionResult & {
-  customer?: Customer | null
-}
-
-export async function updateProfile(
-  input: ProfileUpdateInput,
-): Promise<UpdateProfileResult> {
+export async function updateCustomer(
+  input: UpdateProfileInput,
+): Promise<UpdateCustomerResult> {
   const accessToken = await getCustomerAccessToken()
 
   if (!accessToken) {
@@ -45,7 +42,7 @@ export async function updateProfile(
     }
   }
 
-  const { customer, customerUserErrors } = await updateCustomer(
+  const { customer, customerUserErrors } = await updateCustomerMutation(
     accessToken,
     input,
   )
@@ -74,25 +71,27 @@ export async function updateProfile(
   }
 }
 
-export async function getOrders(
+export async function getCustomerOrders(
   first: number = 10,
   after?: string,
-): Promise<OrdersListResult | null> {
+): Promise<GetCustomerOrdersResult | null> {
   const accessToken = await getCustomerAccessToken()
 
   if (!accessToken) {
     return null
   }
 
-  return getCustomerOrders(accessToken, first, after)
+  return getCustomerOrdersQuery(accessToken, first, after)
 }
 
-export async function getOrder(orderNumber: number): Promise<Order | null> {
+export async function getCustomerOrder(
+  orderNumber: number,
+): Promise<Order | null> {
   const accessToken = await getCustomerAccessToken()
 
   if (!accessToken) {
     return null
   }
 
-  return getCustomerOrder(accessToken, orderNumber)
+  return getCustomerOrderQuery(accessToken, orderNumber)
 }

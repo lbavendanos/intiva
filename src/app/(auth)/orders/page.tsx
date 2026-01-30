@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { __ } from '@/lib/utils'
-import { getOrders } from '@/actions/account'
+import { getCustomerOrders } from '@/actions/customer'
 import { isAuthenticated } from '@/actions/session'
 import { OrderList } from '@/components/account/order-list'
 
@@ -18,7 +18,7 @@ export default async function OrdersPage() {
     redirect('/login?redirect=/orders')
   }
 
-  const ordersResult = await getOrders(20)
+  const ordersResult = await getCustomerOrders(20)
   const orders = ordersResult?.orders ?? []
 
   return (
