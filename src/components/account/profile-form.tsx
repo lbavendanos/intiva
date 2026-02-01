@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, useWatch, type Control } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import type { Customer } from '@/lib/shopify/types'
@@ -13,9 +13,11 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Field,
+  FieldContent,
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldTitle,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 
@@ -30,34 +32,6 @@ type ProfileFormValues = z.infer<typeof profileSchema>
 
 type ProfileFormProps = {
   customer: Customer
-}
-
-type MarketingCheckboxProps = {
-  control: Control<ProfileFormValues>
-  setValue: (
-    name: 'acceptsMarketing',
-    value: boolean,
-    options?: { shouldValidate?: boolean; shouldDirty?: boolean },
-  ) => void
-}
-
-function MarketingCheckbox({ control, setValue }: MarketingCheckboxProps) {
-  const acceptsMarketing = useWatch({ control, name: 'acceptsMarketing' })
-
-  return (
-    <Field className="flex flex-row items-center gap-3">
-      <Checkbox
-        id="acceptsMarketing"
-        checked={acceptsMarketing}
-        onCheckedChange={(checked) =>
-          setValue('acceptsMarketing', checked === true)
-        }
-      />
-      <FieldLabel htmlFor="acceptsMarketing" className="font-normal">
-        {__('account.profile.accepts_marketing')}
-      </FieldLabel>
-    </Field>
-  )
 }
 
 export function ProfileForm({ customer }: ProfileFormProps) {
@@ -168,7 +142,26 @@ export function ProfileForm({ customer }: ProfileFormProps) {
           )}
         </Field>
 
-        <MarketingCheckbox control={form.control} setValue={form.setValue} />
+        <Controller
+          name="acceptsMarketing"
+          control={form.control}
+          render={({ field }) => (
+            <Field orientation="horizontal">
+              <Checkbox
+                id="acceptsMarketing"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+              <FieldContent>
+                <FieldLabel htmlFor="acceptsMarketing">
+                  <FieldTitle>
+                    {__('account.profile.accepts_marketing')}
+                  </FieldTitle>
+                </FieldLabel>
+              </FieldContent>
+            </Field>
+          )}
+        />
 
         <Button type="submit" disabled={isPending}>
           {isPending
