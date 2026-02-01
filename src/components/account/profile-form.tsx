@@ -8,6 +8,7 @@ import * as z from 'zod'
 import type { Customer } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
 import { updateCustomer } from '@/actions/customer'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -100,9 +101,9 @@ export function ProfileForm({ customer }: ProfileFormProps) {
         )}
 
         {successMessage && (
-          <p className="rounded-md bg-green-50 p-3 text-sm text-green-600 dark:bg-green-950 dark:text-green-400">
-            {successMessage}
-          </p>
+          <Alert variant="success">
+            <AlertDescription>{successMessage}</AlertDescription>
+          </Alert>
         )}
 
         <div className="grid gap-4 sm:grid-cols-2">
