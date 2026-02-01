@@ -2,7 +2,7 @@
 
 import { useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import { __ } from '@/lib/utils'
@@ -61,42 +61,55 @@ export function LoginForm({ redirectTo = '/account' }: LoginFormProps) {
           <FieldError>{form.formState.errors.root.message}</FieldError>
         )}
 
-        <Field data-invalid={!!form.formState.errors.email}>
-          <FieldLabel htmlFor="email">{__('auth.login.email')}</FieldLabel>
-          <Input
-            id="email"
-            type="email"
-            autoComplete="email"
-            placeholder={__('auth.login.email_placeholder')}
-            aria-invalid={!!form.formState.errors.email}
-            {...form.register('email')}
-          />
-          {form.formState.errors.email && (
-            <FieldError>{form.formState.errors.email.message}</FieldError>
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>
+                {__('auth.login.email')}
+              </FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                type="email"
+                autoComplete="email"
+                placeholder={__('auth.login.email_placeholder')}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
-        </Field>
+        />
 
-        <Field data-invalid={!!form.formState.errors.password}>
-          <FieldLabel htmlFor="password">
-            {__('auth.login.password')}
-          </FieldLabel>
-          <Input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            placeholder={__('auth.login.password_placeholder')}
-            aria-invalid={!!form.formState.errors.password}
-            {...form.register('password')}
-          />
-          {form.formState.errors.password && (
-            <FieldError>{form.formState.errors.password.message}</FieldError>
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>
+                {__('auth.login.password')}
+              </FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                type="password"
+                autoComplete="current-password"
+                placeholder={__('auth.login.password_placeholder')}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              <FieldDescription>
+                <a
+                  href="/forgot-password"
+                  className="text-primary hover:underline"
+                >
+                  {__('auth.login.forgot_password')}
+                </a>
+              </FieldDescription>
+            </Field>
           )}
-          <FieldDescription>
-            <a href="/forgot-password" className="text-primary hover:underline">
-              {__('auth.login.forgot_password')}
-            </a>
-          </FieldDescription>
-        </Field>
+        />
 
         <Button type="submit" disabled={isPending} className="w-full">
           {isPending ? __('auth.login.submitting') : __('auth.login.submit')}

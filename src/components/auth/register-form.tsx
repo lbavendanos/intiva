@@ -79,91 +79,115 @@ export function RegisterForm() {
         )}
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field data-invalid={!!form.formState.errors.firstName}>
-            <FieldLabel htmlFor="firstName">
-              {__('auth.register.first_name')}
-            </FieldLabel>
-            <Input
-              id="firstName"
-              type="text"
-              autoComplete="given-name"
-              placeholder={__('auth.register.first_name_placeholder')}
-              aria-invalid={!!form.formState.errors.firstName}
-              {...form.register('firstName')}
-            />
-            {form.formState.errors.firstName && (
-              <FieldError>{form.formState.errors.firstName.message}</FieldError>
+          <Controller
+            name="firstName"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>
+                  {__('auth.register.first_name')}
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id={field.name}
+                  type="text"
+                  autoComplete="given-name"
+                  placeholder={__('auth.register.first_name_placeholder')}
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             )}
-          </Field>
+          />
 
-          <Field data-invalid={!!form.formState.errors.lastName}>
-            <FieldLabel htmlFor="lastName">
-              {__('auth.register.last_name')}
-            </FieldLabel>
-            <Input
-              id="lastName"
-              type="text"
-              autoComplete="family-name"
-              placeholder={__('auth.register.last_name_placeholder')}
-              aria-invalid={!!form.formState.errors.lastName}
-              {...form.register('lastName')}
-            />
-            {form.formState.errors.lastName && (
-              <FieldError>{form.formState.errors.lastName.message}</FieldError>
+          <Controller
+            name="lastName"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>
+                  {__('auth.register.last_name')}
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id={field.name}
+                  type="text"
+                  autoComplete="family-name"
+                  placeholder={__('auth.register.last_name_placeholder')}
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             )}
-          </Field>
+          />
         </div>
 
-        <Field data-invalid={!!form.formState.errors.email}>
-          <FieldLabel htmlFor="email">{__('auth.register.email')}</FieldLabel>
-          <Input
-            id="email"
-            type="email"
-            autoComplete="email"
-            placeholder={__('auth.register.email_placeholder')}
-            aria-invalid={!!form.formState.errors.email}
-            {...form.register('email')}
-          />
-          {form.formState.errors.email && (
-            <FieldError>{form.formState.errors.email.message}</FieldError>
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>
+                {__('auth.register.email')}
+              </FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                type="email"
+                autoComplete="email"
+                placeholder={__('auth.register.email_placeholder')}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
-        </Field>
+        />
 
-        <Field data-invalid={!!form.formState.errors.password}>
-          <FieldLabel htmlFor="password">
-            {__('auth.register.password')}
-          </FieldLabel>
-          <Input
-            id="password"
-            type="password"
-            autoComplete="new-password"
-            placeholder={__('auth.register.password_placeholder')}
-            aria-invalid={!!form.formState.errors.password}
-            {...form.register('password')}
-          />
-          {form.formState.errors.password && (
-            <FieldError>{form.formState.errors.password.message}</FieldError>
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>
+                {__('auth.register.password')}
+              </FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                type="password"
+                autoComplete="new-password"
+                placeholder={__('auth.register.password_placeholder')}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
-        </Field>
+        />
 
-        <Field data-invalid={!!form.formState.errors.confirmPassword}>
-          <FieldLabel htmlFor="confirmPassword">
-            {__('auth.register.confirm_password')}
-          </FieldLabel>
-          <Input
-            id="confirmPassword"
-            type="password"
-            autoComplete="new-password"
-            placeholder={__('auth.register.confirm_password_placeholder')}
-            aria-invalid={!!form.formState.errors.confirmPassword}
-            {...form.register('confirmPassword')}
-          />
-          {form.formState.errors.confirmPassword && (
-            <FieldError>
-              {form.formState.errors.confirmPassword.message}
-            </FieldError>
+        <Controller
+          name="confirmPassword"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>
+                {__('auth.register.confirm_password')}
+              </FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                type="password"
+                autoComplete="new-password"
+                placeholder={__('auth.register.confirm_password_placeholder')}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
-        </Field>
+        />
 
         <Controller
           name="acceptsMarketing"

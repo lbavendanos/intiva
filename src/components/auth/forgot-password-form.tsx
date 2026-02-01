@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import { __ } from '@/lib/utils'
@@ -73,22 +73,26 @@ export function ForgotPasswordForm() {
           <FieldError>{form.formState.errors.root.message}</FieldError>
         )}
 
-        <Field data-invalid={!!form.formState.errors.email}>
-          <FieldLabel htmlFor="email">
-            {__('auth.forgot_password.email')}
-          </FieldLabel>
-          <Input
-            id="email"
-            type="email"
-            autoComplete="email"
-            placeholder={__('auth.forgot_password.email_placeholder')}
-            aria-invalid={!!form.formState.errors.email}
-            {...form.register('email')}
-          />
-          {form.formState.errors.email && (
-            <FieldError>{form.formState.errors.email.message}</FieldError>
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>
+                {__('auth.forgot_password.email')}
+              </FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                type="email"
+                autoComplete="email"
+                placeholder={__('auth.forgot_password.email_placeholder')}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
-        </Field>
+        />
 
         <Button type="submit" disabled={isPending} className="w-full">
           {isPending

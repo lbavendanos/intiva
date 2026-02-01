@@ -81,39 +81,51 @@ export function ProfileForm({ customer }: ProfileFormProps) {
         )}
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field data-invalid={!!form.formState.errors.firstName}>
-            <FieldLabel htmlFor="firstName">
-              {__('account.profile.first_name')}
-            </FieldLabel>
-            <Input
-              id="firstName"
-              type="text"
-              autoComplete="given-name"
-              placeholder={__('account.profile.first_name_placeholder')}
-              aria-invalid={!!form.formState.errors.firstName}
-              {...form.register('firstName')}
-            />
-            {form.formState.errors.firstName && (
-              <FieldError>{form.formState.errors.firstName.message}</FieldError>
+          <Controller
+            name="firstName"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>
+                  {__('account.profile.first_name')}
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id={field.name}
+                  type="text"
+                  autoComplete="given-name"
+                  placeholder={__('account.profile.first_name_placeholder')}
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             )}
-          </Field>
+          />
 
-          <Field data-invalid={!!form.formState.errors.lastName}>
-            <FieldLabel htmlFor="lastName">
-              {__('account.profile.last_name')}
-            </FieldLabel>
-            <Input
-              id="lastName"
-              type="text"
-              autoComplete="family-name"
-              placeholder={__('account.profile.last_name_placeholder')}
-              aria-invalid={!!form.formState.errors.lastName}
-              {...form.register('lastName')}
-            />
-            {form.formState.errors.lastName && (
-              <FieldError>{form.formState.errors.lastName.message}</FieldError>
+          <Controller
+            name="lastName"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>
+                  {__('account.profile.last_name')}
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id={field.name}
+                  type="text"
+                  autoComplete="family-name"
+                  placeholder={__('account.profile.last_name_placeholder')}
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             )}
-          </Field>
+          />
         </div>
 
         <Field>
@@ -127,20 +139,26 @@ export function ProfileForm({ customer }: ProfileFormProps) {
           />
         </Field>
 
-        <Field data-invalid={!!form.formState.errors.phone}>
-          <FieldLabel htmlFor="phone">{__('account.profile.phone')}</FieldLabel>
-          <Input
-            id="phone"
-            type="tel"
-            autoComplete="tel"
-            placeholder={__('account.profile.phone_placeholder')}
-            aria-invalid={!!form.formState.errors.phone}
-            {...form.register('phone')}
-          />
-          {form.formState.errors.phone && (
-            <FieldError>{form.formState.errors.phone.message}</FieldError>
+        <Controller
+          name="phone"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>
+                {__('account.profile.phone')}
+              </FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                type="tel"
+                autoComplete="tel"
+                placeholder={__('account.profile.phone_placeholder')}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
           )}
-        </Field>
+        />
 
         <Controller
           name="acceptsMarketing"
