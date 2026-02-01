@@ -4,9 +4,8 @@ import { Minus, Plus, X } from 'lucide-react'
 
 import type { CartLineItem } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
+import { Price } from '@/components/common/price'
 import { Button } from '@/components/ui/button'
-
-import { Price } from './price'
 
 type CartItemProps = {
   item: CartLineItem
@@ -102,6 +101,7 @@ export function CartItem({ item, updateQuantity, removeItem }: CartItemProps) {
             </Button>
           </div>
           <Price
+            as="p"
             className="text-sm font-semibold"
             amount={cost.totalAmount.amount}
             currencyCode={cost.totalAmount.currencyCode}

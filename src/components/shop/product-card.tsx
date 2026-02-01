@@ -3,11 +3,10 @@ import Link from 'next/link'
 
 import type { ProductListItem } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
+import { Price } from '@/components/common/price'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-
-import { Price } from './price'
 
 type ProductCardProps = {
   product: ProductListItem
@@ -62,9 +61,10 @@ export function ProductCard({ product }: ProductCardProps) {
         </CardContent>
         <CardFooter className="p-4 pt-0">
           <div className="flex items-center gap-2 text-lg font-semibold">
-            <Price {...price} />
+            <Price as="p" {...price} />
             {product.hasDiscount && (
               <Price
+                as="p"
                 className="text-xl font-semibold line-through opacity-40"
                 {...compareAtPrice}
               />

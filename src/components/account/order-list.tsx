@@ -135,6 +135,7 @@ export function OrderCard({ order, compact = false }: OrderCardProps) {
               {__('orders.items', { count: totalItems })}
             </p>
             <Price
+              as="p"
               className="font-medium"
               amount={order.totalPrice.amount}
               currencyCode={order.totalPrice.currencyCode}

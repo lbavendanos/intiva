@@ -86,9 +86,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <p className="mt-1 text-sm text-zinc-500">{product.vendor}</p>
           )}
           <div className="mt-4 flex items-center gap-2">
-            <Price className="text-2xl font-semibold" {...product.price} />
+            <Price
+              as="p"
+              className="text-2xl font-semibold"
+              {...product.price}
+            />
             {product.hasDiscount && (
               <Price
+                as="p"
                 className="text-2xl font-semibold line-through opacity-40"
                 {...product.compareAtPrice}
               />

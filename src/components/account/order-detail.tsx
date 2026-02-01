@@ -156,7 +156,6 @@ export function OrderDetail({ order }: OrderDetailProps) {
                     <div className="col-span-4 flex items-center justify-end">
                       {item.variant?.price && (
                         <Price
-                          as="span"
                           amount={item.variant.price.amount}
                           currencyCode={currencyCode}
                         />
@@ -173,7 +172,6 @@ export function OrderDetail({ order }: OrderDetailProps) {
                       {__('order.subtotal')}
                     </span>
                     <Price
-                      as="span"
                       amount={order.subtotalPrice.amount}
                       currencyCode={currencyCode}
                     />
@@ -183,7 +181,6 @@ export function OrderDetail({ order }: OrderDetailProps) {
                       {__('order.shipping')}
                     </span>
                     <Price
-                      as="span"
                       amount={order.totalShippingPrice.amount}
                       currencyCode={currencyCode}
                     />
@@ -194,7 +191,6 @@ export function OrderDetail({ order }: OrderDetailProps) {
                         {__('order.tax')}
                       </span>
                       <Price
-                        as="span"
                         amount={order.totalTax.amount}
                         currencyCode={currencyCode}
                       />
@@ -204,7 +200,6 @@ export function OrderDetail({ order }: OrderDetailProps) {
                   <div className="flex justify-between font-medium">
                     <span>{__('order.total')}</span>
                     <Price
-                      as="span"
                       amount={order.totalPrice.amount}
                       currencyCode={currencyCode}
                     />

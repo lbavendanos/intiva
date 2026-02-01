@@ -1,17 +1,17 @@
 import { Money } from '@/lib/shopify/types'
 
-type PriceProps<T extends React.ElementType = 'p'> = {
+type PriceProps<T extends React.ElementType = 'span'> = {
   as?: T
 } & Money &
   Omit<React.ComponentProps<T>, keyof Money | 'as'>
 
-export function Price<T extends React.ElementType = 'p'>({
+export function Price<T extends React.ElementType = 'span'>({
   as,
   amount,
   currencyCode,
   ...props
 }: PriceProps<T>) {
-  const Component = as ?? 'p'
+  const Component = as ?? 'span'
   const appLocale = process.env.NEXT_PUBLIC_APP_LOCALE
 
   return (
