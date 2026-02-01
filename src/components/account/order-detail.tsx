@@ -2,65 +2,17 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
-import type { TranslationKeys } from '@/lib/foundation/translation/translator'
 import type { Order } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
 import { DateTime } from '@/components/common/datetime'
+import { PaymentBadge } from '@/components/common/payment-badge'
 import { Price } from '@/components/common/price'
-import { Badge } from '@/components/ui/badge'
+import { ShippingBadge } from '@/components/common/shipping-badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
 type OrderDetailProps = {
   order: Order
-}
-
-function getFinancialStatusVariant(
-  status: string,
-): 'default' | 'secondary' | 'destructive' | 'outline' {
-  switch (status.toUpperCase()) {
-    case 'PAID':
-      return 'default'
-    case 'PENDING':
-    case 'AUTHORIZED':
-      return 'secondary'
-    case 'REFUNDED':
-    case 'PARTIALLY_REFUNDED':
-    case 'VOIDED':
-      return 'destructive'
-    default:
-      return 'outline'
-  }
-}
-
-function getFulfillmentStatusVariant(
-  status: string,
-): 'default' | 'secondary' | 'destructive' | 'outline' {
-  switch (status.toUpperCase()) {
-    case 'FULFILLED':
-      return 'default'
-    case 'IN_PROGRESS':
-    case 'PARTIALLY_FULFILLED':
-    case 'PENDING_FULFILLMENT':
-      return 'secondary'
-    case 'UNFULFILLED':
-    case 'ON_HOLD':
-      return 'outline'
-    default:
-      return 'outline'
-  }
-}
-
-function getFinancialStatusLabel(status: string): string {
-  const key =
-    `orders.financial_status.${status.toLowerCase()}` as TranslationKeys
-  return __(key)
-}
-
-function getFulfillmentStatusLabel(status: string): string {
-  const key =
-    `orders.fulfillment_status.${status.toLowerCase()}` as TranslationKeys
-  return __(key)
 }
 
 export function OrderDetail({ order }: OrderDetailProps) {
@@ -86,12 +38,8 @@ export function OrderDetail({ order }: OrderDetailProps) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant={getFinancialStatusVariant(order.financialStatus)}>
-            {getFinancialStatusLabel(order.financialStatus)}
-          </Badge>
-          <Badge variant={getFulfillmentStatusVariant(order.fulfillmentStatus)}>
-            {getFulfillmentStatusLabel(order.fulfillmentStatus)}
-          </Badge>
+          <PaymentBadge status={order.financialStatus} />
+          <ShippingBadge status={order.fulfillmentStatus} />
         </div>
       </div>
 
