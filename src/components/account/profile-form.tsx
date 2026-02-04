@@ -22,8 +22,8 @@ import {
 import { Input } from '@/components/ui/input'
 
 const profileSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  firstName: z.string().min(1, __('account.validation.first_name_required')),
+  lastName: z.string().min(1, __('account.validation.last_name_required')),
   phone: z.string().optional(),
   acceptsMarketing: z.boolean().optional(),
 })

@@ -125,6 +125,8 @@
   "account.profile.submit": "Guardar cambios",
   "account.profile.submitting": "Guardando...",
   "account.profile.success": "Perfil actualizado correctamente",
+  "account.validation.first_name_required": "El nombre es requerido",
+  "account.validation.last_name_required": "El apellido es requerido",
   "account.error.not_authenticated": "Debes iniciar sesión para realizar esta acción",
   "account.error.update_failed": "Error al actualizar el perfil. Por favor intenta de nuevo.",
   "account.error.generic": "Ocurrió un error. Por favor intenta de nuevo.",

@@ -125,6 +125,8 @@
   "account.profile.submit": "Save changes",
   "account.profile.submitting": "Saving...",
   "account.profile.success": "Profile updated successfully",
+  "account.validation.first_name_required": "First name is required",
+  "account.validation.last_name_required": "Last name is required",
   "account.error.not_authenticated": "You must sign in to perform this action",
   "account.error.update_failed": "Failed to update profile. Please try again.",
   "account.error.generic": "An error occurred. Please try again.",
