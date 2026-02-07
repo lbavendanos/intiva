@@ -1,4 +1,6 @@
 {
+  "auth.login": "Iniciar sesión",
+  "auth.logout": "Cerrar sesión",
   "checkout.redirecting": "Redirigiendo al checkout...",
   "cart.loading": "Cargando carrito",
   "cart.aria_label": "Carrito de compras, :count artículos",

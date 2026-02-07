@@ -1,4 +1,6 @@
 {
+  "auth.login": "Log in",
+  "auth.logout": "Log out",
   "checkout.redirecting": "Redirecting to checkout...",
   "cart.loading": "Loading cart",
   "cart.aria_label": "Shopping cart, :count items",
