@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 
-import { AuthButton, AuthButtonSkeleton } from '@/components/auth/auth-button'
 import { MiniCart, MiniCartSkeleton } from '@/components/shop/mini-cart'
 
 export function Header() {
@@ -33,9 +32,6 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Suspense fallback={<AuthButtonSkeleton />}>
-            <AuthButton />
-          </Suspense>
           <Suspense fallback={<MiniCartSkeleton />}>
             <MiniCart />
           </Suspense>

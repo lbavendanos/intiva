@@ -165,25 +165,6 @@ export type CustomerAddress = {
   phone: Maybe<string>
 }
 
-export type Customer = {
-  id: string
-  email: string
-  firstName: Maybe<string>
-  lastName: Maybe<string>
-  displayName: string
-  phone: Maybe<string>
-  acceptsMarketing: boolean
-  defaultAddress: Maybe<CustomerAddress>
-  addresses: CustomerAddress[]
-  createdAt: string
-  updatedAt: string
-}
-
-export type CustomerAccessToken = {
-  accessToken: string
-  expiresAt: string
-}
-
 export type OrderLineItem = {
   title: string
   quantity: number
