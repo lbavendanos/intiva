@@ -4,9 +4,9 @@ import { NextResponse } from 'next/server'
 import {
   clearSessionCookies,
   getSessionTokens,
-  refreshAccessToken,
   setSessionCookies,
-} from '@/lib/shopify/customer/session'
+} from '@/lib/auth/session'
+import { refreshAccessToken } from '@/lib/shopify/customer/tokens'
 
 const PROTECTED_ROUTES = ['/account']
 

@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 
+import { setOAuthStateCookies } from '@/lib/auth/session'
 import { generatePKCEParams } from '@/lib/shopify/customer/crypto'
 import {
   getClientId,
   getOAuthDiscoveryConfig,
 } from '@/lib/shopify/customer/discovery'
-import { setOAuthStateCookies } from '@/lib/shopify/customer/session'
 import { url } from '@/lib/utils'
 
 export async function GET(): Promise<NextResponse> {

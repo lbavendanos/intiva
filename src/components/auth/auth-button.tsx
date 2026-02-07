@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { UserRound } from 'lucide-react'
 
-import { COOKIE_NAMES } from '@/lib/shopify/customer/session'
+import { COOKIE_NAMES } from '@/lib/auth/session'
 import { __ } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 

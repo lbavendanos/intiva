@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server'
 
 import {
   clearOAuthStateCookies,
-  exchangeCodeForTokens,
   getOAuthStateCookies,
   setSessionCookies,
-} from '@/lib/shopify/customer/session'
+} from '@/lib/auth/session'
+import { exchangeCodeForTokens } from '@/lib/shopify/customer/tokens'
 import { url } from '@/lib/utils'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {

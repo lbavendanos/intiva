@@ -1,11 +1,8 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
+import { clearSessionCookies, getSessionTokens } from '@/lib/auth/session'
 import { getOAuthDiscoveryConfig } from '@/lib/shopify/customer/discovery'
-import {
-  clearSessionCookies,
-  getSessionTokens,
-} from '@/lib/shopify/customer/session'
 import { url } from '@/lib/utils'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
