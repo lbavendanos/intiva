@@ -1,25 +1,27 @@
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
-import { clearSessionCookies, getSessionTokens } from '@/lib/auth/session'
+import { SESSION_COOKIE_NAMES } from '@/lib/auth/session'
 import { getOAuthDiscoveryConfig } from '@/lib/shopify/customer/discovery'
 import { url } from '@/lib/utils'
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
-  const session = getSessionTokens(request)
+export async function GET(): Promise<never> {
+  const cookieStore = await cookies()
+  const idToken = cookieStore.get(SESSION_COOKIE_NAMES.idToken)?.value
 
-  if (!session) {
-    return NextResponse.redirect(url('/').toString())
+  if (!idToken) {
+    redirect('/')
   }
 
   const config = await getOAuthDiscoveryConfig()
 
   const logoutUrl = new URL(config.end_session_endpoint)
-  logoutUrl.searchParams.set('id_token_hint', session.idToken)
+  logoutUrl.searchParams.set('id_token_hint', idToken)
   logoutUrl.searchParams.set('post_logout_redirect_uri', url('/').toString())
 
-  const response = NextResponse.redirect(logoutUrl.toString())
-  clearSessionCookies(response)
+  for (const name of Object.values(SESSION_COOKIE_NAMES)) {
+    cookieStore.delete(name)
+  }
 
-  return response
+  redirect(logoutUrl.toString())
 }

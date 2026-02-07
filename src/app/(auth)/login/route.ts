@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { redirect } from 'next/navigation'
 
 import { setOAuthStateCookies } from '@/lib/auth/oauth-state'
 import { generatePKCEParams } from '@/lib/shopify/customer/crypto'
@@ -8,7 +8,7 @@ import {
 } from '@/lib/shopify/customer/discovery'
 import { url } from '@/lib/utils'
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(): Promise<never> {
   const params = await generatePKCEParams()
   const config = await getOAuthDiscoveryConfig()
   const clientId = getClientId()
@@ -25,5 +25,5 @@ export async function GET(): Promise<NextResponse> {
 
   await setOAuthStateCookies(params)
 
-  return NextResponse.redirect(authUrl.toString())
+  redirect(authUrl.toString())
 }
