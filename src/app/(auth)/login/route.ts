@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { setOAuthStateCookies } from '@/lib/auth/session'
+import { setOAuthStateCookies } from '@/lib/auth/oauth-state'
 import { generatePKCEParams } from '@/lib/shopify/customer/crypto'
 import {
   getClientId,
@@ -23,8 +23,7 @@ export async function GET(): Promise<NextResponse> {
   authUrl.searchParams.set('code_challenge', params.codeChallenge)
   authUrl.searchParams.set('code_challenge_method', 'S256')
 
-  const response = NextResponse.redirect(authUrl.toString())
-  setOAuthStateCookies(response, params)
+  await setOAuthStateCookies(params)
 
-  return response
+  return NextResponse.redirect(authUrl.toString())
 }

@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server'
 import {
   clearOAuthStateCookies,
   getOAuthStateCookies,
-  setSessionCookies,
-} from '@/lib/auth/session'
+} from '@/lib/auth/oauth-state'
+import { setSessionCookies } from '@/lib/auth/session'
 import { exchangeCodeForTokens } from '@/lib/shopify/customer/tokens'
 import { url } from '@/lib/utils'
 
@@ -18,11 +18,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.redirect(url('/').toString())
   }
 
-  const oauthState = getOAuthStateCookies(request)
+  const oauthState = await getOAuthStateCookies()
 
   if (!oauthState || oauthState.state !== state) {
     return NextResponse.redirect(url('/').toString())
   }
+
+  await clearOAuthStateCookies()
 
   try {
     const tokens = await exchangeCodeForTokens(
@@ -33,13 +35,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const response = NextResponse.redirect(url('/').toString())
     setSessionCookies(response, tokens)
-    clearOAuthStateCookies(response)
 
     return response
   } catch {
-    const response = NextResponse.redirect(url('/').toString())
-    clearOAuthStateCookies(response)
-
-    return response
+    return NextResponse.redirect(url('/').toString())
   }
 }
