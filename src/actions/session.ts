@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers'
 
+import { refreshAccessToken } from '@/lib/shopify/customer/tokens'
 import type { SessionTokens } from '@/lib/shopify/customer/types'
 
 const SESSION_COOKIE_PREFIX = 'customer_'
@@ -26,11 +27,32 @@ export async function getSession(): Promise<SessionTokens | null> {
     return null
   }
 
-  return {
+  const session: SessionTokens = {
     accessToken,
     refreshToken,
     idToken,
     expiresAt: Number(expiresAt),
+  }
+
+  if (!session) {
+    return null
+  }
+
+  // Token still valid — return as-is
+  if (session.expiresAt > Date.now()) {
+    return session
+  }
+
+  // Token expired — try to refresh
+  try {
+    const newTokens = await refreshAccessToken(session.refreshToken)
+    await setSession(newTokens)
+
+    return newTokens
+  } catch {
+    await clearSession()
+
+    return null
   }
 }
 
@@ -67,7 +89,7 @@ export async function clearSession(): Promise<void> {
 }
 
 export async function isAuthenticated(): Promise<boolean> {
-  const cookieStore = await cookies()
+  const session = await getSession()
 
-  return !!cookieStore.get(SESSION_COOKIE_NAMES.accessToken)?.value
+  return session !== null
 }

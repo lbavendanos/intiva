@@ -1,12 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-import {
-  clearSessionCookies,
-  getSessionTokens,
-  setSessionCookies,
-} from '@/lib/auth/proxy-session'
-import { refreshAccessToken } from '@/lib/shopify/customer/tokens'
+const SESSION_COOKIE_NAME = 'customer_access_token'
 
 const PROTECTED_ROUTES = ['/account']
 
@@ -16,39 +11,12 @@ function isProtectedRoute(pathname: string): boolean {
   )
 }
 
-export async function proxy(request: NextRequest): Promise<NextResponse> {
+export function proxy(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl
-  const session = getSessionTokens(request)
-  const isProtected = isProtectedRoute(pathname)
+  const hasSession = request.cookies.has(SESSION_COOKIE_NAME)
 
-  // No session — redirect to login if protected route
-  if (!session) {
-    if (isProtected) {
-      const loginUrl = new URL('/login', request.url)
-      return NextResponse.redirect(loginUrl)
-    }
-
-    return NextResponse.next()
-  }
-
-  // Session exists but access token is expired — try to refresh
-  if (session.expiresAt <= Date.now()) {
-    try {
-      const newTokens = await refreshAccessToken(session.refreshToken)
-      const response = NextResponse.next()
-      setSessionCookies(response, newTokens)
-
-      return response
-    } catch {
-      // Refresh failed — clear cookies and redirect if protected
-      const response = isProtected
-        ? NextResponse.redirect(new URL('/login', request.url))
-        : NextResponse.next()
-
-      clearSessionCookies(response)
-
-      return response
-    }
+  if (!hasSession && isProtectedRoute(pathname)) {
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
   return NextResponse.next()
