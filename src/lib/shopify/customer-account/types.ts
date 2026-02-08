@@ -48,37 +48,86 @@ export type CustomerAddress = {
   address2: Maybe<string>
   city: Maybe<string>
   province: Maybe<string>
-  provinceCode: Maybe<string>
+  zoneCode: Maybe<string>
   country: Maybe<string>
-  countryCodeV2: Maybe<string>
+  territoryCode: Maybe<string>
   zip: Maybe<string>
-  phone: Maybe<string>
+  phoneNumber: Maybe<string>
+  formatted: string[]
+  formattedArea: Maybe<string>
+}
+
+export type CustomerEmailAddress = {
+  emailAddress: Maybe<string>
+  marketingState: string
+}
+
+export type CustomerPhoneNumber = {
+  phoneNumber: string
+  marketingState: string
+}
+
+export type Customer = {
+  id: string
+  firstName: Maybe<string>
+  lastName: Maybe<string>
+  displayName: string
+  imageUrl: string
+  emailAddress: Maybe<CustomerEmailAddress>
+  phoneNumber: Maybe<CustomerPhoneNumber>
+  creationDate: string
+  defaultAddress: Maybe<CustomerAddress>
+  addresses: CustomerAddress[]
 }
 
 export type OrderLineItem = {
+  id: string
   title: string
+  name: string
   quantity: number
-  variant: Maybe<{
-    id: string
-    title: string
-    price: Money
-    image: Maybe<Image>
-  }>
+  image: Maybe<Image>
+  price: Maybe<Money>
+  variantTitle: Maybe<string>
+  totalPrice: Maybe<Money>
 }
 
 export type Order = {
   id: string
-  orderNumber: number
   name: string
+  number: number
   processedAt: string
-  financialStatus: string
+  financialStatus: Maybe<string>
   fulfillmentStatus: string
   totalPrice: Money
-  subtotalPrice: Money
+  subtotal: Maybe<Money>
   totalTax: Maybe<Money>
-  totalShippingPrice: Money
+  totalShipping: Money
   lineItems: OrderLineItem[]
   shippingAddress: Maybe<CustomerAddress>
+  statusPageUrl: string
+}
+
+export type OrderListItem = {
+  id: string
+  name: string
+  number: number
+  processedAt: string
+  financialStatus: Maybe<string>
+  fulfillmentStatus: string
+  totalPrice: Money
+}
+
+export type CustomerAddressInput = {
+  firstName?: string
+  lastName?: string
+  address1?: string
+  address2?: string
+  city?: string
+  company?: string
+  territoryCode?: string
+  zoneCode?: string
+  zip?: string
+  phoneNumber?: string
 }
 
 export type CustomerUserError = UserError & {

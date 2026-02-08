@@ -12,5 +12,5 @@ export async function GET(request: NextRequest): Promise<void> {
     redirect(url('/').toString())
   }
 
-  authorize(code, state)
+  await authorize(code, state)
 }
