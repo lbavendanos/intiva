@@ -49,10 +49,9 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 - `src/actions/` - Server Actions
 - `src/lib/` - Utility functions
 - `src/lib/foundation/` - Core framework modules
-- `src/lib/shopify/` - Shopify Storefront API integration
-- `src/lib/shopify/fragments/` - GraphQL fragments for reusable query parts
-- `src/lib/shopify/mutations/` - GraphQL mutations for data modifications
-- `src/lib/shopify/queries/` - GraphQL queries for data fetching
+- `src/lib/shopify/` - Shopify integration (shared types)
+- `src/lib/shopify/storefront/` - Storefront API (client, queries, mutations, fragments)
+- `src/lib/shopify/customer-account/` - Customer Account API (OAuth, tokens, discovery, queries, mutations, fragments)
 - `src/hooks/` - Custom React hooks
 - `src/lang/` - Translation dictionaries (en.json, es.json)
 - `__tests__/unit/` - Unit tests (Vitest)
@@ -111,15 +110,25 @@ Only export types and functions that are used externally. Keep internal implemen
 
 ## Shopify Integration
 
-### Client (`src/lib/shopify/client.ts`)
+### Storefront API (`src/lib/shopify/storefront/`)
 
 - `storefrontQuery<T>(query, options)` - Execute GraphQL queries against Shopify Storefront API
 - `extractNodesFromEdges<T>(connection)` - Extract nodes from Shopify connection edges
 - `ShopifyClientError` - Custom error class with GraphQL error details
+- `queries/` - Data fetching functions (products, collections, cart)
+- `mutations/` - Data modification functions (cart operations)
+- `fragments/` - Reusable GraphQL fragments
 
-### Queries
+### Customer Account API (`src/lib/shopify/customer-account/`)
 
-Located in `src/lib/shopify/queries/` - data fetching functions for Shopify resources.
+- `customerAccountQuery<T>(query, accessToken, options)` - Execute GraphQL queries against Customer Account API
+- `CustomerAccountError` - Custom error class for Customer Account API errors
+- `discovery.ts` - OAuth discovery and configuration endpoints
+- `tokens.ts` - Token exchange and refresh
+- `crypto.ts` - PKCE parameter generation
+- `queries/` - Data fetching functions
+- `mutations/` - Data modification functions
+- `fragments/` - Reusable GraphQL fragments
 
 ## Testing Patterns
 
