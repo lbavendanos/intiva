@@ -1,22 +1,20 @@
-import { cookies } from 'next/headers'
 import { UserRound } from 'lucide-react'
 
-import { SESSION_COOKIE_NAMES } from '@/lib/auth/session'
 import { __ } from '@/lib/utils'
 import { login, logout } from '@/actions/auth'
+import { isAuthenticated } from '@/actions/session'
 import { Button } from '@/components/ui/button'
 
 export async function AuthButton() {
-  const cookieStore = await cookies()
-  const isLoggedIn = !!cookieStore.get(SESSION_COOKIE_NAMES.accessToken)?.value
+  const authenticated = await isAuthenticated()
 
   return (
-    <form action={isLoggedIn ? logout : login}>
+    <form action={authenticated ? logout : login}>
       <Button
         type="submit"
         variant="ghost"
         size="icon"
-        aria-label={isLoggedIn ? __('auth.logout') : __('auth.login')}
+        aria-label={authenticated ? __('auth.logout') : __('auth.login')}
       >
         <UserRound className="h-5 w-5" />
       </Button>
