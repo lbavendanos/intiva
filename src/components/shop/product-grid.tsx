@@ -1,4 +1,4 @@
-import { ProductListItem } from '@/lib/shopify/types'
+import { ProductListItem } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
 
 import { ProductCard, ProductCardSkeleton } from './product-card'

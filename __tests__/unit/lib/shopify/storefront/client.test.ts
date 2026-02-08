@@ -4,7 +4,7 @@ import {
   extractNodesFromEdges,
   ShopifyClientError,
   storefrontQuery,
-} from '@/lib/shopify/client'
+} from '@/lib/shopify/storefront/client'
 
 const mockFetch = vi.fn()
 

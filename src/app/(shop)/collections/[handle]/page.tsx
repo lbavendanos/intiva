@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { getCollectionProducts } from '@/lib/shopify/queries/collections'
+import { getCollectionProducts } from '@/lib/shopify/storefront/queries/collections'
 import { __ } from '@/lib/utils'
 import { Pagination } from '@/components/shop/pagination'
 import {

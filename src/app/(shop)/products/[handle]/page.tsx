@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { getProducts } from '@/lib/shopify/queries/products'
+import { getProducts } from '@/lib/shopify/storefront/queries/products'
 import { __, url } from '@/lib/utils'
 import { getProductByHandle } from '@/actions/products'
 import { Price } from '@/components/common/price'

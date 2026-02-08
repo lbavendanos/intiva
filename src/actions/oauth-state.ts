@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 
-import type { PKCEParams } from '@/lib/shopify/customer/types'
+import type { PKCEParams } from '@/lib/shopify/customer-account/types'
 
 const OAUTH_STATE_COOKIE_PREFIX = 'oauth_'
 const OAUTH_STATE_COOKIE_MAX_AGE = 60 * 10 // 10 minutes

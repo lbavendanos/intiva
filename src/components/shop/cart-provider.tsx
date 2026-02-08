@@ -2,7 +2,7 @@
 
 import { createContext, type ReactNode } from 'react'
 
-import type { Cart } from '@/lib/shopify/types'
+import type { Cart } from '@/lib/shopify/storefront/types'
 
 type CartContextValue = {
   cartPromise: Promise<Cart | null>

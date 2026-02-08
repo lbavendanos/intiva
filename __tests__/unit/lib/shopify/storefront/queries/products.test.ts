@@ -4,7 +4,7 @@ import {
   getProductByHandle,
   getProductRecommendations,
   getProducts,
-} from '@/lib/shopify/queries/products'
+} from '@/lib/shopify/storefront/queries/products'
 
 const mockFetch = vi.fn()
 

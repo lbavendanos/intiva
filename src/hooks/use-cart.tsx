@@ -2,7 +2,8 @@
 
 import { use, useContext, useOptimistic, useTransition } from 'react'
 
-import type { Cart, CartLineItem, Money } from '@/lib/shopify/types'
+import type { Cart, CartLineItem } from '@/lib/shopify/storefront/types'
+import type { Money } from '@/lib/shopify/types'
 import {
   removeFromCart as removeFromCartAction,
   updateCartItem as updateCartItemAction,

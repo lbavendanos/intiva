@@ -5,7 +5,7 @@ import {
   createCart,
   removeFromCart,
   updateCartLines,
-} from '@/lib/shopify/mutations/cart'
+} from '@/lib/shopify/storefront/mutations/cart'
 
 const mockFetch = vi.fn()
 

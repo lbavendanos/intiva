@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
-import { getCollections } from '@/lib/shopify/queries/collections'
+import { getCollections } from '@/lib/shopify/storefront/queries/collections'
 import { __ } from '@/lib/utils'
 import {
   CollectionGrid,

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import type { ProductListItem } from '@/lib/shopify/types'
+import type { ProductListItem } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
 import { Price } from '@/components/common/price'
 import { Badge } from '@/components/ui/badge'

@@ -1,3 +1,4 @@
+import type { Connection, Image, PageInfo } from '../../types'
 import { extractNodesFromEdges, storefrontQuery } from '../client'
 import { computePricing } from '../common'
 import {
@@ -10,9 +11,6 @@ import {
   SEO_FRAGMENT,
 } from '../fragments'
 import type {
-  Connection,
-  Image,
-  PageInfo,
   Product,
   ProductListItem,
   ProductRecommendationIntent,

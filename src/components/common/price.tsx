@@ -1,4 +1,4 @@
-import { Money } from '@/lib/shopify/types'
+import type { Money } from '@/lib/shopify/types'
 
 type PriceProps<T extends React.ElementType = 'span'> = {
   as?: T

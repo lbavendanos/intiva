@@ -1,16 +1,12 @@
-import { extractNodesFromEdges, storefrontQuery } from '@/lib/shopify/client'
+import type { Connection } from '../../types'
+import { extractNodesFromEdges, storefrontQuery } from '../client'
 import {
   CART_FRAGMENT,
   CART_LINE_FRAGMENT,
   IMAGE_FRAGMENT,
   MONEY_FRAGMENT,
-} from '@/lib/shopify/fragments'
-import type {
-  Cart,
-  CartLineItem,
-  CartUserError,
-  Connection,
-} from '@/lib/shopify/types'
+} from '../fragments'
+import type { Cart, CartLineItem, CartUserError } from '../types'
 
 type CartLineNode = Omit<CartLineItem, 'merchandise'> & {
   merchandise: CartLineItem['merchandise']

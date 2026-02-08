@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import type { CollectionListItem } from '@/lib/shopify/types'
+import type { CollectionListItem } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'

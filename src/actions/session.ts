@@ -2,8 +2,8 @@
 
 import { cookies } from 'next/headers'
 
-import { refreshAccessToken } from '@/lib/shopify/customer/tokens'
-import type { SessionTokens } from '@/lib/shopify/customer/types'
+import { refreshAccessToken } from '@/lib/shopify/customer-account/tokens'
+import type { SessionTokens } from '@/lib/shopify/customer-account/types'
 
 const SESSION_COOKIE_PREFIX = 'customer_'
 const SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days

@@ -1,4 +1,5 @@
-import type { Money, ProductPricing } from './types'
+import type { Money } from '../types'
+import type { ProductPricing } from './types'
 
 export function computePricing({
   priceRange,

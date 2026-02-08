@@ -9,9 +9,9 @@ import {
   createCart,
   removeFromCart as removeFromCartMutation,
   updateCartLines,
-} from '@/lib/shopify/mutations/cart'
-import { getCart as getCartQuery } from '@/lib/shopify/queries/cart'
-import type { Cart } from '@/lib/shopify/types'
+} from '@/lib/shopify/storefront/mutations/cart'
+import { getCart as getCartQuery } from '@/lib/shopify/storefront/queries/cart'
+import type { Cart } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
 
 type CartActionResult = {

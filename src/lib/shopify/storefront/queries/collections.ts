@@ -1,3 +1,4 @@
+import type { Image, PageInfo } from '../../types'
 import { extractNodesFromEdges, storefrontQuery } from '../client'
 import {
   COLLECTION_FRAGMENT,
@@ -7,13 +8,7 @@ import {
   PRODUCT_CARD_FRAGMENT,
   SEO_FRAGMENT,
 } from '../fragments'
-import type {
-  Collection,
-  CollectionListItem,
-  Image,
-  PageInfo,
-  ProductListItem,
-} from '../types'
+import type { Collection, CollectionListItem, ProductListItem } from '../types'
 
 type GetCollectionsQueryResponse = {
   collections: {

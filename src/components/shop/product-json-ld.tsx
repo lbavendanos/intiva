@@ -1,6 +1,6 @@
 import type { Product as ProductContext, WithContext } from 'schema-dts'
 
-import type { Product } from '@/lib/shopify/types'
+import type { Product } from '@/lib/shopify/storefront/types'
 import { url } from '@/lib/utils'
 
 type ProductJsonLdProps = {

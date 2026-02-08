@@ -2,12 +2,12 @@
 
 import { redirect } from 'next/navigation'
 
-import { generatePKCEParams } from '@/lib/shopify/customer/crypto'
+import { generatePKCEParams } from '@/lib/shopify/customer-account/crypto'
 import {
   getClientId,
   getOAuthDiscoveryConfig,
-} from '@/lib/shopify/customer/discovery'
-import { exchangeCodeForTokens } from '@/lib/shopify/customer/tokens'
+} from '@/lib/shopify/customer-account/discovery'
+import { exchangeCodeForTokens } from '@/lib/shopify/customer-account/tokens'
 import { url } from '@/lib/utils'
 
 import {

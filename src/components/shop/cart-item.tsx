@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Minus, Plus, X } from 'lucide-react'
 
-import type { CartLineItem } from '@/lib/shopify/types'
+import type { CartLineItem } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
 import { Price } from '@/components/common/price'
 import { Button } from '@/components/ui/button'

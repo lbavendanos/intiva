@@ -5,12 +5,12 @@ import { cacheLife, cacheTag } from 'next/cache'
 import {
   getProductByHandle as getProductByHandleQuery,
   getProductRecommendations as getProductRecommendationsQuery,
-} from '@/lib/shopify/queries/products'
+} from '@/lib/shopify/storefront/queries/products'
 import type {
   Product,
   ProductListItem,
   ProductRecommendationIntent,
-} from '@/lib/shopify/types'
+} from '@/lib/shopify/storefront/types'
 
 const PRODUCTS_CACHE_TAG = 'products'
 

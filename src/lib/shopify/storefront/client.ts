@@ -1,4 +1,4 @@
-import type { ShopifyError, ShopifyResponse } from './types'
+import type { ShopifyError, ShopifyResponse } from '../types'
 
 export class ShopifyClientError extends Error {
   constructor(

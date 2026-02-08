@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { getCart } from '@/lib/shopify/queries/cart'
+import { getCart } from '@/lib/shopify/storefront/queries/cart'
 
 const mockFetch = vi.fn()
 

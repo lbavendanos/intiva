@@ -1,4 +1,4 @@
-import type { Cart } from '@/lib/shopify/types'
+import type { Cart } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
 import { Price } from '@/components/common/price'
 import { Separator } from '@/components/ui/separator'
