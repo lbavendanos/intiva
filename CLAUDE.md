@@ -28,10 +28,14 @@ pnpm test:e2e:ui    # Run E2E tests with Playwright UI
 Required:
 
 ```
-SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
-SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-storefront-access-token
-NEXT_PUBLIC_APP_URL=http://localhost:3000    # Base URL for url() helper
-NEXT_PUBLIC_APP_LOCALE=en-US                 # Locale for date/price formatting
+NEXT_PUBLIC_APP_NAME=MyApp                                    # Application name
+NEXT_PUBLIC_APP_URL=http://localhost:3000                     # Base URL for url() helper
+NEXT_PUBLIC_APP_TIMEZONE=America/New_York                     # Timezone for date formatting
+NEXT_PUBLIC_APP_LOCALE=en-US                                  # Locale for date/price formatting
+SHOPIFY_STORE_DOMAIN=your-store.myshopify.com                 # Shopify store domain
+SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-storefront-access-token  # Storefront API access token
+SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID=your-client-id             # Headless/Hydrogen sales channel client ID
+SHOPIFY_WEBHOOK_SECRET=your-webhook-secret                    # Shopify webhook signing secret
 ```
 
 ## Architecture
