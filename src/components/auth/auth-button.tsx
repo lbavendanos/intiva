@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers'
-import Link from 'next/link'
 import { UserRound } from 'lucide-react'
 
 import { SESSION_COOKIE_NAMES } from '@/lib/auth/session'
 import { __ } from '@/lib/utils'
+import { login, logout } from '@/actions/auth'
 import { Button } from '@/components/ui/button'
 
 export async function AuthButton() {
@@ -11,16 +11,16 @@ export async function AuthButton() {
   const isLoggedIn = !!cookieStore.get(SESSION_COOKIE_NAMES.accessToken)?.value
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      asChild
-      aria-label={isLoggedIn ? __('auth.logout') : __('auth.login')}
-    >
-      <Link href={isLoggedIn ? '/logout' : '/login'}>
+    <form action={isLoggedIn ? logout : login}>
+      <Button
+        type="submit"
+        variant="ghost"
+        size="icon"
+        aria-label={isLoggedIn ? __('auth.logout') : __('auth.login')}
+      >
         <UserRound className="h-5 w-5" />
-      </Link>
-    </Button>
+      </Button>
+    </form>
   )
 }
 
