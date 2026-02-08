@@ -1,43 +1,16 @@
+import { redirect } from 'next/navigation'
 import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
 
-import {
-  clearOAuthStateCookies,
-  getOAuthStateCookies,
-} from '@/actions/oauth-state'
-import { setSessionCookies } from '@/lib/auth/session'
-import { exchangeCodeForTokens } from '@/lib/shopify/customer/tokens'
 import { url } from '@/lib/utils'
+import { authorize } from '@/actions/auth'
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
-  const searchParams = request.nextUrl.searchParams
-  const code = searchParams.get('code')
-  const state = searchParams.get('state')
+export async function GET(request: NextRequest): Promise<void> {
+  const code = request.nextUrl.searchParams.get('code')
+  const state = request.nextUrl.searchParams.get('state')
 
   if (!code || !state) {
-    return NextResponse.redirect(url('/').toString())
+    redirect(url('/').toString())
   }
 
-  const oauthState = await getOAuthStateCookies()
-
-  if (!oauthState || oauthState.state !== state) {
-    return NextResponse.redirect(url('/').toString())
-  }
-
-  await clearOAuthStateCookies()
-
-  try {
-    const tokens = await exchangeCodeForTokens(
-      code,
-      oauthState.codeVerifier,
-      url('/auth/callback').toString(),
-    )
-
-    const response = NextResponse.redirect(url('/').toString())
-    setSessionCookies(response, tokens)
-
-    return response
-  } catch {
-    return NextResponse.redirect(url('/').toString())
-  }
+  authorize(code, state)
 }

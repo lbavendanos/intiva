@@ -9,9 +9,15 @@ import {
   getClientId,
   getOAuthDiscoveryConfig,
 } from '@/lib/shopify/customer/discovery'
+import { exchangeCodeForTokens } from '@/lib/shopify/customer/tokens'
 import { url } from '@/lib/utils'
 
-import { setOAuthStateCookies } from './oauth-state'
+import {
+  clearOAuthStateCookies,
+  getOAuthStateCookies,
+  setOAuthStateCookies,
+} from './oauth-state'
+import { setSession } from './session'
 
 export async function login(): Promise<void> {
   const params = await generatePKCEParams()
@@ -31,6 +37,28 @@ export async function login(): Promise<void> {
   await setOAuthStateCookies(params)
 
   redirect(authUrl.toString())
+}
+
+export async function authorize(code: string, state: string): Promise<void> {
+  const oauthState = await getOAuthStateCookies()
+
+  if (oauthState && oauthState.state === state) {
+    await clearOAuthStateCookies()
+
+    try {
+      const tokens = await exchangeCodeForTokens(
+        code,
+        oauthState.codeVerifier,
+        url('/auth/callback').toString(),
+      )
+
+      await setSession(tokens)
+    } catch {
+      // Token exchange failed
+    }
+  }
+
+  redirect(url('/').toString())
 }
 
 export async function logout(): Promise<void> {
