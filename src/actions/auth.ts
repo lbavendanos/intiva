@@ -1,9 +1,7 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { SESSION_COOKIE_NAMES } from '@/lib/auth/session'
 import { generatePKCEParams } from '@/lib/shopify/customer/crypto'
 import {
   getClientId,
@@ -17,7 +15,7 @@ import {
   getOAuthStateCookies,
   setOAuthStateCookies,
 } from './oauth-state'
-import { setSession } from './session'
+import { clearSession, getSession, setSession } from './session'
 
 export async function login(): Promise<void> {
   const params = await generatePKCEParams()
@@ -62,22 +60,19 @@ export async function authorize(code: string, state: string): Promise<void> {
 }
 
 export async function logout(): Promise<void> {
-  const cookieStore = await cookies()
-  const idToken = cookieStore.get(SESSION_COOKIE_NAMES.idToken)?.value
+  const session = await getSession()
 
-  if (!idToken) {
+  if (!session) {
     redirect('/')
   }
 
   const config = await getOAuthDiscoveryConfig()
 
   const logoutUrl = new URL(config.end_session_endpoint)
-  logoutUrl.searchParams.set('id_token_hint', idToken)
+  logoutUrl.searchParams.set('id_token_hint', session.idToken)
   logoutUrl.searchParams.set('post_logout_redirect_uri', url('/').toString())
 
-  for (const name of Object.values(SESSION_COOKIE_NAMES)) {
-    cookieStore.delete(name)
-  }
+  await clearSession()
 
   redirect(logoutUrl.toString())
 }

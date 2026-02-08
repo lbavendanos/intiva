@@ -5,7 +5,7 @@ import {
   clearSessionCookies,
   getSessionTokens,
   setSessionCookies,
-} from '@/lib/auth/session'
+} from '@/lib/auth/proxy-session'
 import { refreshAccessToken } from '@/lib/shopify/customer/tokens'
 
 const PROTECTED_ROUTES = ['/account']

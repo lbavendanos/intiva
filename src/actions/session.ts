@@ -2,10 +2,37 @@
 
 import { cookies } from 'next/headers'
 
-import { SESSION_COOKIE_NAMES } from '@/lib/auth/session'
 import type { SessionTokens } from '@/lib/shopify/customer/types'
 
+const SESSION_COOKIE_PREFIX = 'customer_'
 const SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
+
+const SESSION_COOKIE_NAMES = {
+  accessToken: `${SESSION_COOKIE_PREFIX}access_token`,
+  refreshToken: `${SESSION_COOKIE_PREFIX}refresh_token`,
+  idToken: `${SESSION_COOKIE_PREFIX}id_token`,
+  expiresAt: `${SESSION_COOKIE_PREFIX}expires_at`,
+} as const
+
+export async function getSession(): Promise<SessionTokens | null> {
+  const cookieStore = await cookies()
+
+  const accessToken = cookieStore.get(SESSION_COOKIE_NAMES.accessToken)?.value
+  const refreshToken = cookieStore.get(SESSION_COOKIE_NAMES.refreshToken)?.value
+  const idToken = cookieStore.get(SESSION_COOKIE_NAMES.idToken)?.value
+  const expiresAt = cookieStore.get(SESSION_COOKIE_NAMES.expiresAt)?.value
+
+  if (!accessToken || !refreshToken || !idToken || !expiresAt) {
+    return null
+  }
+
+  return {
+    accessToken,
+    refreshToken,
+    idToken,
+    expiresAt: Number(expiresAt),
+  }
+}
 
 export async function setSession(tokens: SessionTokens): Promise<void> {
   const cookieStore = await cookies()
@@ -29,6 +56,14 @@ export async function setSession(tokens: SessionTokens): Promise<void> {
     String(tokens.expiresAt),
     options,
   )
+}
+
+export async function clearSession(): Promise<void> {
+  const cookieStore = await cookies()
+
+  for (const name of Object.values(SESSION_COOKIE_NAMES)) {
+    cookieStore.delete(name)
+  }
 }
 
 export async function isAuthenticated(): Promise<boolean> {
