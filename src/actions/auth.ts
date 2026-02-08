@@ -3,7 +3,6 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { setOAuthStateCookies } from '@/lib/auth/oauth-state'
 import { SESSION_COOKIE_NAMES } from '@/lib/auth/session'
 import { generatePKCEParams } from '@/lib/shopify/customer/crypto'
 import {
@@ -11,6 +10,8 @@ import {
   getOAuthDiscoveryConfig,
 } from '@/lib/shopify/customer/discovery'
 import { url } from '@/lib/utils'
+
+import { setOAuthStateCookies } from './oauth-state'
 
 export async function login(): Promise<void> {
   const params = await generatePKCEParams()

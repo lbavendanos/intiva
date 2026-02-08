@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 import {
   clearOAuthStateCookies,
   getOAuthStateCookies,
-} from '@/lib/auth/oauth-state'
+} from '@/actions/oauth-state'
 import { setSessionCookies } from '@/lib/auth/session'
 import { exchangeCodeForTokens } from '@/lib/shopify/customer/tokens'
 import { url } from '@/lib/utils'
