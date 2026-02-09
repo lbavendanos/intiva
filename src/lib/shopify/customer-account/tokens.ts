@@ -54,7 +54,7 @@ export async function exchangeCodeForTokens(
 
 export async function refreshAccessToken(
   refreshToken: string,
-): Promise<SessionTokens> {
+): Promise<Omit<SessionTokens, 'idToken'>> {
   const config = await getOAuthDiscoveryConfig()
   const clientId = getClientId()
 
@@ -85,12 +85,11 @@ export async function refreshAccessToken(
     )
   }
 
-  const data = (await response.json()) as TokenResponse
+  const data = (await response.json()) as Omit<TokenResponse, 'id_token'>
 
   return {
     accessToken: data.access_token,
     refreshToken: data.refresh_token,
-    idToken: data.id_token,
     expiresAt: Date.now() + data.expires_in * 1000,
   }
 }

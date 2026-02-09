@@ -32,7 +32,12 @@ type AccountActionResult<T = undefined> = {
 
 async function getAccessToken(): Promise<string | null> {
   const session = await getSession()
-  return session?.accessToken ?? null
+
+  if (!session || session.expiresAt <= Date.now()) {
+    return null
+  }
+
+  return session.accessToken
 }
 
 export async function getCustomerProfile(): Promise<

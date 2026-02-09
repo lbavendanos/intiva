@@ -7,7 +7,10 @@ import {
   getClientId,
   getOAuthDiscoveryConfig,
 } from '@/lib/shopify/customer-account/discovery'
-import { exchangeCodeForTokens } from '@/lib/shopify/customer-account/tokens'
+import {
+  exchangeCodeForTokens,
+  refreshAccessToken,
+} from '@/lib/shopify/customer-account/tokens'
 import { url } from '@/lib/utils'
 
 import {
@@ -56,7 +59,25 @@ export async function authorize(code: string, state: string): Promise<void> {
     }
   }
 
-  redirect(url('/').toString())
+  redirect('/')
+}
+
+export async function refresh(redirectTo: string): Promise<void> {
+  const session = await getSession()
+
+  if (!session) {
+    redirect('/login')
+  }
+
+  try {
+    const newTokens = await refreshAccessToken(session.refreshToken)
+    await setSession({ ...newTokens, idToken: session.idToken })
+  } catch {
+    await clearSession()
+    redirect('/login')
+  }
+
+  redirect(redirectTo)
 }
 
 export async function logout(): Promise<void> {
