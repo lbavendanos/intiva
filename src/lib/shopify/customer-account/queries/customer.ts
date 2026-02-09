@@ -2,7 +2,7 @@ import { extractNodesFromEdges } from '@/lib/shopify/storefront/client'
 
 import type { Connection } from '../../types'
 import { customerAccountQuery } from '../client'
-import { CUSTOMER_ADDRESS_FRAGMENT, CUSTOMER_FRAGMENT } from '../fragments'
+import { CUSTOMER_FRAGMENT } from '../fragments'
 import type { Customer, CustomerAddress } from '../types'
 
 type CustomerResponse = Omit<Customer, 'addresses'> & {
@@ -20,7 +20,6 @@ const GET_CUSTOMER_QUERY = /* GraphQL */ `
     }
   }
   ${CUSTOMER_FRAGMENT}
-  ${CUSTOMER_ADDRESS_FRAGMENT}
 `
 
 export async function getCustomer(accessToken: string): Promise<Customer> {

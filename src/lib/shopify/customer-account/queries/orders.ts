@@ -2,12 +2,7 @@ import { extractNodesFromEdges } from '@/lib/shopify/storefront/client'
 
 import type { Connection, PageInfo } from '../../types'
 import { customerAccountQuery } from '../client'
-import {
-  CUSTOMER_ADDRESS_FRAGMENT,
-  ORDER_FRAGMENT,
-  ORDER_LINE_ITEM_FRAGMENT,
-  ORDER_LIST_ITEM_FRAGMENT,
-} from '../fragments'
+import { ORDER_FRAGMENT, ORDER_LIST_ITEM_FRAGMENT } from '../fragments'
 import type { Order, OrderLineItem, OrderListItem } from '../types'
 
 type OrderResponse = Omit<Order, 'lineItems'> & {
@@ -62,8 +57,6 @@ const GET_CUSTOMER_ORDER_QUERY = /* GraphQL */ `
     }
   }
   ${ORDER_FRAGMENT}
-  ${CUSTOMER_ADDRESS_FRAGMENT}
-  ${ORDER_LINE_ITEM_FRAGMENT}
 `
 
 export async function getCustomerOrders(
