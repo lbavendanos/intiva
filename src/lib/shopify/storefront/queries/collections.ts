@@ -1,5 +1,6 @@
 import type { Image, PageInfo } from '../../types'
-import { extractNodesFromEdges, storefrontQuery } from '../client'
+import { extractNodesFromEdges } from '../../utils'
+import { storefrontQuery } from '../client'
 import {
   COLLECTION_FRAGMENT,
   IMAGE_FRAGMENT,

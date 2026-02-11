@@ -1,5 +1,6 @@
 import type { Connection, Image, PageInfo } from '../../types'
-import { extractNodesFromEdges, storefrontQuery } from '../client'
+import { extractNodesFromEdges } from '../../utils'
+import { storefrontQuery } from '../client'
 import { computePricing } from '../common'
 import {
   IMAGE_FRAGMENT,

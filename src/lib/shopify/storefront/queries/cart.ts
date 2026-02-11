@@ -1,5 +1,6 @@
 import type { Connection } from '../../types'
-import { extractNodesFromEdges, storefrontQuery } from '../client'
+import { extractNodesFromEdges } from '../../utils'
+import { storefrontQuery } from '../client'
 import {
   CART_FRAGMENT,
   CART_LINE_FRAGMENT,

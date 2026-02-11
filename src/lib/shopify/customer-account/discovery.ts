@@ -1,4 +1,19 @@
-import type { CustomerAccountApiConfig, OAuthDiscoveryConfig } from './types'
+type OAuthDiscoveryConfig = {
+  issuer: string
+  authorization_endpoint: string
+  token_endpoint: string
+  end_session_endpoint: string
+  userinfo_endpoint: string
+  jwks_uri: string
+  scopes_supported: string[]
+  response_types_supported: string[]
+  subject_types_supported: string[]
+  id_token_signing_alg_values_supported: string[]
+}
+
+type CustomerAccountApiConfig = {
+  graphql_api: string
+}
 
 export class CustomerAccountError extends Error {
   constructor(message: string) {

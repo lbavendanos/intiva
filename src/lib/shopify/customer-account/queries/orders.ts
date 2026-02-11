@@ -1,4 +1,4 @@
-import { extractNodesFromEdges } from '@/lib/shopify/storefront/client'
+import { extractNodesFromEdges } from '@/lib/shopify/utils'
 
 import type { Connection, PageInfo } from '../../types'
 import { customerAccountQuery } from '../client'

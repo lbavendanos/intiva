@@ -3,7 +3,15 @@ import {
   getClientId,
   getOAuthDiscoveryConfig,
 } from './discovery'
-import type { SessionTokens, TokenResponse } from './types'
+import type { SessionTokens } from './types'
+
+type TokenResponse = {
+  access_token: string
+  expires_in: number
+  refresh_token: string
+  id_token: string
+  token_type: string
+}
 
 export async function exchangeCodeForTokens(
   code: string,
