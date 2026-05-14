@@ -24,7 +24,7 @@ export function ProfileForm({ firstName, lastName, email }: ProfileFormProps) {
   return (
     <form action={formAction} className="space-y-6">
       {state.success && (
-        <Alert variant="success">
+        <Alert>
           <AlertDescription>{__('profile.success')}</AlertDescription>
         </Alert>
       )}

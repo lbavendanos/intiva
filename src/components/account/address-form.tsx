@@ -26,7 +26,7 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
   return (
     <form action={formAction} className="space-y-6">
       {state.success && (
-        <Alert variant="success">
+        <Alert>
           <AlertDescription>{__('address.success')}</AlertDescription>
         </Alert>
       )}
