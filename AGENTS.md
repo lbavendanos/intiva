@@ -6,27 +6,27 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Before You Start
 
-**Always consult Context7 MCP before making changes.** When creating or modifying files, use Context7 to query the official documentation of the libraries/frameworks involved. This ensures code follows current best practices and uses up-to-date APIs.
+**Use the dedicated skill for the project's primary libraries.** These skills provide more specific and reliable guidance than generic documentation lookups:
+
+- **Next.js 16 / React 19** → `next-best-practices`, `next-cache-components`, `next-upgrade`, `vercel-react-best-practices`, `vercel-composition-patterns`
+- **Shopify Storefront API** → `shopify-storefront-graphql`, `shopify-dev`
+- **Shopify Customer Account API** → `shopify-customer`, `shopify-dev`
+- **Shopify Metafields / Metaobjects** → `shopify-custom-data`
+- **shadcn/ui** → `shadcn`
+- **UI components / accessibility** → `building-components`, `web-design-guidelines`
+
+**For any other library or tool without a dedicated skill** (e.g., Vitest, Playwright, Tailwind, Prettier, ESLint, TypeScript), consult Context7 MCP to query the official documentation. This ensures code follows current best practices and uses up-to-date APIs.
 
 ## Build & Development Commands
 
 ```bash
-pnpm dev            # Start development server on http://localhost:3000
-pnpm build          # Build for production
-pnpm start          # Start production server
-pnpm lint           # Run ESLint
-pnpm format:write   # Format code with Prettier
-pnpm format:check   # Check code formatting
-pnpm test           # Run unit tests with Vitest (watch mode)
-pnpm test:ui        # Run unit tests with Vitest UI
-pnpm test:run       # Run unit tests once
-pnpm test:coverage  # Run unit tests with coverage report
-pnpm test:e2e       # Run E2E tests with Playwright
-pnpm test:e2e:ui    # Run E2E tests with Playwright UI
+pnpm dev | build | start              # Dev server (localhost:3000) | production build | production server
+pnpm lint                             # ESLint
+pnpm format[:write | :check]          # Prettier write | verify
+pnpm test[:ui | :run | :coverage]     # Vitest (default: watch)
+pnpm test:e2e[:ui]                    # Playwright
 ```
 
 ## Environment Variables
@@ -50,37 +50,19 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 
 **Key directories:**
 
-- `src/app/` - App Router pages, layouts, and global styles
-- `src/app/(shop)/` - Shop route group
-- `src/components/ui/` - shadcn/ui components (installed via CLI)
-- `src/components/common/` - Shared reusable components
-- `src/components/auth/` - Authentication components
-- `src/components/account/` - Account management components
-- `src/components/layout/` - Layout components
-- `src/components/shop/` - Shop-specific components
-- `src/actions/` - Server Actions
-- `src/lib/` - Utility functions
-- `src/lib/foundation/` - Core framework modules
-- `src/lib/shopify/` - Shopify integration (shared types)
-- `src/lib/shopify/storefront/` - Storefront API (client, queries, mutations, fragments)
-- `src/lib/shopify/customer-account/` - Customer Account API (OAuth, tokens, discovery, queries, mutations, fragments)
-- `src/hooks/` - Custom React hooks
-- `src/lang/` - Translation dictionaries (en.json, es.json)
-- `__tests__/unit/` - Unit tests (Vitest)
-- `__tests__/e2e/` - E2E tests (Playwright)
-- `public/` - Static assets
+- `src/app/` — App Router; `(shop)` is a route group
+- `src/components/{ui,common,auth,account,layout,shop}/` — `ui/` is shadcn/ui installed via CLI; rest grouped by domain
+- `src/actions/` — Server Actions
+- `src/lib/foundation/` — Core framework modules (non-obvious; check before adding utilities)
+- `src/lib/shopify/{storefront,customer-account}/` — each has `client.ts`, `queries/`, `mutations/`, `fragments/`
+- `src/hooks/`, `src/lang/` (i18n dictionaries: `en.json`, `es.json`)
+- `__tests__/{unit,e2e}/`, `public/`
 
 **Path alias:** `@/*` maps to `./src/*`
 
 ## Code Style Guidelines
 
-**Formatting:**
-
-- See `prettier.config.mjs` for Prettier configuration
-
-**Import order:**
-
-- See `prettier.config.mjs` for import ordering configuration
+> Formatting, import order, and TS compiler options live in `prettier.config.mjs` and `tsconfig.json` — read those for config details. The rules below are project conventions not encoded there.
 
 **File organization:**
 
@@ -95,7 +77,6 @@ Only export types and functions that are used externally. Keep internal implemen
 
 **TypeScript conventions:**
 
-- See `tsconfig.json` for compiler options
 - Use `type` instead of `interface` for type definitions
 - Prefer explicit return types for exported functions
 
