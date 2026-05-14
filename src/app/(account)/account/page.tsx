@@ -3,7 +3,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { __ } from '@/lib/utils'
-import { getCustomerProfile, getOrders } from '@/actions/account'
+import { getCustomer } from '@/actions/customer'
+import { getOrders } from '@/actions/order'
 import { OrderList } from '@/components/account/order-list'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -14,12 +15,12 @@ export const metadata: Metadata = {
 
 async function DashboardContent() {
   const [customerResult, ordersResult] = await Promise.all([
-    getCustomerProfile(),
+    getCustomer(),
     getOrders(),
   ])
 
-  const customer = customerResult.data
-  const orders = ordersResult.data?.orders ?? []
+  const customer = customerResult.customer
+  const orders = ordersResult.orders ?? []
 
   return (
     <div className="space-y-6">

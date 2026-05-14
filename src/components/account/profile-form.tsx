@@ -3,7 +3,7 @@
 import { useActionState } from 'react'
 
 import { __ } from '@/lib/utils'
-import { updateCustomerProfile } from '@/actions/account'
+import { updateCustomer } from '@/actions/customer'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Field, FieldLabel } from '@/components/ui/field'
@@ -16,8 +16,9 @@ type ProfileFormProps = {
 }
 
 export function ProfileForm({ firstName, lastName, email }: ProfileFormProps) {
-  const [state, formAction, isPending] = useActionState(updateCustomerProfile, {
+  const [state, formAction, isPending] = useActionState(updateCustomer, {
     success: false,
+    customer: null,
   })
 
   return (

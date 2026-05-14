@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
 import { __ } from '@/lib/utils'
-import { getCustomerProfile } from '@/actions/account'
+import { getCustomer } from '@/actions/customer'
 import { ProfileForm } from '@/components/account/profile-form'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -11,15 +11,15 @@ export const metadata: Metadata = {
 }
 
 async function ProfileContent() {
-  const result = await getCustomerProfile()
+  const result = await getCustomer()
 
-  if (!result.success || !result.data) {
+  if (!result.success || !result.customer) {
     return (
       <p className="text-center text-zinc-500">{__('account.error.generic')}</p>
     )
   }
 
-  const customer = result.data
+  const customer = result.customer
 
   return (
     <ProfileForm

@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
 import { __ } from '@/lib/utils'
-import { getOrders } from '@/actions/account'
+import { getOrders } from '@/actions/order'
 import { OrderList } from '@/components/account/order-list'
 import { Pagination } from '@/components/shop/pagination'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -23,7 +23,7 @@ async function OrdersContent({
   const { cursor } = await searchParams
   const result = await getOrders(cursor)
 
-  if (!result.success || !result.data) {
+  if (!result.success || !result.orders || !result.pageInfo) {
     return (
       <p className="text-center text-zinc-500">{__('account.error.generic')}</p>
     )
@@ -31,8 +31,8 @@ async function OrdersContent({
 
   return (
     <>
-      <OrderList orders={result.data.orders} />
-      <Pagination pageInfo={result.data.pageInfo} basePath="/account/orders" />
+      <OrderList orders={result.orders} />
+      <Pagination pageInfo={result.pageInfo} basePath="/account/orders" />
     </>
   )
 }
