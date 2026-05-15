@@ -78,7 +78,7 @@ export function OrderDetail({ order }: OrderDetailProps) {
                     className="rounded-md object-cover"
                   />
                 ) : (
-                  <div className="flex h-16 w-16 items-center justify-center rounded-md bg-zinc-100 text-xs text-zinc-400">
+                  <div className="flex size-16 items-center justify-center rounded-md bg-zinc-100 text-xs text-zinc-400">
                     {__('cart.item.no_image')}
                   </div>
                 )}

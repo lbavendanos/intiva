@@ -51,7 +51,7 @@ export function ProductGallery({ images, productTitle }: ProductGalleryProps) {
               type="button"
               onClick={() => setSelectedIndex(index)}
               className={cn(
-                'relative h-20 w-20 shrink-0 overflow-hidden rounded-md border-2 transition-colors',
+                'relative size-20 shrink-0 overflow-hidden rounded-md border-2 transition-colors',
                 selectedIndex === index
                   ? 'border-zinc-900'
                   : 'border-transparent hover:border-zinc-300',

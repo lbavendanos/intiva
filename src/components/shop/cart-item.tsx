@@ -34,7 +34,7 @@ export function CartItem({ item, updateQuantity, removeItem }: CartItemProps) {
     <div className="flex gap-4 py-4" data-testid="cart-item">
       <Link
         href={`/products/${product.handle}`}
-        className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-zinc-100"
+        className="relative size-20 shrink-0 overflow-hidden rounded-md bg-zinc-100"
       >
         {product.featuredImage ? (
           <Image

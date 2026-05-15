@@ -62,7 +62,7 @@ export function FullCartSkeleton() {
         <div className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 p-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex gap-4 py-4 first:pt-0 last:pb-0">
-              <Skeleton className="h-24 w-24 rounded-md" />
+              <Skeleton className="size-24 rounded-md" />
               <div className="flex flex-1 flex-col gap-2">
                 <Skeleton className="h-5 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />

@@ -55,7 +55,7 @@ export function MiniCart() {
           <ShoppingBagIcon className="size-5" />
           {itemCount > 0 && (
             <span
-              className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-900 text-xs font-medium text-white"
+              className="absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full bg-zinc-900 text-xs font-medium text-white"
               data-testid="cart-count"
             >
               {itemCount > 99 ? '99+' : itemCount}
