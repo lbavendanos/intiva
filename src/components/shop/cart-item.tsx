@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Minus, Plus, X } from 'lucide-react'
+import { MinusIcon, PlusIcon, XIcon } from '@phosphor-icons/react/dist/ssr'
 
 import type { CartLineItem } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
@@ -68,12 +68,11 @@ export function CartItem({ item, updateQuantity, removeItem }: CartItemProps) {
           </div>
           <Button
             variant="ghost"
-            size="icon"
-            className="h-6 w-6"
+            size="icon-sm"
             onClick={handleRemove}
             aria-label={__('cart.item.remove', { name: product.title })}
           >
-            <X className="h-4 w-4" />
+            <XIcon className="size-4" />
           </Button>
         </div>
 
@@ -82,22 +81,20 @@ export function CartItem({ item, updateQuantity, removeItem }: CartItemProps) {
             <Button
               variant="outline"
               size="icon"
-              className="h-7 w-7"
               onClick={() => handleUpdateQuantity(quantity - 1)}
               disabled={quantity <= 1}
               aria-label={__('cart.item.decrease')}
             >
-              <Minus className="h-3 w-3" />
+              <MinusIcon />
             </Button>
             <span className="w-8 text-center text-sm">{quantity}</span>
             <Button
               variant="outline"
               size="icon"
-              className="h-7 w-7"
               onClick={() => handleUpdateQuantity(quantity + 1)}
               aria-label={__('cart.item.increase')}
             >
-              <Plus className="h-3 w-3" />
+              <PlusIcon />
             </Button>
           </div>
           <Price

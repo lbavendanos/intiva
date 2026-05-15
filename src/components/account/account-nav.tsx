@@ -2,7 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, MapPin, Package, User } from 'lucide-react'
+import {
+  MapPinIcon,
+  PackageIcon,
+  SquaresFourIcon,
+  UserIcon,
+} from '@phosphor-icons/react'
 
 import { __, cn } from '@/lib/utils'
 
@@ -10,25 +15,25 @@ const NAV_ITEMS = [
   {
     href: '/account',
     label: () => __('account.dashboard'),
-    icon: LayoutDashboard,
+    icon: SquaresFourIcon,
     exact: true,
   },
   {
     href: '/account/profile',
     label: () => __('account.profile'),
-    icon: User,
+    icon: UserIcon,
     exact: false,
   },
   {
     href: '/account/orders',
     label: () => __('account.orders'),
-    icon: Package,
+    icon: PackageIcon,
     exact: false,
   },
   {
     href: '/account/addresses',
     label: () => __('account.addresses'),
-    icon: MapPin,
+    icon: MapPinIcon,
     exact: false,
   },
 ] as const
@@ -55,7 +60,7 @@ export function AccountNav() {
                 : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900',
             )}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="size-4" />
             {item.label()}
           </Link>
         )

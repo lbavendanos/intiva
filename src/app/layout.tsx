@@ -78,10 +78,11 @@ export default function RootLayout({
   const cartPromise = getCart()
 
   return (
-    <html lang={appLocale}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html
+      lang={appLocale}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+    >
+      <body>
         <div className="flex min-h-screen flex-col">
           <CartProvider cartPromise={cartPromise}>
             <Header />

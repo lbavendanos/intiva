@@ -1,5 +1,9 @@
 import Link from 'next/link'
-import { LogOut, Package, User } from 'lucide-react'
+import {
+  PackageIcon,
+  SignOutIcon,
+  UserIcon,
+} from '@phosphor-icons/react/dist/ssr'
 
 import { __ } from '@/lib/utils'
 import { login, logout } from '@/actions/auth'
@@ -25,7 +29,7 @@ export async function AuthButton() {
           size="icon"
           aria-label={__('auth.login')}
         >
-          <User className="h-5 w-5" />
+          <UserIcon className="size-5" />
         </Button>
       </form>
     )
@@ -35,27 +39,27 @@ export async function AuthButton() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" aria-label={__('auth.account')}>
-          <User className="h-5 w-5" />
+          <UserIcon className="size-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
           <Link href="/account">
-            <User className="mr-2 h-4 w-4" />
+            <UserIcon />
             {__('auth.account')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/account/orders">
-            <Package className="mr-2 h-4 w-4" />
+            <PackageIcon />
             {__('auth.orders')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <form action={logout} className="w-full">
-            <button type="submit" className="flex w-full items-center">
-              <LogOut className="mr-2 h-4 w-4" />
+            <button type="submit" className="flex w-full items-center gap-2">
+              <SignOutIcon />
               {__('auth.logout')}
             </button>
           </form>
@@ -68,7 +72,7 @@ export async function AuthButton() {
 export function AuthButtonSkeleton() {
   return (
     <Button variant="ghost" size="icon" disabled aria-label={__('auth.login')}>
-      <User className="h-5 w-5" />
+      <UserIcon className="size-5" />
     </Button>
   )
 }

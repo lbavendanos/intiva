@@ -2,7 +2,7 @@
 
 import { startTransition, useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { ShoppingBag } from 'lucide-react'
+import { ShoppingBagIcon } from '@phosphor-icons/react'
 
 import { __ } from '@/lib/utils'
 import { useCart } from '@/hooks/use-cart'
@@ -52,7 +52,7 @@ export function MiniCart() {
           aria-label={__('cart.aria_label', { count: itemCount })}
           data-testid="cart-button"
         >
-          <ShoppingBag className="h-5 w-5" />
+          <ShoppingBagIcon className="size-5" />
           {itemCount > 0 && (
             <span
               className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-900 text-xs font-medium text-white"
@@ -70,7 +70,7 @@ export function MiniCart() {
 
         {isEmpty ? (
           <div className="flex flex-1 flex-col items-center justify-center">
-            <ShoppingBag className="h-12 w-12 text-zinc-300" />
+            <ShoppingBagIcon className="size-12 text-zinc-300" />
             <p className="mt-4 text-center text-zinc-500">{__('cart.empty')}</p>
             <Button
               variant="outline"
@@ -110,7 +110,7 @@ export function MiniCartSkeleton() {
       disabled
       aria-label={__('cart.loading')}
     >
-      <ShoppingBag className="h-5 w-5" />
+      <ShoppingBagIcon className="size-5" />
     </Button>
   )
 }

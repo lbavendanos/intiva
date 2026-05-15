@@ -2,7 +2,7 @@
 
 import { useTransition } from 'react'
 import Link from 'next/link'
-import { Pencil, Star, Trash2 } from 'lucide-react'
+import { PencilIcon, StarIcon, TrashIcon } from '@phosphor-icons/react'
 
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
@@ -61,7 +61,7 @@ export function AddressList({ addresses, defaultAddressId }: AddressListProps) {
                   <Link
                     href={`/account/addresses/${encodeURIComponent(address.id)}`}
                   >
-                    <Pencil className="mr-1 h-3 w-3" />
+                    <PencilIcon data-icon="inline-start" />
                     {__('addresses.edit')}
                   </Link>
                 </Button>
@@ -73,7 +73,7 @@ export function AddressList({ addresses, defaultAddressId }: AddressListProps) {
                       disabled={isPending}
                       onClick={() => handleSetDefault(address.id)}
                     >
-                      <Star className="mr-1 h-3 w-3" />
+                      <StarIcon data-icon="inline-start" />
                       {__('addresses.set_default')}
                     </Button>
                     <Button
@@ -82,7 +82,7 @@ export function AddressList({ addresses, defaultAddressId }: AddressListProps) {
                       disabled={isPending}
                       onClick={() => handleDelete(address.id)}
                     >
-                      <Trash2 className="mr-1 h-3 w-3" />
+                      <TrashIcon data-icon="inline-start" />
                       {__('addresses.delete')}
                     </Button>
                   </>

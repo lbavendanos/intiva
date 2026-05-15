@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react/dist/ssr'
 
 import type { PageInfo } from '@/lib/shopify/types'
 import { __, url } from '@/lib/utils'
@@ -35,13 +35,13 @@ export function Pagination({ pageInfo, basePath }: PaginationProps) {
       {hasPreviousPage ? (
         <Button variant="outline" asChild>
           <Link href={basePath}>
-            <ChevronLeft className="mr-2 h-4 w-4" />
+            <CaretLeftIcon data-icon="inline-start" />
             {__('pagination.previous')}
           </Link>
         </Button>
       ) : (
         <Button variant="outline" disabled>
-          <ChevronLeft className="mr-2 h-4 w-4" />
+          <CaretLeftIcon data-icon="inline-start" />
           {__('pagination.previous')}
         </Button>
       )}
@@ -50,13 +50,13 @@ export function Pagination({ pageInfo, basePath }: PaginationProps) {
         <Button variant="outline" asChild>
           <Link href={createUrl(endCursor)}>
             {__('pagination.next')}
-            <ChevronRight className="ml-2 h-4 w-4" />
+            <CaretRightIcon data-icon="inline-end" />
           </Link>
         </Button>
       ) : (
         <Button variant="outline" disabled>
           {__('pagination.next')}
-          <ChevronRight className="ml-2 h-4 w-4" />
+          <CaretRightIcon data-icon="inline-end" />
         </Button>
       )}
     </nav>

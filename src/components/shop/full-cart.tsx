@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ShoppingBag } from 'lucide-react'
+import { ShoppingBagIcon } from '@phosphor-icons/react'
 
 import { __ } from '@/lib/utils'
 import { useCart } from '@/hooks/use-cart'
@@ -19,7 +19,7 @@ export function FullCart() {
   if (isEmpty) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
-        <ShoppingBag className="h-16 w-16 text-zinc-300" />
+        <ShoppingBagIcon className="size-16 text-zinc-300" />
         <p className="mt-4 text-lg text-zinc-500">{__('cart.empty')}</p>
         <Button asChild className="mt-6">
           <Link href="/products">{__('cart.explore_products')}</Link>
