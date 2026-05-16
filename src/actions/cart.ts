@@ -14,11 +14,9 @@ import {
 import type { Cart, CartUserError } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
 
-type CartActionResult = {
-  success: boolean
-  cart: Cart | null
-  error?: string
-}
+import { fail, ok, type ActionResult } from './_shared'
+
+type CartResult = ActionResult<Cart | null>
 
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 
@@ -67,7 +65,7 @@ function translateCartError(
 export async function addToCart(
   merchandiseId: string,
   quantity: number = 1,
-): Promise<CartActionResult> {
+): Promise<CartResult> {
   const cartId = await getCartId()
   const lines = [{ merchandiseId, quantity }]
 
@@ -76,11 +74,7 @@ export async function addToCart(
     : await createCart(lines)
 
   if (userErrors.length > 0) {
-    return {
-      success: false,
-      cart: null,
-      error: translateCartError(userErrors[0], 'cart.error.generic'),
-    }
+    return fail(translateCartError(userErrors[0], 'cart.error.generic'))
   }
 
   if (!cartId && cart) {
@@ -89,13 +83,13 @@ export async function addToCart(
 
   updateTag(CART_CACHE_TAG)
 
-  return { success: true, cart }
+  return ok(cart)
 }
 
 export async function updateCartItem(
   lineId: string,
   quantity: number,
-): Promise<CartActionResult> {
+): Promise<CartResult> {
   if (quantity <= 0) {
     return removeFromCart(lineId)
   }
@@ -103,7 +97,7 @@ export async function updateCartItem(
   const cartId = await getCartId()
 
   if (!cartId) {
-    return { success: false, cart: null, error: __('cart.error.not_found') }
+    return fail(__('cart.error.not_found'))
   }
 
   const { cart, userErrors } = await updateCartLines(cartId, [
@@ -111,40 +105,30 @@ export async function updateCartItem(
   ])
 
   if (userErrors.length > 0) {
-    return {
-      success: false,
-      cart: null,
-      error: translateCartError(userErrors[0], 'cart.error.generic'),
-    }
+    return fail(translateCartError(userErrors[0], 'cart.error.generic'))
   }
 
   updateTag(CART_CACHE_TAG)
 
-  return { success: true, cart }
+  return ok(cart)
 }
 
-export async function removeFromCart(
-  lineId: string,
-): Promise<CartActionResult> {
+export async function removeFromCart(lineId: string): Promise<CartResult> {
   const cartId = await getCartId()
 
   if (!cartId) {
-    return { success: false, cart: null, error: __('cart.error.not_found') }
+    return fail(__('cart.error.not_found'))
   }
 
   const { cart, userErrors } = await removeFromCartMutation(cartId, [lineId])
 
   if (userErrors.length > 0) {
-    return {
-      success: false,
-      cart: null,
-      error: translateCartError(userErrors[0], 'cart.error.generic'),
-    }
+    return fail(translateCartError(userErrors[0], 'cart.error.generic'))
   }
 
   updateTag(CART_CACHE_TAG)
 
-  return { success: true, cart }
+  return ok(cart)
 }
 
 export async function redirectToCheckout(checkoutUrl: string): Promise<never> {
