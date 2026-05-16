@@ -11,11 +11,18 @@ type CartItemProps = {
   item: CartLineItem
   updateQuantity: (lineId: string, quantity: number) => void
   removeItem: (lineId: string) => void
+  onNavigate?: (href: string) => void
 }
 
-export function CartItem({ item, updateQuantity, removeItem }: CartItemProps) {
+export function CartItem({
+  item,
+  updateQuantity,
+  removeItem,
+  onNavigate,
+}: CartItemProps) {
   const { id, quantity, merchandise, cost } = item
   const { product, selectedOptions } = merchandise
+  const href = `/products/${product.handle}`
 
   const variantTitle = selectedOptions
     .filter((option) => option.value !== 'Default Title')
@@ -30,10 +37,29 @@ export function CartItem({ item, updateQuantity, removeItem }: CartItemProps) {
     removeItem(id)
   }
 
+  const handleNavigate = onNavigate
+    ? (event: React.MouseEvent<HTMLAnchorElement>) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        ) {
+          return
+        }
+
+        event.preventDefault()
+        onNavigate(href)
+      }
+    : undefined
+
   return (
     <div className="flex gap-4 py-4" data-testid="cart-item">
       <Link
-        href={`/products/${product.handle}`}
+        href={href}
+        onClick={handleNavigate}
         className="relative size-20 shrink-0 overflow-hidden rounded-md bg-zinc-100"
       >
         {product.featuredImage ? (
@@ -57,7 +83,8 @@ export function CartItem({ item, updateQuantity, removeItem }: CartItemProps) {
         <div className="flex justify-between">
           <div>
             <Link
-              href={`/products/${product.handle}`}
+              href={href}
+              onClick={handleNavigate}
               className="text-sm font-medium text-zinc-900 hover:text-zinc-600"
             >
               {product.title}

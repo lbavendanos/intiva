@@ -1,7 +1,7 @@
 'use client'
 
 import { startTransition, useEffect, useRef, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { ShoppingBagIcon } from '@phosphor-icons/react'
 
 import { __ } from '@/lib/utils'
@@ -18,13 +18,21 @@ import {
 import { CartItem } from './cart-item'
 import { CartSummary } from './cart-summary'
 
+const SHEET_CLOSE_DURATION_MS = 200
+
 export function MiniCart() {
   const pathname = usePathname()
+  const router = useRouter()
   const { cart, updateQuantity, removeItem } = useCart()
   const [isOpen, setIsOpen] = useState(false)
   const prevQuantityRef = useRef(cart?.totalQuantity ?? 0)
 
   const isCartPage = pathname === '/cart'
+
+  const handleNavigate = (href: string) => {
+    setIsOpen(false)
+    window.setTimeout(() => router.push(href), SHEET_CLOSE_DURATION_MS)
+  }
 
   useEffect(() => {
     const currentQuantity = cart?.totalQuantity ?? 0
@@ -90,6 +98,7 @@ export function MiniCart() {
                     item={item}
                     updateQuantity={updateQuantity}
                     removeItem={removeItem}
+                    onNavigate={handleNavigate}
                   />
                 ))}
               </div>
