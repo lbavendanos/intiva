@@ -51,7 +51,13 @@ export function MiniCart() {
   const isEmpty = !cart || cart.lines.length === 0
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (open && isCartPage) return
+        setIsOpen(open)
+      }}
+    >
       <SheetTrigger asChild>
         <Button
           variant="ghost"
@@ -103,6 +109,15 @@ export function MiniCart() {
                 ))}
               </div>
             </div>
+            <Button
+              variant="outline"
+              className="w-full"
+              size="lg"
+              onClick={() => handleNavigate('/cart')}
+              data-testid="cart-view-link"
+            >
+              {__('cart.view_cart')}
+            </Button>
             <CartSummary cart={cart} />
           </>
         )}
