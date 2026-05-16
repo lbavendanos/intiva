@@ -1,7 +1,6 @@
 import type { Connection, Image, PageInfo } from '../../types'
 import { extractNodesFromEdges } from '../../utils'
 import { storefrontQuery } from '../client'
-import { computePricing } from '../common'
 import {
   IMAGE_FRAGMENT,
   MONEY_FRAGMENT,
@@ -11,6 +10,7 @@ import {
   PRODUCT_VARIANT_FRAGMENT,
   SEO_FRAGMENT,
 } from '../fragments'
+import { computePricing } from '../transforms'
 import type {
   Product,
   ProductListItem,

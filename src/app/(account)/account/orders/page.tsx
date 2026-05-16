@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
+import { getOrders } from '@/lib/data/orders'
 import { __ } from '@/lib/utils'
-import { getOrders } from '@/actions/order'
 import { OrderList } from '@/components/account/order-list'
 import { Pagination } from '@/components/shop/pagination'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -21,9 +21,9 @@ async function OrdersContent({
   searchParams: Promise<{ cursor?: string }>
 }) {
   const { cursor } = await searchParams
-  const result = await getOrders(cursor)
+  const result = await getOrders(10, cursor)
 
-  if (!result.success || !result.orders || !result.pageInfo) {
+  if (!result) {
     return (
       <p className="text-center text-zinc-500">{__('account.error.generic')}</p>
     )

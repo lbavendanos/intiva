@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 
-import { getOrder } from '@/actions/order'
+import { getOrder } from '@/lib/data/orders'
 import { OrderDetail } from '@/components/account/order-detail'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -10,13 +10,13 @@ type OrderPageProps = {
 }
 
 async function OrderContent({ orderId }: { orderId: string }) {
-  const result = await getOrder(orderId)
+  const order = await getOrder(orderId)
 
-  if (!result.success || !result.order) {
+  if (!order) {
     notFound()
   }
 
-  return <OrderDetail order={result.order} />
+  return <OrderDetail order={order} />
 }
 
 function OrderSkeleton() {

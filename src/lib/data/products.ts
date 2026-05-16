@@ -1,18 +1,31 @@
-'use server'
+import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
 
 import {
   getProductByHandle as getProductByHandleQuery,
   getProductRecommendations as getProductRecommendationsQuery,
+  getProducts as getProductsQuery,
 } from '@/lib/shopify/storefront/queries/products'
 import type {
   Product,
   ProductListItem,
   ProductRecommendationIntent,
 } from '@/lib/shopify/storefront/types'
+import type { PageInfo } from '@/lib/shopify/types'
 
-const PRODUCTS_CACHE_TAG = 'products'
+export const PRODUCTS_CACHE_TAG = 'products'
+
+export async function getProducts(
+  first: number = 12,
+  after?: string,
+): Promise<{ products: ProductListItem[]; pageInfo: PageInfo }> {
+  'use cache'
+  cacheTag(PRODUCTS_CACHE_TAG)
+  cacheLife('hours')
+
+  return getProductsQuery(first, after)
+}
 
 export async function getProductByHandle(
   handle: string,

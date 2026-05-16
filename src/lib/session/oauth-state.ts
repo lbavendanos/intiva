@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { cookies } from 'next/headers'
 
 import type { PKCEParams } from '@/lib/shopify/customer-account/types'

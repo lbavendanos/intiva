@@ -1,5 +1,5 @@
+import { getProductRecommendations } from '@/lib/data/products'
 import { __ } from '@/lib/utils'
-import { getProductRecommendations } from '@/actions/products'
 
 import { ProductCard } from './product-card'
 

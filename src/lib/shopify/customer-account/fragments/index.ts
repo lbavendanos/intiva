@@ -1,3 +1,19 @@
+export const MONEY_FRAGMENT = /* GraphQL */ `
+  fragment MoneyFragment on MoneyV2 {
+    amount
+    currencyCode
+  }
+`
+
+export const IMAGE_FRAGMENT = /* GraphQL */ `
+  fragment ImageFragment on Image {
+    url
+    altText
+    width
+    height
+  }
+`
+
 export const CUSTOMER_ADDRESS_FRAGMENT = /* GraphQL */ `
   fragment CustomerAddressFragment on CustomerAddress {
     id
@@ -45,7 +61,6 @@ export const CUSTOMER_FRAGMENT = /* GraphQL */ `
       }
     }
   }
-  ${CUSTOMER_ADDRESS_FRAGMENT}
 `
 
 export const ORDER_LINE_ITEM_FRAGMENT = /* GraphQL */ `
@@ -56,18 +71,13 @@ export const ORDER_LINE_ITEM_FRAGMENT = /* GraphQL */ `
     quantity
     variantTitle
     image {
-      url
-      altText
-      width
-      height
+      ...ImageFragment
     }
     price {
-      amount
-      currencyCode
+      ...MoneyFragment
     }
     totalPrice {
-      amount
-      currencyCode
+      ...MoneyFragment
     }
   }
 `
@@ -82,20 +92,16 @@ export const ORDER_FRAGMENT = /* GraphQL */ `
     fulfillmentStatus
     statusPageUrl
     totalPrice {
-      amount
-      currencyCode
+      ...MoneyFragment
     }
     subtotal {
-      amount
-      currencyCode
+      ...MoneyFragment
     }
     totalTax {
-      amount
-      currencyCode
+      ...MoneyFragment
     }
     totalShipping {
-      amount
-      currencyCode
+      ...MoneyFragment
     }
     shippingAddress {
       ...CustomerAddressFragment
@@ -108,8 +114,6 @@ export const ORDER_FRAGMENT = /* GraphQL */ `
       }
     }
   }
-  ${CUSTOMER_ADDRESS_FRAGMENT}
-  ${ORDER_LINE_ITEM_FRAGMENT}
 `
 
 export const ORDER_LIST_ITEM_FRAGMENT = /* GraphQL */ `
@@ -121,8 +125,7 @@ export const ORDER_LIST_ITEM_FRAGMENT = /* GraphQL */ `
     financialStatus
     fulfillmentStatus
     totalPrice {
-      amount
-      currencyCode
+      ...MoneyFragment
     }
   }
 `

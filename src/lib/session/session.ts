@@ -1,7 +1,8 @@
-'use server'
+import 'server-only'
 
 import { cookies } from 'next/headers'
 
+import { refreshAccessToken } from '@/lib/shopify/customer-account/tokens'
 import type { SessionTokens } from '@/lib/shopify/customer-account/types'
 
 const SESSION_COOKIE_PREFIX = 'customer_'
@@ -70,4 +71,29 @@ export async function isAuthenticated(): Promise<boolean> {
   const session = await getSession()
 
   return session !== null
+}
+
+/**
+ * Returns a valid access token, refreshing it if expired.
+ * Returns null if there's no session or the refresh fails.
+ */
+export async function getAccessToken(): Promise<string | null> {
+  const session = await getSession()
+
+  if (!session) {
+    return null
+  }
+
+  if (session.expiresAt > Date.now()) {
+    return session.accessToken
+  }
+
+  try {
+    const refreshed = await refreshAccessToken(session.refreshToken)
+    await setSession({ ...refreshed, idToken: session.idToken })
+    return refreshed.accessToken
+  } catch {
+    await clearSession()
+    return null
+  }
 }

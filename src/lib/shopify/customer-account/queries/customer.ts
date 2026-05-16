@@ -1,8 +1,8 @@
-import { extractNodesFromEdges } from '@/lib/shopify/utils'
-
+import { composeQuery } from '../../graphql'
 import type { Connection } from '../../types'
+import { extractNodesFromEdges } from '../../utils'
 import { customerAccountQuery } from '../client'
-import { CUSTOMER_FRAGMENT } from '../fragments'
+import { CUSTOMER_ADDRESS_FRAGMENT, CUSTOMER_FRAGMENT } from '../fragments'
 import type { Customer, CustomerAddress } from '../types'
 
 type CustomerResponse = Omit<Customer, 'addresses'> & {
@@ -13,14 +13,16 @@ type GetCustomerResponse = {
   customer: CustomerResponse
 }
 
-const GET_CUSTOMER_QUERY = /* GraphQL */ `
-  query getCustomer {
-    customer {
-      ...CustomerFragment
+const GET_CUSTOMER_QUERY = composeQuery(
+  /* GraphQL */ `
+    query getCustomer {
+      customer {
+        ...CustomerFragment
+      }
     }
-  }
-  ${CUSTOMER_FRAGMENT}
-`
+  `,
+  [CUSTOMER_FRAGMENT, CUSTOMER_ADDRESS_FRAGMENT],
+)
 
 export async function getCustomer(accessToken: string): Promise<Customer> {
   const data = await customerAccountQuery<GetCustomerResponse>(

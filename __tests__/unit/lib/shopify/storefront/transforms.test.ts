@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { computePricing } from '@/lib/shopify/storefront/common'
+import { computePricing } from '@/lib/shopify/storefront/transforms'
 
 describe('computePricing', () => {
   it('should return hasDiscount true when compareAtPrice is greater than price', () => {

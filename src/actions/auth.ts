@@ -2,6 +2,12 @@
 
 import { redirect } from 'next/navigation'
 
+import {
+  clearOAuthStateCookies,
+  getOAuthStateCookies,
+  setOAuthStateCookies,
+} from '@/lib/session/oauth-state'
+import { clearSession, getSession, setSession } from '@/lib/session/session'
 import { generatePKCEParams } from '@/lib/shopify/customer-account/crypto'
 import {
   getClientId,
@@ -12,13 +18,6 @@ import {
   refreshAccessToken,
 } from '@/lib/shopify/customer-account/tokens'
 import { url } from '@/lib/utils'
-
-import {
-  clearOAuthStateCookies,
-  getOAuthStateCookies,
-  setOAuthStateCookies,
-} from './oauth-state'
-import { clearSession, getSession, setSession } from './session'
 
 export async function login(): Promise<void> {
   const params = await generatePKCEParams()
@@ -43,20 +42,22 @@ export async function login(): Promise<void> {
 export async function authorize(code: string, state: string): Promise<void> {
   const oauthState = await getOAuthStateCookies()
 
-  if (oauthState && oauthState.state === state) {
-    await clearOAuthStateCookies()
+  await clearOAuthStateCookies()
 
-    try {
-      const tokens = await exchangeCodeForTokens(
-        code,
-        oauthState.codeVerifier,
-        url('/auth/callback').toString(),
-      )
+  if (!oauthState || oauthState.state !== state) {
+    redirect('/login?error=invalid_state')
+  }
 
-      await setSession(tokens)
-    } catch {
-      // Token exchange failed
-    }
+  try {
+    const tokens = await exchangeCodeForTokens(
+      code,
+      oauthState.codeVerifier,
+      url('/auth/callback').toString(),
+    )
+
+    await setSession(tokens)
+  } catch {
+    redirect('/login?error=token_exchange_failed')
   }
 
   redirect('/')

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
+import { getCart } from '@/lib/data/cart'
 import { url } from '@/lib/utils'
-import { getCart } from '@/actions/cart'
 import { Header } from '@/components/layout/header'
 import { CartProvider } from '@/components/shop/cart-provider'
 

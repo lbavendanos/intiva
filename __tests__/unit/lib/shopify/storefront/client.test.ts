@@ -69,9 +69,7 @@ describe('Shopify Client', () => {
 
       await expect(
         storefrontQuery('query { products { id } }'),
-      ).rejects.toThrow(
-        'Network error while fetching from Shopify: Network failure',
-      )
+      ).rejects.toThrow('Network error: Network failure')
     })
 
     it('should throw on HTTP errors', async () => {
@@ -83,7 +81,7 @@ describe('Shopify Client', () => {
 
       await expect(
         storefrontQuery('query { products { id } }'),
-      ).rejects.toThrow('HTTP error from Shopify: 500 Internal Server Error')
+      ).rejects.toThrow('HTTP error: 500 Internal Server Error')
     })
 
     it('should throw on invalid JSON response', async () => {
@@ -94,7 +92,7 @@ describe('Shopify Client', () => {
 
       await expect(
         storefrontQuery('query { products { id } }'),
-      ).rejects.toThrow('Invalid JSON response from Shopify')
+      ).rejects.toThrow('Invalid JSON response')
     })
 
     it('should throw when no data is returned', async () => {
@@ -105,7 +103,7 @@ describe('Shopify Client', () => {
 
       await expect(
         storefrontQuery('query { products { id } }'),
-      ).rejects.toThrow('No data returned from Shopify')
+      ).rejects.toThrow('No data returned')
     })
 
     it('should throw when store domain is missing', async () => {

@@ -1,49 +1,23 @@
-import type { Connection } from '../../types'
-import { extractNodesFromEdges } from '../../utils'
 import { storefrontQuery } from '../client'
 import {
   CART_FRAGMENT,
   CART_LINE_FRAGMENT,
+  CART_USER_ERROR_FRAGMENT,
   IMAGE_FRAGMENT,
   MONEY_FRAGMENT,
 } from '../fragments'
-import type { Cart, CartLineItem, CartUserError } from '../types'
+import { transformCart, type CartResponse } from '../transforms'
+import type { Cart, CartUserError } from '../types'
 
-type CartLineNode = Omit<CartLineItem, 'merchandise'> & {
-  merchandise: CartLineItem['merchandise']
+type CartMutationPayload = {
+  cart: CartResponse | null
+  userErrors: CartUserError[]
 }
 
-type CartResponse = Omit<Cart, 'lines'> & {
-  lines: Connection<CartLineNode>
-}
-
-type CartCreateResponse = {
-  cartCreate: {
-    cart: CartResponse | null
-    userErrors: CartUserError[]
-  }
-}
-
-type CartLinesAddResponse = {
-  cartLinesAdd: {
-    cart: CartResponse | null
-    userErrors: CartUserError[]
-  }
-}
-
-type CartLinesUpdateResponse = {
-  cartLinesUpdate: {
-    cart: CartResponse | null
-    userErrors: CartUserError[]
-  }
-}
-
-type CartLinesRemoveResponse = {
-  cartLinesRemove: {
-    cart: CartResponse | null
-    userErrors: CartUserError[]
-  }
-}
+type CartCreateResponse = { cartCreate: CartMutationPayload }
+type CartLinesAddResponse = { cartLinesAdd: CartMutationPayload }
+type CartLinesUpdateResponse = { cartLinesUpdate: CartMutationPayload }
+type CartLinesRemoveResponse = { cartLinesRemove: CartMutationPayload }
 
 type CartLineInput = {
   merchandiseId: string
@@ -55,10 +29,18 @@ type CartLineUpdateInput = {
   quantity: number
 }
 
-type CartCreateResult = {
+export type CartMutationResult = {
   cart: Cart | null
   userErrors: CartUserError[]
 }
+
+const CART_MUTATION_FRAGMENTS = `
+  ${CART_FRAGMENT}
+  ${CART_LINE_FRAGMENT}
+  ${CART_USER_ERROR_FRAGMENT}
+  ${IMAGE_FRAGMENT}
+  ${MONEY_FRAGMENT}
+`
 
 const CART_CREATE_MUTATION = /* GraphQL */ `
   mutation cartCreate($input: CartInput) {
@@ -67,16 +49,11 @@ const CART_CREATE_MUTATION = /* GraphQL */ `
         ...CartFragment
       }
       userErrors {
-        field
-        message
-        code
+        ...CartUserErrorFragment
       }
     }
   }
-  ${CART_FRAGMENT}
-  ${CART_LINE_FRAGMENT}
-  ${IMAGE_FRAGMENT}
-  ${MONEY_FRAGMENT}
+  ${CART_MUTATION_FRAGMENTS}
 `
 
 const CART_LINES_ADD_MUTATION = /* GraphQL */ `
@@ -86,16 +63,11 @@ const CART_LINES_ADD_MUTATION = /* GraphQL */ `
         ...CartFragment
       }
       userErrors {
-        field
-        message
-        code
+        ...CartUserErrorFragment
       }
     }
   }
-  ${CART_FRAGMENT}
-  ${CART_LINE_FRAGMENT}
-  ${IMAGE_FRAGMENT}
-  ${MONEY_FRAGMENT}
+  ${CART_MUTATION_FRAGMENTS}
 `
 
 const CART_LINES_UPDATE_MUTATION = /* GraphQL */ `
@@ -105,16 +77,11 @@ const CART_LINES_UPDATE_MUTATION = /* GraphQL */ `
         ...CartFragment
       }
       userErrors {
-        field
-        message
-        code
+        ...CartUserErrorFragment
       }
     }
   }
-  ${CART_FRAGMENT}
-  ${CART_LINE_FRAGMENT}
-  ${IMAGE_FRAGMENT}
-  ${MONEY_FRAGMENT}
+  ${CART_MUTATION_FRAGMENTS}
 `
 
 const CART_LINES_REMOVE_MUTATION = /* GraphQL */ `
@@ -124,107 +91,62 @@ const CART_LINES_REMOVE_MUTATION = /* GraphQL */ `
         ...CartFragment
       }
       userErrors {
-        field
-        message
-        code
+        ...CartUserErrorFragment
       }
     }
   }
-  ${CART_FRAGMENT}
-  ${CART_LINE_FRAGMENT}
-  ${IMAGE_FRAGMENT}
-  ${MONEY_FRAGMENT}
+  ${CART_MUTATION_FRAGMENTS}
 `
 
-function transformCart(cart: CartResponse): Cart {
+function toResult(payload: CartMutationPayload): CartMutationResult {
   return {
-    ...cart,
-    lines: extractNodesFromEdges(cart.lines),
+    cart: payload.cart ? transformCart(payload.cart) : null,
+    userErrors: payload.userErrors,
   }
 }
 
 export async function createCart(
   lines?: CartLineInput[],
-): Promise<CartCreateResult> {
-  const response = await storefrontQuery<CartCreateResponse>(
-    CART_CREATE_MUTATION,
-    {
-      variables: {
-        input: lines ? { lines } : undefined,
-      },
-    },
-  )
+): Promise<CartMutationResult> {
+  const data = await storefrontQuery<CartCreateResponse>(CART_CREATE_MUTATION, {
+    variables: { input: lines ? { lines } : undefined },
+  })
 
-  const { cart, userErrors } = response.cartCreate
-
-  return {
-    cart: cart ? transformCart(cart) : null,
-    userErrors,
-  }
+  return toResult(data.cartCreate)
 }
 
 export async function addToCart(
   cartId: string,
   lines: CartLineInput[],
-): Promise<CartCreateResult> {
-  const response = await storefrontQuery<CartLinesAddResponse>(
+): Promise<CartMutationResult> {
+  const data = await storefrontQuery<CartLinesAddResponse>(
     CART_LINES_ADD_MUTATION,
-    {
-      variables: {
-        cartId,
-        lines,
-      },
-    },
+    { variables: { cartId, lines } },
   )
 
-  const { cart, userErrors } = response.cartLinesAdd
-
-  return {
-    cart: cart ? transformCart(cart) : null,
-    userErrors,
-  }
+  return toResult(data.cartLinesAdd)
 }
 
 export async function updateCartLines(
   cartId: string,
   lines: CartLineUpdateInput[],
-): Promise<CartCreateResult> {
-  const response = await storefrontQuery<CartLinesUpdateResponse>(
+): Promise<CartMutationResult> {
+  const data = await storefrontQuery<CartLinesUpdateResponse>(
     CART_LINES_UPDATE_MUTATION,
-    {
-      variables: {
-        cartId,
-        lines,
-      },
-    },
+    { variables: { cartId, lines } },
   )
 
-  const { cart, userErrors } = response.cartLinesUpdate
-
-  return {
-    cart: cart ? transformCart(cart) : null,
-    userErrors,
-  }
+  return toResult(data.cartLinesUpdate)
 }
 
 export async function removeFromCart(
   cartId: string,
   lineIds: string[],
-): Promise<CartCreateResult> {
-  const response = await storefrontQuery<CartLinesRemoveResponse>(
+): Promise<CartMutationResult> {
+  const data = await storefrontQuery<CartLinesRemoveResponse>(
     CART_LINES_REMOVE_MUTATION,
-    {
-      variables: {
-        cartId,
-        lineIds,
-      },
-    },
+    { variables: { cartId, lineIds } },
   )
 
-  const { cart, userErrors } = response.cartLinesRemove
-
-  return {
-    cart: cart ? transformCart(cart) : null,
-    userErrors,
-  }
+  return toResult(data.cartLinesRemove)
 }

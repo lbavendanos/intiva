@@ -1,5 +1,17 @@
-import type { Money } from '../types'
-import type { ProductPricing } from './types'
+import type { Connection, Money } from '../types'
+import { extractNodesFromEdges } from '../utils'
+import type { Cart, CartLineItem, ProductPricing } from './types'
+
+export type CartResponse = Omit<Cart, 'lines'> & {
+  lines: Connection<CartLineItem>
+}
+
+export function transformCart(cart: CartResponse): Cart {
+  return {
+    ...cart,
+    lines: extractNodesFromEdges(cart.lines),
+  }
+}
 
 export function computePricing({
   priceRange,

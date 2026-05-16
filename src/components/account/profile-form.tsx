@@ -18,7 +18,6 @@ type ProfileFormProps = {
 export function ProfileForm({ firstName, lastName, email }: ProfileFormProps) {
   const [state, formAction, isPending] = useActionState(updateCustomer, {
     success: false,
-    customer: null,
   })
 
   return (

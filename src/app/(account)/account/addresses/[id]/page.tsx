@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 
+import { getCustomer } from '@/lib/data/customer'
 import { __ } from '@/lib/utils'
-import { getCustomer } from '@/actions/customer'
 import { AddressForm } from '@/components/account/address-form'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -11,13 +11,12 @@ type AddressEditPageProps = {
 }
 
 async function AddressEditContent({ addressId }: { addressId: string }) {
-  const result = await getCustomer()
+  const customer = await getCustomer()
 
-  if (!result.success || !result.customer) {
+  if (!customer) {
     notFound()
   }
 
-  const customer = result.customer
   const address = customer.addresses.find((a) => a.id === addressId)
 
   if (!address) {

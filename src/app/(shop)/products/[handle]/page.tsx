@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { getProducts } from '@/lib/shopify/storefront/queries/products'
+import { getProductByHandle, getProducts } from '@/lib/data/products'
 import { __, url } from '@/lib/utils'
-import { getProductByHandle } from '@/actions/products'
 import { Price } from '@/components/common/price'
 import { ProductForm } from '@/components/shop/product-form'
 import { ProductGallery } from '@/components/shop/product-gallery'

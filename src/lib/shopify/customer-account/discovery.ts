@@ -15,11 +15,37 @@ type CustomerAccountApiConfig = {
   graphql_api: string
 }
 
+const oauthDiscoveryCache = new Map<string, Promise<OAuthDiscoveryConfig>>()
+const customerAccountApiCache = new Map<
+  string,
+  Promise<CustomerAccountApiConfig>
+>()
+
 export class CustomerAccountError extends Error {
   constructor(message: string) {
     super(message)
     this.name = 'CustomerAccountError'
   }
+}
+
+async function fetchJson<T>(url: string, context: string): Promise<T> {
+  let response: Response
+
+  try {
+    response = await fetch(url)
+  } catch (error) {
+    throw new CustomerAccountError(
+      `Failed to fetch ${context}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    )
+  }
+
+  if (!response.ok) {
+    throw new CustomerAccountError(
+      `${context} returned ${response.status} ${response.statusText}`,
+    )
+  }
+
+  return (await response.json()) as T
 }
 
 export function getStoreDomain(): string {
@@ -46,48 +72,42 @@ export function getClientId(): string {
   return clientId
 }
 
-export async function getOAuthDiscoveryConfig(): Promise<OAuthDiscoveryConfig> {
+export function getOAuthDiscoveryConfig(): Promise<OAuthDiscoveryConfig> {
   const domain = getStoreDomain()
-  const url = `https://${domain}/.well-known/openid-configuration`
+  const cached = oauthDiscoveryCache.get(domain)
 
-  let response: Response
-
-  try {
-    response = await fetch(url)
-  } catch (error) {
-    throw new CustomerAccountError(
-      `Failed to fetch OAuth discovery config: ${error instanceof Error ? error.message : 'Unknown error'}`,
-    )
+  if (cached) {
+    return cached
   }
 
-  if (!response.ok) {
-    throw new CustomerAccountError(
-      `OAuth discovery endpoint returned ${response.status} ${response.statusText}`,
-    )
-  }
+  const promise = fetchJson<OAuthDiscoveryConfig>(
+    `https://${domain}/.well-known/openid-configuration`,
+    'OAuth discovery endpoint',
+  ).catch((error) => {
+    oauthDiscoveryCache.delete(domain)
+    throw error
+  })
 
-  return (await response.json()) as OAuthDiscoveryConfig
+  oauthDiscoveryCache.set(domain, promise)
+  return promise
 }
 
-export async function getCustomerAccountApiConfig(): Promise<CustomerAccountApiConfig> {
+export function getCustomerAccountApiConfig(): Promise<CustomerAccountApiConfig> {
   const domain = getStoreDomain()
-  const url = `https://${domain}/.well-known/customer-account-api`
+  const cached = customerAccountApiCache.get(domain)
 
-  let response: Response
-
-  try {
-    response = await fetch(url)
-  } catch (error) {
-    throw new CustomerAccountError(
-      `Failed to fetch Customer Account API config: ${error instanceof Error ? error.message : 'Unknown error'}`,
-    )
+  if (cached) {
+    return cached
   }
 
-  if (!response.ok) {
-    throw new CustomerAccountError(
-      `Customer Account API config endpoint returned ${response.status} ${response.statusText}`,
-    )
-  }
+  const promise = fetchJson<CustomerAccountApiConfig>(
+    `https://${domain}/.well-known/customer-account-api`,
+    'Customer Account API config endpoint',
+  ).catch((error) => {
+    customerAccountApiCache.delete(domain)
+    throw error
+  })
 
-  return (await response.json()) as CustomerAccountApiConfig
+  customerAccountApiCache.set(domain, promise)
+  return promise
 }

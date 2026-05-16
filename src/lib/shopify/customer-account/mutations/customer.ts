@@ -12,6 +12,10 @@ type CustomerUpdateResponse = {
   }
 }
 
+export type CustomerMutationResult = {
+  userErrors: CustomerUserError[]
+}
+
 const CUSTOMER_UPDATE_MUTATION = /* GraphQL */ `
   mutation customerUpdate($input: CustomerUpdateInput!) {
     customerUpdate(input: $input) {
@@ -24,21 +28,15 @@ const CUSTOMER_UPDATE_MUTATION = /* GraphQL */ `
   }
 `
 
-type CustomerUpdateResult = {
-  userErrors: CustomerUserError[]
-}
-
 export async function updateCustomer(
   accessToken: string,
   input: CustomerUpdateInput,
-): Promise<CustomerUpdateResult> {
+): Promise<CustomerMutationResult> {
   const data = await customerAccountQuery<CustomerUpdateResponse>(
     CUSTOMER_UPDATE_MUTATION,
     accessToken,
     { variables: { input } },
   )
 
-  return {
-    userErrors: data.customerUpdate.userErrors,
-  }
+  return { userErrors: data.customerUpdate.userErrors }
 }

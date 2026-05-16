@@ -2,9 +2,9 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import { getCustomer } from '@/lib/data/customer'
+import { getOrders } from '@/lib/data/orders'
 import { __ } from '@/lib/utils'
-import { getCustomer } from '@/actions/customer'
-import { getOrders } from '@/actions/order'
 import { OrderList } from '@/components/account/order-list'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -14,13 +14,12 @@ export const metadata: Metadata = {
 }
 
 async function DashboardContent() {
-  const [customerResult, ordersResult] = await Promise.all([
+  const [customer, ordersResult] = await Promise.all([
     getCustomer(),
     getOrders(),
   ])
 
-  const customer = customerResult.customer
-  const orders = ordersResult.orders ?? []
+  const orders = ordersResult?.orders ?? []
 
   return (
     <div className="space-y-6">

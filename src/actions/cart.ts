@@ -1,17 +1,17 @@
 'use server'
 
-import { cacheLife, cacheTag, updateTag } from 'next/cache'
+import { updateTag } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { CART_CACHE_TAG, CART_COOKIE_NAME } from '@/lib/data/cart'
 import {
   addToCart as addToCartMutation,
   createCart,
   removeFromCart as removeFromCartMutation,
   updateCartLines,
 } from '@/lib/shopify/storefront/mutations/cart'
-import { getCart as getCartQuery } from '@/lib/shopify/storefront/queries/cart'
-import type { Cart } from '@/lib/shopify/storefront/types'
+import type { Cart, CartUserError } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
 
 type CartActionResult = {
@@ -20,9 +20,7 @@ type CartActionResult = {
   error?: string
 }
 
-const CART_COOKIE_NAME = 'cartId'
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
-const CART_CACHE_TAG = 'cart'
 
 const CART_ERROR_CODE = {
   INVALID: 'INVALID',
@@ -49,25 +47,21 @@ async function setCartId(cartId: string): Promise<void> {
   })
 }
 
-export async function getCart(): Promise<Cart | null> {
-  'use cache: private'
-  cacheTag(CART_CACHE_TAG)
-  cacheLife('seconds')
-
-  const cartId = await getCartId()
-
-  if (!cartId) {
-    return null
+function translateCartError(
+  error: CartUserError,
+  fallbackKey: 'cart.error.generic' | 'cart.error.not_found',
+): string {
+  switch (error.code) {
+    case CART_ERROR_CODE.INVALID_MERCHANDISE_LINE:
+      return __('cart.error.invalid_product')
+    case CART_ERROR_CODE.LESS_THAN:
+    case CART_ERROR_CODE.GREATER_THAN:
+      return __('cart.error.invalid_quantity')
+    case CART_ERROR_CODE.INVALID:
+      return __('cart.error.item_not_found')
+    default:
+      return error.message || __(fallbackKey)
   }
-
-  const cart = await getCartQuery(cartId)
-
-  // If cart doesn't exist or is invalid, return null
-  if (!cart) {
-    return null
-  }
-
-  return cart
 }
 
 export async function addToCart(
@@ -75,88 +69,41 @@ export async function addToCart(
   quantity: number = 1,
 ): Promise<CartActionResult> {
   const cartId = await getCartId()
+  const lines = [{ merchandiseId, quantity }]
 
-  if (!cartId) {
-    // Create a new cart with the item
-    const { cart, userErrors } = await createCart([{ merchandiseId, quantity }])
-
-    if (userErrors.length > 0) {
-      const error = userErrors[0]
-
-      if (error.code === CART_ERROR_CODE.INVALID_MERCHANDISE_LINE) {
-        return {
-          success: false,
-          cart: null,
-          error: __('cart.error.invalid_product'),
-        }
-      }
-
-      return {
-        success: false,
-        cart: null,
-        error: error.message || __('cart.error.generic'),
-      }
-    }
-
-    if (cart) {
-      await setCartId(cart.id)
-      updateTag(CART_CACHE_TAG)
-    }
-
-    return {
-      success: true,
-      cart,
-    }
-  }
-
-  // Add to existing cart
-  const { cart, userErrors } = await addToCartMutation(cartId, [
-    { merchandiseId, quantity },
-  ])
+  const { cart, userErrors } = cartId
+    ? await addToCartMutation(cartId, lines)
+    : await createCart(lines)
 
   if (userErrors.length > 0) {
-    const error = userErrors[0]
-
-    if (error.code === CART_ERROR_CODE.INVALID_MERCHANDISE_LINE) {
-      return {
-        success: false,
-        cart: null,
-        error: __('cart.error.invalid_product'),
-      }
-    }
-
     return {
       success: false,
       cart: null,
-      error: error.message || __('cart.error.generic'),
+      error: translateCartError(userErrors[0], 'cart.error.generic'),
     }
+  }
+
+  if (!cartId && cart) {
+    await setCartId(cart.id)
   }
 
   updateTag(CART_CACHE_TAG)
 
-  return {
-    success: true,
-    cart,
-  }
+  return { success: true, cart }
 }
 
 export async function updateCartItem(
   lineId: string,
   quantity: number,
 ): Promise<CartActionResult> {
+  if (quantity <= 0) {
+    return removeFromCart(lineId)
+  }
+
   const cartId = await getCartId()
 
   if (!cartId) {
-    return {
-      success: false,
-      cart: null,
-      error: __('cart.error.not_found'),
-    }
-  }
-
-  // If quantity is 0, remove the item instead
-  if (quantity <= 0) {
-    return removeFromCart(lineId)
+    return { success: false, cart: null, error: __('cart.error.not_found') }
   }
 
   const { cart, userErrors } = await updateCartLines(cartId, [
@@ -164,40 +111,16 @@ export async function updateCartItem(
   ])
 
   if (userErrors.length > 0) {
-    const error = userErrors[0]
-
-    if (
-      error.code === CART_ERROR_CODE.LESS_THAN ||
-      error.code === CART_ERROR_CODE.GREATER_THAN
-    ) {
-      return {
-        success: false,
-        cart: null,
-        error: __('cart.error.invalid_quantity'),
-      }
-    }
-
-    if (error.code === CART_ERROR_CODE.INVALID) {
-      return {
-        success: false,
-        cart: null,
-        error: __('cart.error.item_not_found'),
-      }
-    }
-
     return {
       success: false,
       cart: null,
-      error: error.message || __('cart.error.generic'),
+      error: translateCartError(userErrors[0], 'cart.error.generic'),
     }
   }
 
   updateTag(CART_CACHE_TAG)
 
-  return {
-    success: true,
-    cart,
-  }
+  return { success: true, cart }
 }
 
 export async function removeFromCart(
@@ -206,39 +129,22 @@ export async function removeFromCart(
   const cartId = await getCartId()
 
   if (!cartId) {
-    return {
-      success: false,
-      cart: null,
-      error: __('cart.error.not_found'),
-    }
+    return { success: false, cart: null, error: __('cart.error.not_found') }
   }
 
   const { cart, userErrors } = await removeFromCartMutation(cartId, [lineId])
 
   if (userErrors.length > 0) {
-    const error = userErrors[0]
-
-    if (error.code === CART_ERROR_CODE.INVALID) {
-      return {
-        success: false,
-        cart: null,
-        error: __('cart.error.item_not_found'),
-      }
-    }
-
     return {
       success: false,
       cart: null,
-      error: error.message || __('cart.error.generic'),
+      error: translateCartError(userErrors[0], 'cart.error.generic'),
     }
   }
 
   updateTag(CART_CACHE_TAG)
 
-  return {
-    success: true,
-    cart,
-  }
+  return { success: true, cart }
 }
 
 export async function redirectToCheckout(checkoutUrl: string): Promise<never> {

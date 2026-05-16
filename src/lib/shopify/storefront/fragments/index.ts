@@ -1,3 +1,11 @@
+export const CART_USER_ERROR_FRAGMENT = /* GraphQL */ `
+  fragment CartUserErrorFragment on CartUserError {
+    field
+    message
+    code
+  }
+`
+
 export const IMAGE_FRAGMENT = /* GraphQL */ `
   fragment ImageFragment on Image {
     url

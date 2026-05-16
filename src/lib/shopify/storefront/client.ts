@@ -1,4 +1,15 @@
-import type { ShopifyError, ShopifyResponse } from '../types'
+import { STOREFRONT_API_VERSION } from '../constants'
+import { graphqlFetch } from '../graphql'
+import type { ShopifyError } from '../types'
+
+type StorefrontClientConfig = {
+  storeDomain: string
+  storefrontAccessToken: string
+}
+
+export type StorefrontQueryOptions = {
+  variables?: Record<string, unknown>
+}
 
 export class ShopifyClientError extends Error {
   constructor(
@@ -10,19 +21,7 @@ export class ShopifyClientError extends Error {
   }
 }
 
-export type ShopifyClientConfig = {
-  storeDomain: string
-  storefrontAccessToken: string
-  apiVersion?: string
-}
-
-export type StorefrontQueryOptions = {
-  variables?: Record<string, unknown>
-}
-
-const SHOPIFY_STOREFRONT_API_VERSION = '2026-04'
-
-function getConfig(): ShopifyClientConfig {
+function getConfig(): StorefrontClientConfig {
   const storeDomain = process.env.SHOPIFY_STORE_DOMAIN
   const storefrontAccessToken = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
 
@@ -38,75 +37,28 @@ function getConfig(): ShopifyClientConfig {
     )
   }
 
-  return {
-    storeDomain,
-    storefrontAccessToken,
-    apiVersion: SHOPIFY_STOREFRONT_API_VERSION,
-  }
+  return { storeDomain, storefrontAccessToken }
 }
 
-function getStorefrontApiUrl(config: ShopifyClientConfig): string {
-  const { storeDomain, apiVersion } = config
+function getStorefrontApiUrl(storeDomain: string): string {
   const domain = storeDomain.replace(/^https?:\/\//, '').replace(/\/$/, '')
 
-  return `https://${domain}/api/${apiVersion}/graphql.json`
-}
-
-function getHeaders(config: ShopifyClientConfig): HeadersInit {
-  return {
-    'Content-Type': 'application/json',
-    'X-Shopify-Storefront-Access-Token': config.storefrontAccessToken,
-  }
+  return `https://${domain}/api/${STOREFRONT_API_VERSION}/graphql.json`
 }
 
 export async function storefrontQuery<T = unknown>(
   query: string,
   options: StorefrontQueryOptions = {},
 ): Promise<T> {
-  const { variables = {} } = options
-  const config = getConfig()
-  const url = getStorefrontApiUrl(config)
-  const headers = getHeaders(config)
+  const { storeDomain, storefrontAccessToken } = getConfig()
 
-  let response: Response
-
-  try {
-    response = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ query, variables }),
-    })
-  } catch (error) {
-    throw new ShopifyClientError(
-      `Network error while fetching from Shopify: ${error instanceof Error ? error.message : 'Unknown error'}`,
-    )
-  }
-
-  if (!response.ok) {
-    throw new ShopifyClientError(
-      `HTTP error from Shopify: ${response.status} ${response.statusText}`,
-    )
-  }
-
-  let json: ShopifyResponse<T>
-
-  try {
-    json = (await response.json()) as ShopifyResponse<T>
-  } catch {
-    throw new ShopifyClientError('Invalid JSON response from Shopify')
-  }
-
-  if (json.errors && json.errors.length > 0) {
-    const errorMessages = json.errors.map((e) => e.message).join(', ')
-    throw new ShopifyClientError(
-      `GraphQL errors: ${errorMessages}`,
-      json.errors,
-    )
-  }
-
-  if (!json.data) {
-    throw new ShopifyClientError('No data returned from Shopify')
-  }
-
-  return json.data
+  return graphqlFetch<T>({
+    url: getStorefrontApiUrl(storeDomain),
+    query,
+    variables: options.variables,
+    headers: {
+      'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
+    },
+    errorFactory: (message, errors) => new ShopifyClientError(message, errors),
+  })
 }

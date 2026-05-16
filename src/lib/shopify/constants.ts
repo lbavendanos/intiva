@@ -1,0 +1,1 @@
+export const STOREFRONT_API_VERSION = '2026-04'
