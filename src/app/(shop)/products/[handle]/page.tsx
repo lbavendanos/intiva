@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
@@ -7,8 +8,12 @@ import { Price } from '@/components/common/price'
 import { ProductForm } from '@/components/shop/product-form'
 import { ProductGallery } from '@/components/shop/product-gallery'
 import { ProductJsonLd } from '@/components/shop/product-json-ld'
-import { RelatedProducts } from '@/components/shop/related-products'
+import {
+  RelatedProducts,
+  RelatedProductsSkeleton,
+} from '@/components/shop/related-products'
 import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type ProductPageProps = {
   params: Promise<{ handle: string }>
@@ -66,7 +71,28 @@ export async function generateMetadata({
   }
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
+function ProductDetailSkeleton() {
+  return (
+    <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+      <Skeleton className="aspect-square w-full" />
+      <div className="flex flex-col">
+        <Skeleton className="h-9 w-3/4" />
+        <Skeleton className="mt-2 h-4 w-1/3" />
+        <Skeleton className="mt-4 h-8 w-1/4" />
+        <Separator className="my-6" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="mt-3 h-10 w-full" />
+        <Skeleton className="mt-3 h-12 w-full" />
+      </div>
+    </div>
+  )
+}
+
+async function ProductDetail({
+  params,
+}: {
+  params: Promise<{ handle: string }>
+}) {
   const { handle } = await params
   const product = await getProductByHandle(handle)
 
@@ -75,7 +101,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
       <ProductJsonLd product={product} />
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
         <ProductGallery images={product.images} productTitle={product.title} />
@@ -116,7 +142,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
           )}
         </div>
       </div>
-      <RelatedProducts productId={product.id} />
+      <Suspense fallback={<RelatedProductsSkeleton />}>
+        <RelatedProducts productId={product.id} />
+      </Suspense>
+    </>
+  )
+}
+
+export default function ProductPage({ params }: ProductPageProps) {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <Suspense fallback={<ProductDetailSkeleton />}>
+        <ProductDetail params={params} />
+      </Suspense>
     </div>
   )
 }

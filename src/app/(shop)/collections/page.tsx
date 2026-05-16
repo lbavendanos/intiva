@@ -9,16 +9,21 @@ import {
 } from '@/components/shop/collection-grid'
 import { Pagination } from '@/components/shop/pagination'
 
+type CollectionsPageProps = {
+  searchParams: Promise<{ cursor?: string }>
+}
+
 export const metadata: Metadata = {
   title: __('collections.title'),
   description: __('collections.description'),
 }
 
-type CollectionsPageProps = {
+async function CollectionList({
+  searchParams,
+}: {
   searchParams: Promise<{ cursor?: string }>
-}
-
-async function CollectionList({ cursor }: { cursor?: string }) {
+}) {
+  const { cursor } = await searchParams
   const { collections, pageInfo } = await getCollections(12, cursor)
 
   return (
@@ -29,11 +34,9 @@ async function CollectionList({ cursor }: { cursor?: string }) {
   )
 }
 
-export default async function CollectionsPage({
+export default function CollectionsPage({
   searchParams,
 }: CollectionsPageProps) {
-  const { cursor } = await searchParams
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -44,7 +47,7 @@ export default async function CollectionsPage({
       </div>
 
       <Suspense fallback={<CollectionGridSkeleton count={6} />}>
-        <CollectionList cursor={cursor} />
+        <CollectionList searchParams={searchParams} />
       </Suspense>
     </div>
   )

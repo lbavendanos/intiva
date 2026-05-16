@@ -9,8 +9,9 @@ type OrderPageProps = {
   params: Promise<{ id: string }>
 }
 
-async function OrderContent({ orderId }: { orderId: string }) {
-  const order = await getOrder(orderId)
+async function OrderContent({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const order = await getOrder(decodeURIComponent(id))
 
   if (!order) {
     notFound()
@@ -35,9 +36,7 @@ function OrderSkeleton() {
 export default function OrderPage({ params }: OrderPageProps) {
   return (
     <Suspense fallback={<OrderSkeleton />}>
-      {params.then(({ id }) => (
-        <OrderContent orderId={decodeURIComponent(id)} />
-      ))}
+      <OrderContent params={params} />
     </Suspense>
   )
 }

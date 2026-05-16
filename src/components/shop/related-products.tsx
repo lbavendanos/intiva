@@ -1,7 +1,8 @@
 import { getProductRecommendations } from '@/lib/data/products'
 import { __ } from '@/lib/utils'
+import { Skeleton } from '@/components/ui/skeleton'
 
-import { ProductCard } from './product-card'
+import { ProductCard, ProductCardSkeleton } from './product-card'
 
 type RelatedProductsProps = {
   productId: string
@@ -23,6 +24,27 @@ export async function RelatedProducts({ productId }: RelatedProductsProps) {
         {products.map((product) => (
           <div key={product.id} className="w-50 shrink-0 sm:w-62.5">
             <ProductCard product={product} />
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+type RelatedProductsSkeletonProps = {
+  count?: number
+}
+
+export function RelatedProductsSkeleton({
+  count = 4,
+}: RelatedProductsSkeletonProps) {
+  return (
+    <section className="mt-16">
+      <Skeleton className="mb-6 h-8 w-48" />
+      <div className="flex gap-4 overflow-x-auto sm:gap-6">
+        {Array.from({ length: count }).map((_, index) => (
+          <div key={index} className="w-50 shrink-0 sm:w-62.5">
+            <ProductCardSkeleton />
           </div>
         ))}
       </div>

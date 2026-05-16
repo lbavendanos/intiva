@@ -10,7 +10,13 @@ type AddressEditPageProps = {
   params: Promise<{ id: string }>
 }
 
-async function AddressEditContent({ addressId }: { addressId: string }) {
+async function AddressEditContent({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  const addressId = decodeURIComponent(id)
   const customer = await getCustomer()
 
   if (!customer) {
@@ -46,9 +52,7 @@ export default function AddressEditPage({ params }: AddressEditPageProps) {
         {__('addresses.edit')}
       </h2>
       <Suspense fallback={<AddressEditSkeleton />}>
-        {params.then(({ id }) => (
-          <AddressEditContent addressId={decodeURIComponent(id)} />
-        ))}
+        <AddressEditContent params={params} />
       </Suspense>
     </div>
   )

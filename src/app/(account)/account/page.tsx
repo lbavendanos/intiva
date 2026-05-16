@@ -13,89 +13,86 @@ export const metadata: Metadata = {
   title: __('account.dashboard'),
 }
 
-async function DashboardContent() {
-  const [customer, ordersResult] = await Promise.all([
-    getCustomer(),
-    getOrders(),
-  ])
+async function WelcomeCard() {
+  const customer = await getCustomer()
 
-  const orders = ordersResult?.orders ?? []
+  if (!customer) {
+    return null
+  }
 
   return (
-    <div className="space-y-6">
-      {customer && (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {__('account.welcome', { name: customer.displayName })}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-zinc-600">
-              {customer.emailAddress?.emailAddress}
-            </p>
-          </CardContent>
-        </Card>
-      )}
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          {__('account.welcome', { name: customer.displayName })}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-zinc-600">
+          {customer.emailAddress?.emailAddress}
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
 
-      <div>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-zinc-900">
-            {__('account.recent_orders')}
-          </h2>
-          <Link
-            href="/account/orders"
-            className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
-          >
-            {__('orders.view_all')}
-          </Link>
-        </div>
-        <OrderList orders={orders.slice(0, 3)} />
+async function RecentOrders() {
+  const result = await getOrders()
+  const orders = result?.orders ?? []
+
+  return (
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-zinc-900">
+          {__('account.recent_orders')}
+        </h2>
+        <Link
+          href="/account/orders"
+          className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+        >
+          {__('orders.view_all')}
+        </Link>
       </div>
-
-      {customer?.defaultAddress && (
-        <Card>
-          <CardHeader>
-            <CardTitle>{__('account.default_address')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-sm text-zinc-600">
-              {customer.defaultAddress.formatted.map((line, i) => (
-                <p key={i}>{line}</p>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {!customer?.defaultAddress && (
-        <Card>
-          <CardHeader>
-            <CardTitle>{__('account.default_address')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-zinc-500">{__('account.no_address')}</p>
-          </CardContent>
-        </Card>
-      )}
+      <OrderList orders={orders.slice(0, 3)} />
     </div>
   )
 }
 
-function DashboardSkeleton() {
+async function DefaultAddressCard() {
+  const customer = await getCustomer()
+
   return (
-    <div className="space-y-6">
-      <Skeleton className="h-32 w-full" />
-      <Skeleton className="h-48 w-full" />
-      <Skeleton className="h-32 w-full" />
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{__('account.default_address')}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {customer?.defaultAddress ? (
+          <div className="text-sm text-zinc-600">
+            {customer.defaultAddress.formatted.map((line, i) => (
+              <p key={i}>{line}</p>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-zinc-500">{__('account.no_address')}</p>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 
 export default function AccountPage() {
   return (
-    <Suspense fallback={<DashboardSkeleton />}>
-      <DashboardContent />
-    </Suspense>
+    <div className="space-y-6">
+      <Suspense fallback={<Skeleton className="h-32 w-full" />}>
+        <WelcomeCard />
+      </Suspense>
+      <Suspense fallback={<Skeleton className="h-48 w-full" />}>
+        <RecentOrders />
+      </Suspense>
+      <Suspense fallback={<Skeleton className="h-32 w-full" />}>
+        <DefaultAddressCard />
+      </Suspense>
+    </div>
   )
 }

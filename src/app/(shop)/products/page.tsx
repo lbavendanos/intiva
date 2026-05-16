@@ -9,16 +9,21 @@ import {
   ProductGridSkeleton,
 } from '@/components/shop/product-grid'
 
+type ProductsPageProps = {
+  searchParams: Promise<{ cursor?: string }>
+}
+
 export const metadata: Metadata = {
   title: __('products.title'),
   description: __('products.description'),
 }
 
-type ProductsPageProps = {
+async function ProductList({
+  searchParams,
+}: {
   searchParams: Promise<{ cursor?: string }>
-}
-
-async function ProductList({ cursor }: { cursor?: string }) {
+}) {
+  const { cursor } = await searchParams
   const { products, pageInfo } = await getProducts(12, cursor)
 
   return (
@@ -29,11 +34,7 @@ async function ProductList({ cursor }: { cursor?: string }) {
   )
 }
 
-export default async function ProductsPage({
-  searchParams,
-}: ProductsPageProps) {
-  const { cursor } = await searchParams
-
+export default function ProductsPage({ searchParams }: ProductsPageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -44,7 +45,7 @@ export default async function ProductsPage({
       </div>
 
       <Suspense fallback={<ProductGridSkeleton count={12} />}>
-        <ProductList cursor={cursor} />
+        <ProductList searchParams={searchParams} />
       </Suspense>
     </div>
   )
