@@ -6,7 +6,7 @@ import { PencilIcon, StarIcon, TrashIcon } from '@phosphor-icons/react'
 
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
-import { deleteAddress, setDefaultAddress } from '@/actions/account'
+import { deleteAddress, setDefaultAddress } from '@/actions/address'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

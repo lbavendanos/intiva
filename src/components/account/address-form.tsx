@@ -4,7 +4,7 @@ import { useActionState } from 'react'
 
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
-import { createAddress, updateAddress } from '@/actions/account'
+import { createAddress, updateAddress } from '@/actions/address'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
