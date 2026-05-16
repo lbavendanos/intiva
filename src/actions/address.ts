@@ -2,7 +2,7 @@
 
 import { updateTag } from 'next/cache'
 
-import { CUSTOMER_CACHE_TAG } from '@/lib/data/customer'
+import { CUSTOMER_CACHE_TAG } from '@/lib/data/cache-tags'
 import {
   createCustomerAddress,
   deleteCustomerAddress,

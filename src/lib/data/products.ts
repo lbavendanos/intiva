@@ -2,6 +2,7 @@ import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
 
+import { PRODUCTS_CACHE_TAG } from '@/lib/data/cache-tags'
 import {
   getProductByHandle as getProductByHandleQuery,
   getProductRecommendations as getProductRecommendationsQuery,
@@ -13,8 +14,6 @@ import type {
   ProductRecommendationIntent,
 } from '@/lib/shopify/storefront/types'
 import type { PageInfo } from '@/lib/shopify/types'
-
-export const PRODUCTS_CACHE_TAG = 'products'
 
 export async function getProducts(
   first: number = 12,

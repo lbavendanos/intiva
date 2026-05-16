@@ -2,11 +2,10 @@ import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
 
+import { CUSTOMER_CACHE_TAG } from '@/lib/data/cache-tags'
 import { getAccessToken } from '@/lib/session/session'
 import { getCustomer as getCustomerQuery } from '@/lib/shopify/customer-account/queries/customer'
 import type { Customer } from '@/lib/shopify/customer-account/types'
-
-export const CUSTOMER_CACHE_TAG = 'customer'
 
 export async function getCustomer(): Promise<Customer | null> {
   'use cache: private'

@@ -2,7 +2,7 @@
 
 import { updateTag } from 'next/cache'
 
-import { CUSTOMER_CACHE_TAG } from '@/lib/data/customer'
+import { CUSTOMER_CACHE_TAG } from '@/lib/data/cache-tags'
 import { updateCustomer as updateCustomerMutation } from '@/lib/shopify/customer-account/mutations/customer'
 import { __ } from '@/lib/utils'
 

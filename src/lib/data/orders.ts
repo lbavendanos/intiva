@@ -2,6 +2,7 @@ import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
 
+import { ORDERS_CACHE_TAG } from '@/lib/data/cache-tags'
 import { getAccessToken } from '@/lib/session/session'
 import {
   getCustomerOrder as getCustomerOrderQuery,
@@ -9,8 +10,6 @@ import {
 } from '@/lib/shopify/customer-account/queries/orders'
 import type { Order, OrderListItem } from '@/lib/shopify/customer-account/types'
 import type { PageInfo } from '@/lib/shopify/types'
-
-export const ORDERS_CACHE_TAG = 'orders'
 
 export async function getOrders(
   first: number = 10,

@@ -2,6 +2,7 @@ import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
 
+import { COLLECTIONS_CACHE_TAG } from '@/lib/data/cache-tags'
 import {
   getCollectionByHandle as getCollectionByHandleQuery,
   getCollectionProducts as getCollectionProductsQuery,
@@ -13,8 +14,6 @@ import type {
   ProductListItem,
 } from '@/lib/shopify/storefront/types'
 import type { PageInfo } from '@/lib/shopify/types'
-
-export const COLLECTIONS_CACHE_TAG = 'collections'
 
 export async function getCollections(
   first: number = 12,
