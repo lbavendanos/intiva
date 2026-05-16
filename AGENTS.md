@@ -46,7 +46,7 @@ SHOPIFY_WEBHOOK_SECRET=your-webhook-secret                    # Shopify webhook 
 
 ## Architecture
 
-This is a Next.js 16 project using the App Router pattern with React 19 and TypeScript. It integrates with the Shopify Storefront API version `2025-10`.
+This is a Next.js 16 project using the App Router pattern with React 19 and TypeScript. It integrates with the Shopify Storefront API version `2026-04`.
 
 **Key directories:**
 

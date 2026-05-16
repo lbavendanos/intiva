@@ -30,24 +30,6 @@ export const PAGE_INFO_FRAGMENT = /* GraphQL */ `
   }
 `
 
-export const CUSTOMER_ADDRESS_FRAGMENT = /* GraphQL */ `
-  fragment CustomerAddressFragment on MailingAddress {
-    id
-    firstName
-    lastName
-    company
-    address1
-    address2
-    city
-    province
-    provinceCode
-    country
-    countryCodeV2
-    zip
-    phone
-  }
-`
-
 export const PRODUCT_VARIANT_FRAGMENT = /* GraphQL */ `
   fragment ProductVariantFragment on ProductVariant {
     id
@@ -148,7 +130,10 @@ export const PRODUCT_FRAGMENT = /* GraphQL */ `
     options {
       id
       name
-      values
+      optionValues {
+        id
+        name
+      }
     }
     variants(first: 100) {
       edges {
@@ -226,74 +211,6 @@ export const CART_FRAGMENT = /* GraphQL */ `
       totalAmount {
         ...MoneyFragment
       }
-    }
-  }
-`
-
-export const CUSTOMER_FRAGMENT = /* GraphQL */ `
-  fragment CustomerFragment on Customer {
-    id
-    email
-    firstName
-    lastName
-    displayName
-    phone
-    acceptsMarketing
-    defaultAddress {
-      ...CustomerAddressFragment
-    }
-    addresses(first: 10) {
-      edges {
-        node {
-          ...CustomerAddressFragment
-        }
-      }
-    }
-    createdAt
-    updatedAt
-  }
-`
-
-export const ORDER_FRAGMENT = /* GraphQL */ `
-  fragment OrderFragment on Order {
-    id
-    orderNumber
-    name
-    processedAt
-    financialStatus
-    fulfillmentStatus
-    totalPrice {
-      ...MoneyFragment
-    }
-    subtotalPrice {
-      ...MoneyFragment
-    }
-    totalTax {
-      ...MoneyFragment
-    }
-    totalShippingPrice {
-      ...MoneyFragment
-    }
-    lineItems(first: 50) {
-      edges {
-        node {
-          title
-          quantity
-          variant {
-            id
-            title
-            price {
-              ...MoneyFragment
-            }
-            image {
-              ...ImageFragment
-            }
-          }
-        }
-      }
-    }
-    shippingAddress {
-      ...CustomerAddressFragment
     }
   }
 `

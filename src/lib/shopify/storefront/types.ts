@@ -5,10 +5,15 @@ export type SelectedOption = {
   value: string
 }
 
+export type ProductOptionValue = {
+  id: string
+  name: string
+}
+
 export type ProductOption = {
   id: string
   name: string
-  values: string[]
+  optionValues: ProductOptionValue[]
 }
 
 export type ProductVariant = {

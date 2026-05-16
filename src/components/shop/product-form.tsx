@@ -48,8 +48,8 @@ function createDefaultValues(product: Product) {
   const defaults: Record<string, string> = {}
 
   product.options.forEach((option) => {
-    if (option.values.length === 1) {
-      defaults[option.name] = option.values[0]
+    if (option.optionValues.length === 1) {
+      defaults[option.name] = option.optionValues[0].name
     } else {
       defaults[option.name] = ''
     }
@@ -90,7 +90,7 @@ export function ProductForm({
     !(
       product.options.length === 1 &&
       product.options[0].name === 'Title' &&
-      product.options[0].values.length === 1
+      product.options[0].optionValues.length === 1
     )
 
   const isAvailableForSale = hasRealOptions
@@ -162,20 +162,20 @@ export function ProductForm({
                       aria-invalid={isInvalid}
                       className="flex flex-wrap gap-3"
                     >
-                      {option.values.map((value) => {
+                      {option.optionValues.map(({ id, name }) => {
                         const optionId =
-                          `${product.handle}-${option.name}-${value}`
+                          `${product.handle}-${option.name}-${name}`
                             .toLowerCase()
                             .replace(/\s+/g, '-')
 
                         const isValueAvailable = checkValueAvailability(
                           option.name,
-                          value,
+                          name,
                         )
 
                         return (
                           <FieldLabel
-                            key={value}
+                            key={id}
                             htmlFor={optionId}
                             className={cn(
                               'w-auto!',
@@ -193,11 +193,11 @@ export function ProductForm({
                                     !isValueAvailable && 'line-through',
                                   )}
                                 >
-                                  {value}
+                                  {name}
                                 </FieldTitle>
                               </FieldContent>
                               <RadioGroupItem
-                                value={value}
+                                value={name}
                                 id={optionId}
                                 aria-invalid={isInvalid}
                                 className="sr-only"

@@ -20,7 +20,7 @@ export type StorefrontQueryOptions = {
   variables?: Record<string, unknown>
 }
 
-const SHOPIFY_STOREFRONT_API_VERSION = '2025-10'
+const SHOPIFY_STOREFRONT_API_VERSION = '2026-04'
 
 function getConfig(): ShopifyClientConfig {
   const storeDomain = process.env.SHOPIFY_STORE_DOMAIN
