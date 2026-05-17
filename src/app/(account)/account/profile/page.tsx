@@ -1,31 +1,12 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
-import { getCustomer } from '@/lib/data/customer'
 import { __ } from '@/lib/utils'
-import { ProfileForm } from '@/components/account/profile-form'
+import { ProfileContent } from '@/components/account/profile-content'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {
   title: __('profile.title'),
-}
-
-async function ProfileContent() {
-  const customer = await getCustomer()
-
-  if (!customer) {
-    return (
-      <p className="text-center text-zinc-500">{__('account.error.generic')}</p>
-    )
-  }
-
-  return (
-    <ProfileForm
-      firstName={customer.firstName ?? ''}
-      lastName={customer.lastName ?? ''}
-      email={customer.emailAddress?.emailAddress ?? ''}
-    />
-  )
 }
 
 function ProfileSkeleton() {

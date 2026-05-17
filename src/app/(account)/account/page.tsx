@@ -2,38 +2,15 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-import { getCustomer } from '@/lib/data/customer'
 import { getOrders } from '@/lib/data/orders'
 import { __ } from '@/lib/utils'
+import { DefaultAddressCard } from '@/components/account/default-address-card'
 import { OrderList } from '@/components/account/order-list'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { WelcomeCard } from '@/components/account/welcome-card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {
   title: __('account.dashboard'),
-}
-
-async function WelcomeCard() {
-  const customer = await getCustomer()
-
-  if (!customer) {
-    return null
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {__('account.welcome', { name: customer.displayName })}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm text-zinc-600">
-          {customer.emailAddress?.emailAddress}
-        </p>
-      </CardContent>
-    </Card>
-  )
 }
 
 async function RecentOrders() {
@@ -55,29 +32,6 @@ async function RecentOrders() {
       </div>
       <OrderList orders={orders.slice(0, 3)} />
     </div>
-  )
-}
-
-async function DefaultAddressCard() {
-  const customer = await getCustomer()
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{__('account.default_address')}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {customer?.defaultAddress ? (
-          <div className="text-sm text-zinc-600">
-            {customer.defaultAddress.formatted.map((line, i) => (
-              <p key={i}>{line}</p>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-zinc-500">{__('account.no_address')}</p>
-        )}
-      </CardContent>
-    </Card>
   )
 }
 

@@ -1,7 +1,9 @@
 import { Suspense } from 'react'
 
+import { getCustomer } from '@/lib/data/customer'
 import { __ } from '@/lib/utils'
 import { AccountNav } from '@/components/account/account-nav'
+import { CustomerProvider } from '@/components/account/customer-provider'
 import { Skeleton } from '@/components/ui/skeleton'
 
 function AccountNavSkeleton() {
@@ -19,19 +21,23 @@ export default function AccountLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const customerPromise = getCustomer()
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold text-zinc-900">
-        {__('account.title')}
-      </h1>
-      <div className="flex flex-col gap-8 md:flex-row">
-        <aside className="w-full shrink-0 md:w-56">
-          <Suspense fallback={<AccountNavSkeleton />}>
-            <AccountNav />
-          </Suspense>
-        </aside>
-        <div className="min-w-0 flex-1">{children}</div>
+    <CustomerProvider customerPromise={customerPromise}>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="mb-8 text-3xl font-bold text-zinc-900">
+          {__('account.title')}
+        </h1>
+        <div className="flex flex-col gap-8 md:flex-row">
+          <aside className="w-full shrink-0 md:w-56">
+            <Suspense fallback={<AccountNavSkeleton />}>
+              <AccountNav />
+            </Suspense>
+          </aside>
+          <div className="min-w-0 flex-1">{children}</div>
+        </div>
       </div>
-    </div>
+    </CustomerProvider>
   )
 }

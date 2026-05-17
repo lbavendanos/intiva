@@ -1,37 +1,11 @@
 import { Suspense } from 'react'
-import { notFound } from 'next/navigation'
 
-import { getCustomer } from '@/lib/data/customer'
 import { __ } from '@/lib/utils'
-import { AddressForm } from '@/components/account/address-form'
+import { AddressEditContent } from '@/components/account/address-edit-content'
 import { Skeleton } from '@/components/ui/skeleton'
 
 type AddressEditPageProps = {
   params: Promise<{ id: string }>
-}
-
-async function AddressEditContent({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = await params
-  const addressId = decodeURIComponent(id)
-  const customer = await getCustomer()
-
-  if (!customer) {
-    notFound()
-  }
-
-  const address = customer.addresses.find((a) => a.id === addressId)
-
-  if (!address) {
-    notFound()
-  }
-
-  const isDefault = customer.defaultAddress?.id === addressId
-
-  return <AddressForm address={address} isDefault={isDefault} />
 }
 
 function AddressEditSkeleton() {

@@ -1,31 +1,13 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
-import { getCustomer } from '@/lib/data/customer'
 import { __ } from '@/lib/utils'
 import { AddressForm } from '@/components/account/address-form'
-import { AddressList } from '@/components/account/address-list'
+import { AddressesContent } from '@/components/account/addresses-content'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {
   title: __('addresses.title'),
-}
-
-async function AddressesContent() {
-  const customer = await getCustomer()
-
-  if (!customer) {
-    return (
-      <p className="text-center text-zinc-500">{__('account.error.generic')}</p>
-    )
-  }
-
-  return (
-    <AddressList
-      addresses={customer.addresses}
-      defaultAddressId={customer.defaultAddress?.id ?? null}
-    />
-  )
 }
 
 function AddressesSkeleton() {

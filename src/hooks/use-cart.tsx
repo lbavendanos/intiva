@@ -1,6 +1,6 @@
 'use client'
 
-import { use, useContext, useOptimistic, useTransition } from 'react'
+import { use, useOptimistic, useTransition } from 'react'
 
 import type { Cart, CartLineItem } from '@/lib/shopify/storefront/types'
 import type { Money } from '@/lib/shopify/types'
@@ -88,7 +88,7 @@ function cartReducer(
 }
 
 export function useCart(): UseCartReturn {
-  const context = useContext(CartContext)
+  const context = use(CartContext)
 
   if (!context) {
     throw new Error('useCart must be used within a CartProvider')
