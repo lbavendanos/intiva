@@ -9,6 +9,7 @@ import {
   PRODUCT_CARD_FRAGMENT,
   SEO_FRAGMENT,
 } from '../fragments'
+import { computePricing } from '../transforms'
 import type { Collection, CollectionListItem, ProductListItem } from '../types'
 
 type GetCollectionsQueryResponse = {
@@ -164,6 +165,13 @@ export async function getCollectionProducts(
     }
   }
 
+  const products = extractNodesFromEdges(data.collection.products).map(
+    (product) => ({
+      ...product,
+      ...computePricing(product),
+    }),
+  )
+
   return {
     collection: {
       id: data.collection.id,
@@ -174,7 +182,7 @@ export async function getCollectionProducts(
       image: data.collection.image,
       seo: data.collection.seo,
     },
-    products: extractNodesFromEdges(data.collection.products),
+    products,
     pageInfo: data.collection.products.pageInfo,
   }
 }
