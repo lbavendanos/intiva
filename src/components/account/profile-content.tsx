@@ -19,6 +19,7 @@ export function ProfileContent() {
       firstName={customer.firstName ?? ''}
       lastName={customer.lastName ?? ''}
       email={customer.emailAddress?.emailAddress ?? ''}
+      marketingState={customer.emailAddress?.marketingState ?? ''}
     />
   )
 }

@@ -1,62 +1,158 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useState, useTransition } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
+import * as z from 'zod'
 
 import { __ } from '@/lib/utils'
 import { updateCustomer } from '@/actions/customer'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Field, FieldLabel } from '@/components/ui/field'
+import { Checkbox } from '@/components/ui/checkbox'
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 
 type ProfileFormProps = {
   firstName: string
   lastName: string
   email: string
+  marketingState: string
 }
 
-export function ProfileForm({ firstName, lastName, email }: ProfileFormProps) {
-  const [state, formAction, isPending] = useActionState(updateCustomer, {
-    success: false,
+function isMarketingSubscribed(state: string): boolean {
+  return state === 'SUBSCRIBED' || state === 'PENDING'
+}
+
+function createFormSchema() {
+  return z.object({
+    firstName: z.string().min(1, __('profile.first_name_required')),
+    lastName: z.string().min(1, __('profile.last_name_required')),
+    acceptsMarketing: z.boolean(),
+  })
+}
+
+export function ProfileForm({
+  firstName,
+  lastName,
+  email,
+  marketingState,
+}: ProfileFormProps) {
+  const [isPending, startTransition] = useTransition()
+  const [showSuccess, setShowSuccess] = useState(false)
+
+  const formSchema = createFormSchema()
+  type FormValues = z.infer<typeof formSchema>
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName,
+      lastName,
+      acceptsMarketing: isMarketingSubscribed(marketingState),
+    },
   })
 
+  const handleSubmit = (values: FormValues) => {
+    setShowSuccess(false)
+
+    startTransition(async () => {
+      const result = await updateCustomer({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        acceptsMarketing: values.acceptsMarketing,
+        previousMarketingState: marketingState,
+      })
+
+      if (!result.success) {
+        form.setError('root', {
+          message: result.error || __('account.error.generic'),
+        })
+        return
+      }
+
+      setShowSuccess(true)
+    })
+  }
+
   return (
-    <form action={formAction} className="space-y-6">
-      {state.success && (
-        <Alert>
-          <AlertDescription>{__('profile.success')}</AlertDescription>
-        </Alert>
-      )}
+    <form
+      id="profile-form"
+      onSubmit={form.handleSubmit(handleSubmit)}
+      noValidate
+    >
+      <FieldGroup>
+        {showSuccess && (
+          <Alert>
+            <AlertDescription>{__('profile.success')}</AlertDescription>
+          </Alert>
+        )}
 
-      {state.error && (
-        <Alert variant="destructive">
-          <AlertDescription>{state.error}</AlertDescription>
-        </Alert>
-      )}
+        {form.formState.errors.root && (
+          <Alert variant="destructive">
+            <AlertDescription>
+              {form.formState.errors.root.message}
+            </AlertDescription>
+          </Alert>
+        )}
 
-      <Field>
-        <FieldLabel htmlFor="email">{__('profile.email')}</FieldLabel>
-        <Input id="email" type="email" value={email} disabled />
-      </Field>
+        <Field>
+          <FieldLabel htmlFor="email">{__('profile.email')}</FieldLabel>
+          <Input id="email" type="email" value={email} disabled />
+        </Field>
 
-      <Field>
-        <FieldLabel htmlFor="firstName">{__('profile.first_name')}</FieldLabel>
-        <Input
-          id="firstName"
-          name="firstName"
-          defaultValue={firstName}
-          required
+        <Field data-invalid={!!form.formState.errors.firstName}>
+          <FieldLabel htmlFor="firstName">
+            {__('profile.first_name')}
+          </FieldLabel>
+          <Input
+            id="firstName"
+            aria-invalid={!!form.formState.errors.firstName}
+            {...form.register('firstName')}
+          />
+          {form.formState.errors.firstName && (
+            <FieldError errors={[form.formState.errors.firstName]} />
+          )}
+        </Field>
+
+        <Field data-invalid={!!form.formState.errors.lastName}>
+          <FieldLabel htmlFor="lastName">{__('profile.last_name')}</FieldLabel>
+          <Input
+            id="lastName"
+            aria-invalid={!!form.formState.errors.lastName}
+            {...form.register('lastName')}
+          />
+          {form.formState.errors.lastName && (
+            <FieldError errors={[form.formState.errors.lastName]} />
+          )}
+        </Field>
+
+        <Controller
+          control={form.control}
+          name="acceptsMarketing"
+          render={({ field }) => (
+            <Field orientation="horizontal">
+              <Checkbox
+                id="acceptsMarketing"
+                checked={field.value}
+                onCheckedChange={(value) => field.onChange(value === true)}
+              />
+              <FieldLabel htmlFor="acceptsMarketing" className="font-normal">
+                {__('profile.accepts_marketing')}
+              </FieldLabel>
+            </Field>
+          )}
         />
-      </Field>
 
-      <Field>
-        <FieldLabel htmlFor="lastName">{__('profile.last_name')}</FieldLabel>
-        <Input id="lastName" name="lastName" defaultValue={lastName} required />
-      </Field>
-
-      <Button type="submit" disabled={isPending}>
-        {isPending ? __('profile.saving') : __('profile.save')}
-      </Button>
+        <Button type="submit" disabled={isPending}>
+          {isPending ? __('profile.saving') : __('profile.save')}
+        </Button>
+      </FieldGroup>
     </form>
   )
 }
