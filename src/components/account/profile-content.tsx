@@ -14,12 +14,5 @@ export function ProfileContent() {
     )
   }
 
-  return (
-    <ProfileForm
-      firstName={customer.firstName ?? ''}
-      lastName={customer.lastName ?? ''}
-      email={customer.emailAddress?.emailAddress ?? ''}
-      marketingState={customer.emailAddress?.marketingState ?? ''}
-    />
-  )
+  return <ProfileForm customer={customer} />
 }

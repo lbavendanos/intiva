@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
+import type { Customer } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { updateCustomer } from '@/actions/customer'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -19,10 +20,7 @@ import {
 import { Input } from '@/components/ui/input'
 
 type ProfileFormProps = {
-  firstName: string
-  lastName: string
-  email: string
-  marketingState: string
+  customer: Customer
 }
 
 function isMarketingSubscribed(state: string): boolean {
@@ -37,14 +35,12 @@ function createFormSchema() {
   })
 }
 
-export function ProfileForm({
-  firstName,
-  lastName,
-  email,
-  marketingState,
-}: ProfileFormProps) {
+export function ProfileForm({ customer }: ProfileFormProps) {
   const [isPending, startTransition] = useTransition()
   const [showSuccess, setShowSuccess] = useState(false)
+
+  const email = customer.emailAddress?.emailAddress ?? ''
+  const marketingState = customer.emailAddress?.marketingState ?? ''
 
   const formSchema = createFormSchema()
   type FormValues = z.infer<typeof formSchema>
@@ -52,8 +48,8 @@ export function ProfileForm({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName,
-      lastName,
+      firstName: customer.firstName ?? '',
+      lastName: customer.lastName ?? '',
       acceptsMarketing: isMarketingSubscribed(marketingState),
     },
   })
