@@ -2,9 +2,17 @@
 
 import { useState, useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import * as z from 'zod'
 
+import {
+  buildCity,
+  getDepartments,
+  getDistricts,
+  getProvinces,
+  getZoneCode,
+  parseAddressToUbigeo,
+} from '@/lib/peru/ubigeo'
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { createAddress, updateAddress } from '@/actions/address'
@@ -18,11 +26,22 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type AddressFormProps = {
   address?: CustomerAddress
   isDefault?: boolean
 }
+
+const DEPARTMENTS = getDepartments()
+const APP_COUNTRY = process.env.NEXT_PUBLIC_APP_COUNTRY as string
 
 function createFormSchema() {
   return z.object({
@@ -31,9 +50,9 @@ function createFormSchema() {
     company: z.string(),
     address1: z.string().min(1, __('address.address1_required')),
     address2: z.string(),
-    city: z.string().min(1, __('address.city_required')),
-    zoneCode: z.string(),
-    territoryCode: z.string().min(1, __('address.territory_code_required')),
+    department: z.string().min(1, __('address.department_required')),
+    province: z.string().min(1, __('address.province_required')),
+    district: z.string().min(1, __('address.district_required')),
     zip: z.string().min(1, __('address.zip_required')),
     phoneNumber: z.string(),
     defaultAddress: z.boolean(),
@@ -47,6 +66,8 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
   const formSchema = createFormSchema()
   type FormValues = z.infer<typeof formSchema>
 
+  const initialUbigeo = parseAddressToUbigeo(address?.zoneCode, address?.city)
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,9 +76,9 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
       company: address?.company ?? '',
       address1: address?.address1 ?? '',
       address2: address?.address2 ?? '',
-      city: address?.city ?? '',
-      zoneCode: address?.zoneCode ?? '',
-      territoryCode: address?.territoryCode ?? '',
+      department: initialUbigeo.department,
+      province: initialUbigeo.province,
+      district: initialUbigeo.district,
       zip: address?.zip ?? '',
       phoneNumber: address?.phoneNumber ?? '',
       defaultAddress: false,
@@ -65,6 +86,12 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
   })
 
   const errors = form.formState.errors
+  const department = useWatch({ control: form.control, name: 'department' })
+  const province = useWatch({ control: form.control, name: 'province' })
+
+  const provinces = department ? getProvinces(department) : []
+  const districts =
+    department && province ? getDistricts(department, province) : []
 
   const handleSubmit = (values: FormValues) => {
     setShowSuccess(false)
@@ -77,9 +104,9 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
           company: values.company || undefined,
           address1: values.address1 || undefined,
           address2: values.address2 || undefined,
-          city: values.city || undefined,
-          zoneCode: values.zoneCode || undefined,
-          territoryCode: values.territoryCode || undefined,
+          city: buildCity(values.province, values.district),
+          zoneCode: getZoneCode(values.department, values.province),
+          territoryCode: APP_COUNTRY,
           zip: values.zip || undefined,
           phoneNumber: values.phoneNumber || undefined,
         },
@@ -172,45 +199,126 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
           {errors.address2 && <FieldError errors={[errors.address2]} />}
         </Field>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field data-invalid={!!errors.city}>
-            <FieldLabel htmlFor="city">{__('address.city')}</FieldLabel>
-            <Input
-              id="city"
-              aria-invalid={!!errors.city}
-              {...form.register('city')}
-            />
-            {errors.city && <FieldError errors={[errors.city]} />}
-          </Field>
+        <Controller
+          control={form.control}
+          name="department"
+          render={({ field }) => (
+            <Field data-invalid={!!errors.department}>
+              <FieldLabel htmlFor="department">
+                {__('address.department')}
+              </FieldLabel>
+              <Select
+                value={field.value}
+                onValueChange={(value) => {
+                  field.onChange(value)
+                  form.setValue('province', '', { shouldValidate: false })
+                  form.setValue('district', '', { shouldValidate: false })
+                }}
+              >
+                <SelectTrigger
+                  id="department"
+                  aria-invalid={!!errors.department}
+                  className="w-full"
+                >
+                  <SelectValue
+                    placeholder={__('address.department_placeholder')}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {DEPARTMENTS.map((name) => (
+                      <SelectItem key={name} value={name}>
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {errors.department && <FieldError errors={[errors.department]} />}
+            </Field>
+          )}
+        />
 
-          <Field data-invalid={!!errors.zoneCode}>
-            <FieldLabel htmlFor="zoneCode">
-              {__('address.zone_code')}
-            </FieldLabel>
-            <Input
-              id="zoneCode"
-              aria-invalid={!!errors.zoneCode}
-              {...form.register('zoneCode')}
-            />
-            {errors.zoneCode && <FieldError errors={[errors.zoneCode]} />}
-          </Field>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Controller
+            control={form.control}
+            name="province"
+            render={({ field }) => (
+              <Field data-invalid={!!errors.province}>
+                <FieldLabel htmlFor="province">
+                  {__('address.province')}
+                </FieldLabel>
+                <Select
+                  value={field.value}
+                  onValueChange={(value) => {
+                    field.onChange(value)
+                    form.setValue('district', '', { shouldValidate: false })
+                  }}
+                  disabled={!department}
+                >
+                  <SelectTrigger
+                    id="province"
+                    aria-invalid={!!errors.province}
+                    className="w-full"
+                  >
+                    <SelectValue
+                      placeholder={__('address.province_placeholder')}
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {provinces.map((name) => (
+                        <SelectItem key={name} value={name}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {errors.province && <FieldError errors={[errors.province]} />}
+              </Field>
+            )}
+          />
+
+          <Controller
+            control={form.control}
+            name="district"
+            render={({ field }) => (
+              <Field data-invalid={!!errors.district}>
+                <FieldLabel htmlFor="district">
+                  {__('address.district')}
+                </FieldLabel>
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  disabled={!province}
+                >
+                  <SelectTrigger
+                    id="district"
+                    aria-invalid={!!errors.district}
+                    className="w-full"
+                  >
+                    <SelectValue
+                      placeholder={__('address.district_placeholder')}
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {districts.map((name) => (
+                        <SelectItem key={name} value={name}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {errors.district && <FieldError errors={[errors.district]} />}
+              </Field>
+            )}
+          />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <Field data-invalid={!!errors.territoryCode}>
-            <FieldLabel htmlFor="territoryCode">
-              {__('address.territory_code')}
-            </FieldLabel>
-            <Input
-              id="territoryCode"
-              aria-invalid={!!errors.territoryCode}
-              {...form.register('territoryCode')}
-            />
-            {errors.territoryCode && (
-              <FieldError errors={[errors.territoryCode]} />
-            )}
-          </Field>
-
           <Field data-invalid={!!errors.zip}>
             <FieldLabel htmlFor="zip">{__('address.zip')}</FieldLabel>
             <Input
@@ -220,20 +328,20 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
             />
             {errors.zip && <FieldError errors={[errors.zip]} />}
           </Field>
-        </div>
 
-        <Field data-invalid={!!errors.phoneNumber}>
-          <FieldLabel htmlFor="phoneNumber">
-            {__('address.phone_number')}
-          </FieldLabel>
-          <Input
-            id="phoneNumber"
-            type="tel"
-            aria-invalid={!!errors.phoneNumber}
-            {...form.register('phoneNumber')}
-          />
-          {errors.phoneNumber && <FieldError errors={[errors.phoneNumber]} />}
-        </Field>
+          <Field data-invalid={!!errors.phoneNumber}>
+            <FieldLabel htmlFor="phoneNumber">
+              {__('address.phone_number')}
+            </FieldLabel>
+            <Input
+              id="phoneNumber"
+              type="tel"
+              aria-invalid={!!errors.phoneNumber}
+              {...form.register('phoneNumber')}
+            />
+            {errors.phoneNumber && <FieldError errors={[errors.phoneNumber]} />}
+          </Field>
+        </div>
 
         {!isDefault && (
           <Controller
