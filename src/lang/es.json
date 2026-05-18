@@ -126,5 +126,9 @@
   "address.phone_number": "Teléfono",
   "address.set_as_default": "Establecer como dirección predeterminada",
   "address.success": "Dirección guardada exitosamente",
-  "address.saving": "Guardando..."
+  "address.saving": "Guardando...",
+  "address.address1_required": "La dirección es obligatoria",
+  "address.city_required": "La ciudad es obligatoria",
+  "address.territory_code_required": "El país es obligatorio",
+  "address.zip_required": "El código postal es obligatorio"
 }

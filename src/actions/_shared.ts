@@ -1,7 +1,6 @@
 import 'server-only'
 
 import { getAccessToken } from '@/lib/session/session'
-import type { CustomerAddressInput } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 
 export type ActionResult<T = undefined> = {
@@ -36,28 +35,5 @@ export async function withAccessToken<T>(
     return await action(accessToken)
   } catch {
     return fail(__('account.error.generic'))
-  }
-}
-
-export function parseAddressFormData(formData: FormData): {
-  address: CustomerAddressInput
-  defaultAddress: boolean
-} {
-  const address: CustomerAddressInput = {
-    firstName: (formData.get('firstName') as string) || undefined,
-    lastName: (formData.get('lastName') as string) || undefined,
-    company: (formData.get('company') as string) || undefined,
-    address1: (formData.get('address1') as string) || undefined,
-    address2: (formData.get('address2') as string) || undefined,
-    city: (formData.get('city') as string) || undefined,
-    zoneCode: (formData.get('zoneCode') as string) || undefined,
-    territoryCode: (formData.get('territoryCode') as string) || undefined,
-    zip: (formData.get('zip') as string) || undefined,
-    phoneNumber: (formData.get('phoneNumber') as string) || undefined,
-  }
-
-  return {
-    address,
-    defaultAddress: formData.get('defaultAddress') === 'on',
   }
 }

@@ -8,27 +8,24 @@ import {
   deleteCustomerAddress,
   updateCustomerAddress,
 } from '@/lib/shopify/customer-account/mutations/address'
+import type { CustomerAddressInput } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 
-import {
-  fail,
-  ok,
-  parseAddressFormData,
-  withAccessToken,
-  type ActionResult,
-} from './_shared'
+import { fail, ok, withAccessToken, type ActionResult } from './_shared'
+
+type AddressActionInput = {
+  address: CustomerAddressInput
+  defaultAddress?: boolean
+}
 
 export async function createAddress(
-  _prevState: ActionResult,
-  formData: FormData,
+  input: AddressActionInput,
 ): Promise<ActionResult> {
-  const { address, defaultAddress } = parseAddressFormData(formData)
-
   return withAccessToken(async (accessToken) => {
     const { userErrors } = await createCustomerAddress(
       accessToken,
-      address,
-      defaultAddress || undefined,
+      input.address,
+      input.defaultAddress || undefined,
     )
 
     if (userErrors.length > 0) {
@@ -42,17 +39,14 @@ export async function createAddress(
 
 export async function updateAddress(
   addressId: string,
-  _prevState: ActionResult,
-  formData: FormData,
+  input: AddressActionInput,
 ): Promise<ActionResult> {
-  const { address, defaultAddress } = parseAddressFormData(formData)
-
   return withAccessToken(async (accessToken) => {
     const { userErrors } = await updateCustomerAddress(
       accessToken,
       addressId,
-      address,
-      defaultAddress || undefined,
+      input.address,
+      input.defaultAddress || undefined,
     )
 
     if (userErrors.length > 0) {

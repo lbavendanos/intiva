@@ -126,5 +126,9 @@
   "address.phone_number": "Phone number",
   "address.set_as_default": "Set as default address",
   "address.success": "Address saved successfully",
-  "address.saving": "Saving..."
+  "address.saving": "Saving...",
+  "address.address1_required": "Address is required",
+  "address.city_required": "City is required",
+  "address.territory_code_required": "Country is required",
+  "address.zip_required": "ZIP / Postal code is required"
 }
