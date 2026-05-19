@@ -118,7 +118,8 @@
   "address.last_name": "Last name",
   "address.company": "Company",
   "address.address1": "Address",
-  "address.address2": "Apartment, suite, etc.",
+  "address.address2": "Reference",
+  "address.address2_placeholder": "Apartment, suite, etc.",
   "address.department": "Department",
   "address.department_placeholder": "Select a department",
   "address.province": "Province",
@@ -128,6 +129,9 @@
   "address.no_results": "No results found",
   "address.zip": "ZIP / Postal code",
   "address.phone_number": "Phone number",
+  "address.phone_number_description": "We will only call you if we have any questions about your order.",
+  "address.phone_number_invalid": "Enter a valid phone number (9 digits)",
+  "address.optional": "(optional)",
   "address.set_as_default": "Set as default address",
   "address.success": "Address saved successfully",
   "address.saving": "Saving...",
@@ -135,5 +139,5 @@
   "address.department_required": "Department is required",
   "address.province_required": "Province is required",
   "address.district_required": "District is required",
-  "address.zip_required": "ZIP / Postal code is required"
+  "address.phone_number_required": "Phone number is required"
 }

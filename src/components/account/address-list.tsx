@@ -7,9 +7,9 @@ import { PencilIcon, StarIcon, TrashIcon } from '@phosphor-icons/react'
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { deleteAddress, setDefaultAddress } from '@/actions/address'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
+import { AddressCard } from './address-card'
 
 type AddressListProps = {
   addresses: CustomerAddress[]
@@ -41,55 +41,40 @@ export function AddressList({ addresses, defaultAddressId }: AddressListProps) {
         const isDefault = address.id === defaultAddressId
 
         return (
-          <Card key={address.id}>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-base">
-                {address.firstName} {address.lastName}
-              </CardTitle>
-              {isDefault && (
-                <Badge variant="secondary">{__('addresses.default')}</Badge>
-              )}
-            </CardHeader>
-            <CardContent>
-              <div className="mb-4 text-sm text-zinc-600">
-                {address.formatted.map((line, i) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" asChild>
-                  <Link
-                    href={`/account/addresses/${encodeURIComponent(address.id)}`}
+          <AddressCard key={address.id} address={address} isDefault={isDefault}>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link
+                  href={`/account/addresses/${encodeURIComponent(address.id)}`}
+                >
+                  <PencilIcon data-icon="inline-start" />
+                  {__('addresses.edit')}
+                </Link>
+              </Button>
+              {!isDefault && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={isPending}
+                    onClick={() => handleSetDefault(address.id)}
                   >
-                    <PencilIcon data-icon="inline-start" />
-                    {__('addresses.edit')}
-                  </Link>
-                </Button>
-                {!isDefault && (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={isPending}
-                      onClick={() => handleSetDefault(address.id)}
-                    >
-                      <StarIcon data-icon="inline-start" />
-                      {__('addresses.set_default')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={isPending}
-                      onClick={() => handleDelete(address.id)}
-                    >
-                      <TrashIcon data-icon="inline-start" />
-                      {__('addresses.delete')}
-                    </Button>
-                  </>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                    <StarIcon data-icon="inline-start" />
+                    {__('addresses.set_default')}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={isPending}
+                    onClick={() => handleDelete(address.id)}
+                  >
+                    <TrashIcon data-icon="inline-start" />
+                    {__('addresses.delete')}
+                  </Button>
+                </>
+              )}
+            </div>
+          </AddressCard>
         )
       })}
     </div>

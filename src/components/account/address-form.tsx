@@ -3,8 +3,10 @@
 import { useState, useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm, useWatch } from 'react-hook-form'
+import { useHookFormMask } from 'use-mask-input'
 import * as z from 'zod'
 
+import { fromE164, PERU_MOBILE_MASK, toE164 } from '@/lib/peru/phone'
 import {
   buildCity,
   getDepartments,
@@ -29,6 +31,7 @@ import {
 } from '@/components/ui/combobox'
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -53,8 +56,14 @@ function createFormSchema() {
     department: z.string().min(1, __('address.department_required')),
     province: z.string().min(1, __('address.province_required')),
     district: z.string().min(1, __('address.district_required')),
-    zip: z.string().min(1, __('address.zip_required')),
-    phoneNumber: z.string(),
+    zip: z.string(),
+    phoneNumber: z
+      .string()
+      .min(1, __('address.phone_number_required'))
+      .transform((value) => value.replace(/\D/g, ''))
+      .refine((value) => /^9\d{8}$/.test(value), {
+        message: __('address.phone_number_invalid'),
+      }),
     defaultAddress: z.boolean(),
   })
 }
@@ -80,11 +89,12 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
       province: initialUbigeo.province,
       district: initialUbigeo.district,
       zip: address?.zip ?? '',
-      phoneNumber: address?.phoneNumber ?? '',
+      phoneNumber: fromE164(address?.phoneNumber),
       defaultAddress: false,
     },
   })
 
+  const registerWithMask = useHookFormMask(form.register)
   const errors = form.formState.errors
   const department = useWatch({ control: form.control, name: 'department' })
   const province = useWatch({ control: form.control, name: 'province' })
@@ -108,7 +118,7 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
           zoneCode: getZoneCode(values.department, values.province),
           territoryCode: APP_COUNTRY,
           zip: values.zip || undefined,
-          phoneNumber: values.phoneNumber || undefined,
+          phoneNumber: toE164(values.phoneNumber),
         },
         defaultAddress: values.defaultAddress,
       }
@@ -147,6 +157,9 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
           <Field data-invalid={!!errors.firstName}>
             <FieldLabel htmlFor="firstName">
               {__('address.first_name')}
+              <span className="text-muted-foreground font-normal">
+                {__('address.optional')}
+              </span>
             </FieldLabel>
             <Input
               id="firstName"
@@ -159,6 +172,9 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
           <Field data-invalid={!!errors.lastName}>
             <FieldLabel htmlFor="lastName">
               {__('address.last_name')}
+              <span className="text-muted-foreground font-normal">
+                {__('address.optional')}
+              </span>
             </FieldLabel>
             <Input
               id="lastName"
@@ -170,7 +186,12 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
         </div>
 
         <Field data-invalid={!!errors.company}>
-          <FieldLabel htmlFor="company">{__('address.company')}</FieldLabel>
+          <FieldLabel htmlFor="company">
+            {__('address.company')}
+            <span className="text-muted-foreground font-normal">
+              {__('address.optional')}
+            </span>
+          </FieldLabel>
           <Input
             id="company"
             aria-invalid={!!errors.company}
@@ -190,9 +211,15 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
         </Field>
 
         <Field data-invalid={!!errors.address2}>
-          <FieldLabel htmlFor="address2">{__('address.address2')}</FieldLabel>
+          <FieldLabel htmlFor="address2">
+            {__('address.address2')}
+            <span className="text-muted-foreground font-normal">
+              {__('address.optional')}
+            </span>
+          </FieldLabel>
           <Input
             id="address2"
+            placeholder={__('address.address2_placeholder')}
             aria-invalid={!!errors.address2}
             {...form.register('address2')}
           />
@@ -324,7 +351,12 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
 
         <div className="grid gap-4 md:grid-cols-2">
           <Field data-invalid={!!errors.zip}>
-            <FieldLabel htmlFor="zip">{__('address.zip')}</FieldLabel>
+            <FieldLabel htmlFor="zip">
+              {__('address.zip')}
+              <span className="text-muted-foreground font-normal">
+                {__('address.optional')}
+              </span>
+            </FieldLabel>
             <Input
               id="zip"
               aria-invalid={!!errors.zip}
@@ -340,9 +372,15 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
             <Input
               id="phoneNumber"
               type="tel"
+              inputMode="numeric"
+              placeholder={PERU_MOBILE_MASK}
               aria-invalid={!!errors.phoneNumber}
-              {...form.register('phoneNumber')}
+              aria-describedby="phoneNumber-description"
+              {...registerWithMask('phoneNumber', PERU_MOBILE_MASK)}
             />
+            <FieldDescription id="phoneNumber-description">
+              {__('address.phone_number_description')}
+            </FieldDescription>
             {errors.phoneNumber && <FieldError errors={[errors.phoneNumber]} />}
           </Field>
         </div>

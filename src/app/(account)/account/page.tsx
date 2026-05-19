@@ -44,7 +44,7 @@ export default function AccountPage() {
       <Suspense fallback={<Skeleton className="h-48 w-full" />}>
         <RecentOrders />
       </Suspense>
-      <Suspense fallback={<Skeleton className="h-32 w-full" />}>
+      <Suspense fallback={<Skeleton className="h-40 w-full" />}>
         <DefaultAddressCard />
       </Suspense>
     </div>
