@@ -125,6 +125,7 @@
   "address.province_placeholder": "Selecciona una provincia",
   "address.district": "Distrito",
   "address.district_placeholder": "Selecciona un distrito",
+  "address.no_results": "No se encontraron resultados",
   "address.zip": "Código postal",
   "address.phone_number": "Teléfono",
   "address.set_as_default": "Establecer como dirección predeterminada",

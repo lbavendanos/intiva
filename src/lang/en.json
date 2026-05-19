@@ -125,6 +125,7 @@
   "address.province_placeholder": "Select a province",
   "address.district": "District",
   "address.district_placeholder": "Select a district",
+  "address.no_results": "No results found",
   "address.zip": "ZIP / Postal code",
   "address.phone_number": "Phone number",
   "address.set_as_default": "Set as default address",

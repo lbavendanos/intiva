@@ -20,20 +20,20 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from '@/components/ui/combobox'
+import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 
 type AddressFormProps = {
   address?: CustomerAddress
@@ -207,33 +207,33 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
               <FieldLabel htmlFor="department">
                 {__('address.department')}
               </FieldLabel>
-              <Select
-                value={field.value}
-                onValueChange={(value) => {
-                  field.onChange(value)
+              <Combobox
+                items={DEPARTMENTS}
+                value={field.value || null}
+                onValueChange={(value: string | null) => {
+                  field.onChange(value ?? '')
                   form.setValue('province', '', { shouldValidate: false })
                   form.setValue('district', '', { shouldValidate: false })
                 }}
+                autoHighlight
               >
-                <SelectTrigger
+                <ComboboxInput
                   id="department"
                   aria-invalid={!!errors.department}
+                  placeholder={__('address.department_placeholder')}
                   className="w-full"
-                >
-                  <SelectValue
-                    placeholder={__('address.department_placeholder')}
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {DEPARTMENTS.map((name) => (
-                      <SelectItem key={name} value={name}>
+                />
+                <ComboboxContent>
+                  <ComboboxEmpty>{__('address.no_results')}</ComboboxEmpty>
+                  <ComboboxList>
+                    {(name: string) => (
+                      <ComboboxItem key={name} value={name}>
                         {name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
               {errors.department && <FieldError errors={[errors.department]} />}
             </Field>
           )}
@@ -248,33 +248,34 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
                 <FieldLabel htmlFor="province">
                   {__('address.province')}
                 </FieldLabel>
-                <Select
-                  value={field.value}
-                  onValueChange={(value) => {
-                    field.onChange(value)
+                <Combobox
+                  items={provinces}
+                  value={field.value || null}
+                  onValueChange={(value: string | null) => {
+                    field.onChange(value ?? '')
                     form.setValue('district', '', { shouldValidate: false })
                   }}
                   disabled={!department}
+                  autoHighlight
                 >
-                  <SelectTrigger
+                  <ComboboxInput
                     id="province"
                     aria-invalid={!!errors.province}
+                    placeholder={__('address.province_placeholder')}
+                    disabled={!department}
                     className="w-full"
-                  >
-                    <SelectValue
-                      placeholder={__('address.province_placeholder')}
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {provinces.map((name) => (
-                        <SelectItem key={name} value={name}>
+                  />
+                  <ComboboxContent>
+                    <ComboboxEmpty>{__('address.no_results')}</ComboboxEmpty>
+                    <ComboboxList>
+                      {(name: string) => (
+                        <ComboboxItem key={name} value={name}>
                           {name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
                 {errors.province && <FieldError errors={[errors.province]} />}
               </Field>
             )}
@@ -288,30 +289,33 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
                 <FieldLabel htmlFor="district">
                   {__('address.district')}
                 </FieldLabel>
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
+                <Combobox
+                  items={districts}
+                  value={field.value || null}
+                  onValueChange={(value: string | null) =>
+                    field.onChange(value ?? '')
+                  }
                   disabled={!province}
+                  autoHighlight
                 >
-                  <SelectTrigger
+                  <ComboboxInput
                     id="district"
                     aria-invalid={!!errors.district}
+                    placeholder={__('address.district_placeholder')}
+                    disabled={!province}
                     className="w-full"
-                  >
-                    <SelectValue
-                      placeholder={__('address.district_placeholder')}
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {districts.map((name) => (
-                        <SelectItem key={name} value={name}>
+                  />
+                  <ComboboxContent>
+                    <ComboboxEmpty>{__('address.no_results')}</ComboboxEmpty>
+                    <ComboboxList>
+                      {(name: string) => (
+                        <ComboboxItem key={name} value={name}>
                           {name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
                 {errors.district && <FieldError errors={[errors.district]} />}
               </Field>
             )}
