@@ -1,7 +1,6 @@
 'use client'
 
 import { useTransition } from 'react'
-import Link from 'next/link'
 import { PencilIcon, StarIcon, TrashIcon } from '@phosphor-icons/react'
 
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
@@ -10,6 +9,7 @@ import { deleteAddress, setDefaultAddress } from '@/actions/address'
 import { Button } from '@/components/ui/button'
 
 import { AddressCard } from './address-card'
+import { AddressDialog } from './address-dialog'
 
 type AddressListProps = {
   addresses: CustomerAddress[]
@@ -41,40 +41,43 @@ export function AddressList({ addresses, defaultAddressId }: AddressListProps) {
         const isDefault = address.id === defaultAddressId
 
         return (
-          <AddressCard key={address.id} address={address} isDefault={isDefault}>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" asChild>
-                <Link
-                  href={`/account/addresses/${encodeURIComponent(address.id)}`}
-                >
-                  <PencilIcon data-icon="inline-start" />
-                  {__('addresses.edit')}
-                </Link>
-              </Button>
-              {!isDefault && (
-                <>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={isPending}
-                    onClick={() => handleSetDefault(address.id)}
-                  >
-                    <StarIcon data-icon="inline-start" />
-                    {__('addresses.set_default')}
+          <AddressCard
+            key={address.id}
+            address={address}
+            isDefault={isDefault}
+            footer={
+              <div className="flex gap-2">
+                <AddressDialog address={address} isDefault={isDefault}>
+                  <Button variant="outline" size="sm">
+                    <PencilIcon data-icon="inline-start" />
+                    {__('addresses.edit')}
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={isPending}
-                    onClick={() => handleDelete(address.id)}
-                  >
-                    <TrashIcon data-icon="inline-start" />
-                    {__('addresses.delete')}
-                  </Button>
-                </>
-              )}
-            </div>
-          </AddressCard>
+                </AddressDialog>
+                {!isDefault && (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={isPending}
+                      onClick={() => handleSetDefault(address.id)}
+                    >
+                      <StarIcon data-icon="inline-start" />
+                      {__('addresses.set_default')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={isPending}
+                      onClick={() => handleDelete(address.id)}
+                    >
+                      <TrashIcon data-icon="inline-start" />
+                      {__('addresses.delete')}
+                    </Button>
+                  </>
+                )}
+              </div>
+            }
+          />
         )
       })}
     </div>

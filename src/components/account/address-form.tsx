@@ -41,6 +41,7 @@ import { Input } from '@/components/ui/input'
 type AddressFormProps = {
   address?: CustomerAddress
   isDefault?: boolean
+  onSuccess?: () => void
 }
 
 const DEPARTMENTS = getDepartments()
@@ -68,7 +69,11 @@ function createFormSchema() {
   })
 }
 
-export function AddressForm({ address, isDefault }: AddressFormProps) {
+export function AddressForm({
+  address,
+  isDefault,
+  onSuccess,
+}: AddressFormProps) {
   const [isPending, startTransition] = useTransition()
   const [showSuccess, setShowSuccess] = useState(false)
 
@@ -131,6 +136,11 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
         form.setError('root', {
           message: result.error || __('account.error.generic'),
         })
+        return
+      }
+
+      if (onSuccess) {
+        onSuccess()
         return
       }
 
@@ -266,124 +276,120 @@ export function AddressForm({ address, isDefault }: AddressFormProps) {
           )}
         />
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <Controller
-            control={form.control}
-            name="province"
-            render={({ field }) => (
-              <Field data-invalid={!!errors.province}>
-                <FieldLabel htmlFor="province">
-                  {__('address.province')}
-                </FieldLabel>
-                <Combobox
-                  items={provinces}
-                  value={field.value || null}
-                  onValueChange={(value: string | null) => {
-                    field.onChange(value ?? '')
-                    form.setValue('district', '', { shouldValidate: false })
-                  }}
+        <Controller
+          control={form.control}
+          name="province"
+          render={({ field }) => (
+            <Field data-invalid={!!errors.province}>
+              <FieldLabel htmlFor="province">
+                {__('address.province')}
+              </FieldLabel>
+              <Combobox
+                items={provinces}
+                value={field.value || null}
+                onValueChange={(value: string | null) => {
+                  field.onChange(value ?? '')
+                  form.setValue('district', '', { shouldValidate: false })
+                }}
+                disabled={!department}
+                autoHighlight
+              >
+                <ComboboxInput
+                  id="province"
+                  aria-invalid={!!errors.province}
+                  placeholder={__('address.province_placeholder')}
                   disabled={!department}
-                  autoHighlight
-                >
-                  <ComboboxInput
-                    id="province"
-                    aria-invalid={!!errors.province}
-                    placeholder={__('address.province_placeholder')}
-                    disabled={!department}
-                    className="w-full"
-                  />
-                  <ComboboxContent>
-                    <ComboboxEmpty>{__('address.no_results')}</ComboboxEmpty>
-                    <ComboboxList>
-                      {(name: string) => (
-                        <ComboboxItem key={name} value={name}>
-                          {name}
-                        </ComboboxItem>
-                      )}
-                    </ComboboxList>
-                  </ComboboxContent>
-                </Combobox>
-                {errors.province && <FieldError errors={[errors.province]} />}
-              </Field>
-            )}
-          />
+                  className="w-full"
+                />
+                <ComboboxContent>
+                  <ComboboxEmpty>{__('address.no_results')}</ComboboxEmpty>
+                  <ComboboxList>
+                    {(name: string) => (
+                      <ComboboxItem key={name} value={name}>
+                        {name}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+              {errors.province && <FieldError errors={[errors.province]} />}
+            </Field>
+          )}
+        />
 
-          <Controller
-            control={form.control}
-            name="district"
-            render={({ field }) => (
-              <Field data-invalid={!!errors.district}>
-                <FieldLabel htmlFor="district">
-                  {__('address.district')}
-                </FieldLabel>
-                <Combobox
-                  items={districts}
-                  value={field.value || null}
-                  onValueChange={(value: string | null) =>
-                    field.onChange(value ?? '')
-                  }
+        <Controller
+          control={form.control}
+          name="district"
+          render={({ field }) => (
+            <Field data-invalid={!!errors.district}>
+              <FieldLabel htmlFor="district">
+                {__('address.district')}
+              </FieldLabel>
+              <Combobox
+                items={districts}
+                value={field.value || null}
+                onValueChange={(value: string | null) =>
+                  field.onChange(value ?? '')
+                }
+                disabled={!province}
+                autoHighlight
+              >
+                <ComboboxInput
+                  id="district"
+                  aria-invalid={!!errors.district}
+                  placeholder={__('address.district_placeholder')}
                   disabled={!province}
-                  autoHighlight
-                >
-                  <ComboboxInput
-                    id="district"
-                    aria-invalid={!!errors.district}
-                    placeholder={__('address.district_placeholder')}
-                    disabled={!province}
-                    className="w-full"
-                  />
-                  <ComboboxContent>
-                    <ComboboxEmpty>{__('address.no_results')}</ComboboxEmpty>
-                    <ComboboxList>
-                      {(name: string) => (
-                        <ComboboxItem key={name} value={name}>
-                          {name}
-                        </ComboboxItem>
-                      )}
-                    </ComboboxList>
-                  </ComboboxContent>
-                </Combobox>
-                {errors.district && <FieldError errors={[errors.district]} />}
-              </Field>
-            )}
+                  className="w-full"
+                />
+                <ComboboxContent>
+                  <ComboboxEmpty>{__('address.no_results')}</ComboboxEmpty>
+                  <ComboboxList>
+                    {(name: string) => (
+                      <ComboboxItem key={name} value={name}>
+                        {name}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+              {errors.district && <FieldError errors={[errors.district]} />}
+            </Field>
+          )}
+        />
+
+        <Field data-invalid={!!errors.zip}>
+          <FieldLabel htmlFor="zip">
+            {__('address.zip')}
+            <span className="text-muted-foreground font-normal">
+              {__('address.optional')}
+            </span>
+          </FieldLabel>
+          <Input
+            id="zip"
+            aria-invalid={!!errors.zip}
+            {...form.register('zip')}
           />
-        </div>
+          {errors.zip && <FieldError errors={[errors.zip]} />}
+        </Field>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field data-invalid={!!errors.zip}>
-            <FieldLabel htmlFor="zip">
-              {__('address.zip')}
-              <span className="text-muted-foreground font-normal">
-                {__('address.optional')}
-              </span>
-            </FieldLabel>
-            <Input
-              id="zip"
-              aria-invalid={!!errors.zip}
-              {...form.register('zip')}
-            />
-            {errors.zip && <FieldError errors={[errors.zip]} />}
-          </Field>
-
-          <Field data-invalid={!!errors.phoneNumber}>
-            <FieldLabel htmlFor="phoneNumber">
-              {__('address.phone_number')}
-            </FieldLabel>
-            <Input
-              id="phoneNumber"
-              type="tel"
-              inputMode="numeric"
-              placeholder={PERU_MOBILE_MASK}
-              aria-invalid={!!errors.phoneNumber}
-              aria-describedby="phoneNumber-description"
-              {...registerWithMask('phoneNumber', PERU_MOBILE_MASK)}
-            />
-            <FieldDescription id="phoneNumber-description">
-              {__('address.phone_number_description')}
-            </FieldDescription>
-            {errors.phoneNumber && <FieldError errors={[errors.phoneNumber]} />}
-          </Field>
-        </div>
+        <Field data-invalid={!!errors.phoneNumber}>
+          <FieldLabel htmlFor="phoneNumber">
+            {__('address.phone_number')}
+          </FieldLabel>
+          <Input
+            id="phoneNumber"
+            type="tel"
+            inputMode="numeric"
+            placeholder={PERU_MOBILE_MASK}
+            aria-invalid={!!errors.phoneNumber}
+            aria-describedby="phoneNumber-description"
+            {...registerWithMask('phoneNumber', PERU_MOBILE_MASK)}
+          />
+          <FieldDescription id="phoneNumber-description">
+            {__('address.phone_number_description')}
+          </FieldDescription>
+          {errors.phoneNumber && <FieldError errors={[errors.phoneNumber]} />}
+        </Field>
 
         {!isDefault && (
           <Controller

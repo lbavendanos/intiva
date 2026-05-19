@@ -1,9 +1,11 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
+import { PlusIcon } from '@phosphor-icons/react/dist/ssr'
 
 import { __ } from '@/lib/utils'
-import { AddressForm } from '@/components/account/address-form'
+import { AddressDialog } from '@/components/account/address-dialog'
 import { AddressesContent } from '@/components/account/addresses-content'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {
@@ -23,20 +25,20 @@ function AddressesSkeleton() {
 export default function AddressesPage() {
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <h2 className="text-xl font-semibold text-zinc-900">
           {__('addresses.title')}
         </h2>
+        <AddressDialog>
+          <Button>
+            <PlusIcon data-icon="inline-start" />
+            {__('addresses.add')}
+          </Button>
+        </AddressDialog>
       </div>
       <Suspense fallback={<AddressesSkeleton />}>
         <AddressesContent />
       </Suspense>
-      <div>
-        <h3 className="mb-4 text-lg font-semibold text-zinc-900">
-          {__('addresses.add')}
-        </h3>
-        <AddressForm />
-      </div>
     </div>
   )
 }

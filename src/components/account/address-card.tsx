@@ -7,12 +7,18 @@ import { parseAddressToUbigeo } from '@/lib/peru/ubigeo'
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 type AddressCardProps = {
   address: CustomerAddress
   isDefault?: boolean
-  children?: ReactNode
+  footer?: ReactNode
 }
 
 function formatAddressLines(address: CustomerAddress): string[] {
@@ -35,11 +41,7 @@ function formatAddressLines(address: CustomerAddress): string[] {
   ].filter((line): line is string => Boolean(line))
 }
 
-export function AddressCard({
-  address,
-  isDefault,
-  children,
-}: AddressCardProps) {
+export function AddressCard({ address, isDefault, footer }: AddressCardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -50,7 +52,7 @@ export function AddressCard({
           <Badge variant="secondary">{__('addresses.default')}</Badge>
         )}
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="flex-1">
         <div className="space-y-1 text-sm text-zinc-600">
           {formatAddressLines(address).map((line, i) => (
             <p key={i}>{line}</p>
@@ -59,8 +61,8 @@ export function AddressCard({
             <p>{formatPhoneNumber(address.phoneNumber)}</p>
           )}
         </div>
-        {children}
       </CardContent>
+      {footer && <CardFooter>{footer}</CardFooter>}
     </Card>
   )
 }
