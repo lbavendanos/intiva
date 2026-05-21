@@ -47,6 +47,14 @@ type AddressFormProps = {
 const DEPARTMENTS = getDepartments()
 const APP_COUNTRY = process.env.NEXT_PUBLIC_APP_COUNTRY as string
 
+function pickOptional(
+  value: string,
+  isDirty: boolean | undefined,
+): string | null | undefined {
+  if (!isDirty) return undefined
+  return value || null
+}
+
 function createFormSchema() {
   return z.object({
     firstName: z.string(),
@@ -99,7 +107,7 @@ export function AddressForm({
   })
 
   const registerWithMask = useHookFormMask(form.register)
-  const errors = form.formState.errors
+  const { errors, dirtyFields } = form.formState
   const department = useWatch({ control: form.control, name: 'department' })
   const province = useWatch({ control: form.control, name: 'province' })
 
@@ -108,23 +116,23 @@ export function AddressForm({
     department && province ? getDistricts(department, province) : []
 
   const handleSubmit = (values: FormValues) => {
-    startTransition(async () => {
-      const input = {
-        address: {
-          firstName: values.firstName || undefined,
-          lastName: values.lastName || undefined,
-          company: values.company || undefined,
-          address1: values.address1 || undefined,
-          address2: values.address2 || undefined,
-          city: buildCity(values.province, values.district),
-          zoneCode: getZoneCode(values.department, values.province),
-          territoryCode: APP_COUNTRY,
-          zip: values.zip || undefined,
-          phoneNumber: toE164(values.phoneNumber),
-        },
-        defaultAddress: values.defaultAddress,
-      }
+    const input = {
+      address: {
+        firstName: pickOptional(values.firstName, dirtyFields.firstName),
+        lastName: pickOptional(values.lastName, dirtyFields.lastName),
+        company: pickOptional(values.company, dirtyFields.company),
+        address1: values.address1,
+        address2: pickOptional(values.address2, dirtyFields.address2),
+        city: buildCity(values.province, values.district),
+        zoneCode: getZoneCode(values.department, values.province),
+        territoryCode: APP_COUNTRY,
+        zip: pickOptional(values.zip, dirtyFields.zip),
+        phoneNumber: toE164(values.phoneNumber),
+      },
+      defaultAddress: values.defaultAddress,
+    }
 
+    startTransition(async () => {
       const result = address
         ? await updateAddress(address.id, input)
         : await createAddress(input)

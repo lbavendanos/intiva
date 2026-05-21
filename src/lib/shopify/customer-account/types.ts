@@ -93,18 +93,18 @@ export type OrderListItem = {
 }
 
 export type CustomerAddressInput = {
-  firstName?: string
-  lastName?: string
+  firstName?: Maybe<string>
+  lastName?: Maybe<string>
   address1?: string
-  address2?: string
+  address2?: Maybe<string>
   city?: string
-  company?: string
+  company?: Maybe<string>
   territoryCode?: string
   zoneCode?: string
-  zip?: string
+  zip?: Maybe<string>
   phoneNumber?: string
 }
 
 export type CustomerUserError = UserError & {
-  code?: string
+  code: Maybe<string>
 }

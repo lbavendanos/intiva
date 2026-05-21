@@ -72,7 +72,7 @@ export type ProductListItem = {
   compareAtPriceRange: {
     minVariantPrice: Money
   }
-  featuredImage: Image | null
+  featuredImage: Maybe<Image>
 } & ProductPricing
 
 export type ProductRecommendationIntent = 'RELATED' | 'COMPLEMENTARY'
@@ -93,7 +93,7 @@ export type CollectionListItem = {
   title: string
   handle: string
   description: string
-  image: Image | null
+  image: Maybe<Image>
 }
 
 export type CartLineItem = {
@@ -131,5 +131,5 @@ export type Cart = {
 }
 
 export type CartUserError = UserError & {
-  code?: string
+  code: Maybe<string>
 }

@@ -104,6 +104,8 @@ Only export types and functions that are used externally. Keep internal implemen
 
 ## Shopify Integration
 
+**Always validate GraphQL with the Shopify MCP `validate_graphql_codeblocks` tool** before considering any new or modified query, mutation, or fragment done. Also use it to confirm schema details (field nullability, accepted input shapes, enum values) instead of guessing or relying on training data.
+
 ### Storefront API (`src/lib/shopify/storefront/`)
 
 - `storefrontQuery<T>(query, options)` - Execute GraphQL queries against Shopify Storefront API
