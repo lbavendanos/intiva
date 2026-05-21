@@ -10,7 +10,8 @@ import {
 } from '@/lib/shopify/customer-account/mutations/customer'
 import { __ } from '@/lib/utils'
 
-import { fail, ok, withAccessToken, type ActionResult } from './_shared'
+import { fail, ok, withAccessToken } from './_shared'
+import type { ActionResult } from './types'
 
 type UpdateCustomerInput = {
   firstName: string

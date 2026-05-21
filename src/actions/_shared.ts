@@ -3,11 +3,7 @@ import 'server-only'
 import { getAccessToken } from '@/lib/session/session'
 import { __ } from '@/lib/utils'
 
-export type ActionResult<T = undefined> = {
-  success: boolean
-  data?: T
-  error?: string
-}
+import type { ActionResult } from './types'
 
 export function ok<T>(data?: T): ActionResult<T> {
   return { success: true, data }

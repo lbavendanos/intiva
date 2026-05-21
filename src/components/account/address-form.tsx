@@ -3,6 +3,7 @@
 import { useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm, useWatch } from 'react-hook-form'
+import { toast } from 'sonner'
 import { useHookFormMask } from 'use-mask-input'
 import * as z from 'zod'
 
@@ -18,7 +19,6 @@ import {
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { createAddress, updateAddress } from '@/actions/address'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -138,9 +138,7 @@ export function AddressForm({
         : await createAddress(input)
 
       if (!result.success) {
-        form.setError('root', {
-          message: result.error || __('account.error.generic'),
-        })
+        toast.error(result.error || __('account.error.generic'))
         return
       }
 
@@ -151,12 +149,6 @@ export function AddressForm({
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)} noValidate>
       <FieldGroup>
-        {errors.root && (
-          <Alert variant="destructive">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-
         <div className="grid gap-4 md:grid-cols-2">
           <Field data-invalid={!!errors.firstName}>
             <FieldLabel htmlFor="firstName">

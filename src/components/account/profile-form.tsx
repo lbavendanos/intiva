@@ -1,14 +1,14 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import * as z from 'zod'
 
 import type { Customer } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { updateCustomer } from '@/actions/customer'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -37,7 +37,6 @@ function createFormSchema() {
 
 export function ProfileForm({ customer }: ProfileFormProps) {
   const [isPending, startTransition] = useTransition()
-  const [showSuccess, setShowSuccess] = useState(false)
 
   const email = customer.emailAddress?.emailAddress ?? ''
   const marketingState = customer.emailAddress?.marketingState ?? ''
@@ -55,8 +54,6 @@ export function ProfileForm({ customer }: ProfileFormProps) {
   })
 
   const handleSubmit = (values: FormValues) => {
-    setShowSuccess(false)
-
     startTransition(async () => {
       const result = await updateCustomer({
         firstName: values.firstName,
@@ -66,13 +63,11 @@ export function ProfileForm({ customer }: ProfileFormProps) {
       })
 
       if (!result.success) {
-        form.setError('root', {
-          message: result.error || __('account.error.generic'),
-        })
+        toast.error(result.error || __('account.error.generic'))
         return
       }
 
-      setShowSuccess(true)
+      toast.success(__('profile.success'))
     })
   }
 
@@ -83,20 +78,6 @@ export function ProfileForm({ customer }: ProfileFormProps) {
       noValidate
     >
       <FieldGroup>
-        {showSuccess && (
-          <Alert>
-            <AlertDescription>{__('profile.success')}</AlertDescription>
-          </Alert>
-        )}
-
-        {form.formState.errors.root && (
-          <Alert variant="destructive">
-            <AlertDescription>
-              {form.formState.errors.root.message}
-            </AlertDescription>
-          </Alert>
-        )}
-
         <Field>
           <FieldLabel htmlFor="email">{__('profile.email')}</FieldLabel>
           <Input id="email" type="email" value={email} disabled />

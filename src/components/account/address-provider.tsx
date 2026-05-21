@@ -15,13 +15,9 @@ import {
   deleteAddress as deleteAddressAction,
   setDefaultAddress as setDefaultAddressAction,
 } from '@/actions/address'
+import type { ActionResult } from '@/actions/types'
 
 import { CustomerContext } from './customer-provider'
-
-type ActionResult = {
-  success: boolean
-  error?: string
-}
 
 type AddressState = {
   addresses: CustomerAddress[]

@@ -15,7 +15,8 @@ import {
 import type { Cart, CartUserError } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
 
-import { fail, ok, type ActionResult } from './_shared'
+import { fail, ok } from './_shared'
+import type { ActionResult } from './types'
 
 type CartResult = ActionResult<Cart | null>
 

@@ -1,14 +1,19 @@
 'use client'
 
 import { use, useOptimistic, useTransition } from 'react'
+import { toast } from 'sonner'
 
 import type { Cart, CartLineItem } from '@/lib/shopify/storefront/types'
 import type { Money } from '@/lib/shopify/types'
+import { __ } from '@/lib/utils'
 import {
   removeFromCart as removeFromCartAction,
   updateCartItem as updateCartItemAction,
 } from '@/actions/cart'
+import type { ActionResult } from '@/actions/types'
 import { CartContext } from '@/components/shop/cart-provider'
+
+type CartActionResult = ActionResult<Cart | null>
 
 type OptimisticAction =
   | { type: 'UPDATE_QUANTITY'; lineId: string; quantity: number }
@@ -17,8 +22,11 @@ type OptimisticAction =
 type UseCartReturn = {
   cart: Cart | null
   isPending: boolean
-  updateQuantity: (lineId: string, quantity: number) => void
-  removeItem: (lineId: string) => void
+  updateQuantity: (
+    lineId: string,
+    quantity: number,
+  ) => Promise<CartActionResult>
+  removeItem: (lineId: string) => Promise<CartActionResult>
 }
 
 function multiplyMoney(money: Money, quantity: number): Money {
@@ -103,17 +111,28 @@ export function useCart(): UseCartReturn {
     cartReducer,
   )
 
+  const notifyOnError = (result: CartActionResult) => {
+    if (!result.success) {
+      toast.error(result.error || __('cart.error.generic'))
+    }
+    return result
+  }
+
   const updateQuantity = (lineId: string, quantity: number) => {
-    startTransition(async () => {
-      addOptimisticUpdate({ type: 'UPDATE_QUANTITY', lineId, quantity })
-      await updateCartItemAction(lineId, quantity)
+    return new Promise<CartActionResult>((resolve) => {
+      startTransition(async () => {
+        addOptimisticUpdate({ type: 'UPDATE_QUANTITY', lineId, quantity })
+        resolve(notifyOnError(await updateCartItemAction(lineId, quantity)))
+      })
     })
   }
 
   const removeItem = (lineId: string) => {
-    startTransition(async () => {
-      addOptimisticUpdate({ type: 'REMOVE_ITEM', lineId })
-      await removeFromCartAction(lineId)
+    return new Promise<CartActionResult>((resolve) => {
+      startTransition(async () => {
+        addOptimisticUpdate({ type: 'REMOVE_ITEM', lineId })
+        resolve(notifyOnError(await removeFromCartAction(lineId)))
+      })
     })
   }
 
