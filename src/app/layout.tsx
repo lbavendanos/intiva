@@ -5,6 +5,7 @@ import { getCart } from '@/lib/data/cart'
 import { url } from '@/lib/utils'
 import { Header } from '@/components/layout/header'
 import { CartProvider } from '@/components/shop/cart-provider'
+import { Toaster } from '@/components/ui/sonner'
 
 import './globals.css'
 
@@ -89,6 +90,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
           </CartProvider>
         </div>
+        <Toaster />
       </body>
     </html>
   )

@@ -135,7 +135,6 @@
   "address.phone_number_invalid": "Enter a valid phone number (9 digits)",
   "address.optional": "(optional)",
   "address.set_as_default": "Set as default address",
-  "address.success": "Address saved successfully",
   "address.saving": "Saving...",
   "address.address1_required": "Address is required",
   "address.department_required": "Department is required",

@@ -4,7 +4,8 @@ import { PlusIcon } from '@phosphor-icons/react/dist/ssr'
 
 import { __ } from '@/lib/utils'
 import { AddressDialog } from '@/components/account/address-dialog'
-import { AddressesContent } from '@/components/account/addresses-content'
+import { AddressList } from '@/components/account/address-list'
+import { AddressProvider } from '@/components/account/address-provider'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -37,7 +38,9 @@ export default function AddressesPage() {
         </AddressDialog>
       </div>
       <Suspense fallback={<AddressesSkeleton />}>
-        <AddressesContent />
+        <AddressProvider>
+          <AddressList />
+        </AddressProvider>
       </Suspense>
     </div>
   )

@@ -135,7 +135,6 @@
   "address.phone_number_invalid": "Ingresa un teléfono válido (9 dígitos)",
   "address.optional": "(opcional)",
   "address.set_as_default": "Establecer como dirección predeterminada",
-  "address.success": "Dirección guardada exitosamente",
   "address.saving": "Guardando...",
   "address.address1_required": "La dirección es obligatoria",
   "address.department_required": "El departamento es obligatorio",

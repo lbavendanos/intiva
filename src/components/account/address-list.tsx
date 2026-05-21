@@ -1,38 +1,20 @@
 'use client'
 
-import { useTransition } from 'react'
 import { PencilIcon, StarIcon, TrashIcon } from '@phosphor-icons/react'
 
-import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
-import { deleteAddress, setDefaultAddress } from '@/actions/address'
+import { useAddress } from '@/hooks/use-address'
 import { Button } from '@/components/ui/button'
 
 import { AddressCard } from './address-card'
 import { AddressDialog } from './address-dialog'
 
-type AddressListProps = {
-  addresses: CustomerAddress[]
-  defaultAddressId: string | null
-}
-
-export function AddressList({ addresses, defaultAddressId }: AddressListProps) {
-  const [isPending, startTransition] = useTransition()
+export function AddressList() {
+  const { addresses, defaultAddressId, deleteAddress, setDefaultAddress } =
+    useAddress()
 
   if (addresses.length === 0) {
     return <p className="text-center text-zinc-500">{__('addresses.empty')}</p>
-  }
-
-  function handleDelete(addressId: string) {
-    startTransition(async () => {
-      await deleteAddress(addressId)
-    })
-  }
-
-  function handleSetDefault(addressId: string) {
-    startTransition(async () => {
-      await setDefaultAddress(addressId)
-    })
   }
 
   return (
@@ -58,8 +40,7 @@ export function AddressList({ addresses, defaultAddressId }: AddressListProps) {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={isPending}
-                      onClick={() => handleSetDefault(address.id)}
+                      onClick={() => setDefaultAddress(address.id)}
                     >
                       <StarIcon data-icon="inline-start" />
                       {__('addresses.set_default')}
@@ -67,8 +48,7 @@ export function AddressList({ addresses, defaultAddressId }: AddressListProps) {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={isPending}
-                      onClick={() => handleDelete(address.id)}
+                      onClick={() => deleteAddress(address.id)}
                     >
                       <TrashIcon data-icon="inline-start" />
                       {__('addresses.delete')}

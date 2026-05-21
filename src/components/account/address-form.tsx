@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useHookFormMask } from 'use-mask-input'
@@ -75,7 +75,6 @@ export function AddressForm({
   onSuccess,
 }: AddressFormProps) {
   const [isPending, startTransition] = useTransition()
-  const [showSuccess, setShowSuccess] = useState(false)
 
   const formSchema = createFormSchema()
   type FormValues = z.infer<typeof formSchema>
@@ -109,8 +108,6 @@ export function AddressForm({
     department && province ? getDistricts(department, province) : []
 
   const handleSubmit = (values: FormValues) => {
-    setShowSuccess(false)
-
     startTransition(async () => {
       const input = {
         address: {
@@ -139,24 +136,13 @@ export function AddressForm({
         return
       }
 
-      if (onSuccess) {
-        onSuccess()
-        return
-      }
-
-      setShowSuccess(true)
+      onSuccess?.()
     })
   }
 
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)} noValidate>
       <FieldGroup>
-        {showSuccess && (
-          <Alert>
-            <AlertDescription>{__('address.success')}</AlertDescription>
-          </Alert>
-        )}
-
         {errors.root && (
           <Alert variant="destructive">
             <AlertDescription>{errors.root.message}</AlertDescription>
