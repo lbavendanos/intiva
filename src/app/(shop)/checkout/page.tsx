@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
-import { getCart } from '@/lib/data/cart'
+import { getCart } from '@/lib/loaders/cart'
 
 export const metadata: Metadata = {
   title: 'Checkout',

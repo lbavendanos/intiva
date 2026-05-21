@@ -2,7 +2,7 @@ import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { PRODUCTS_CACHE_TAG } from '@/lib/data/cache-tags'
+import { PRODUCTS_CACHE_TAG } from '@/lib/loaders/cache-tags'
 import {
   getProductByHandle as getProductByHandleQuery,
   getProductRecommendations as getProductRecommendationsQuery,

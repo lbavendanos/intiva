@@ -6,8 +6,8 @@ import {
   clearOAuthStateCookies,
   getOAuthStateCookies,
   setOAuthStateCookies,
-} from '@/lib/session/oauth-state'
-import { clearSession, getSession, setSession } from '@/lib/session/session'
+} from '@/lib/auth/oauth-state'
+import { clearSession, getSession, setSession } from '@/lib/auth/session'
 import { generatePKCEParams } from '@/lib/shopify/customer-account/crypto'
 import {
   getClientId,

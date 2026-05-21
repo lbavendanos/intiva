@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { useHookFormMask } from 'use-mask-input'
 import * as z from 'zod'
 
+import { createAddress, updateAddress } from '@/lib/actions/address'
 import { fromE164, PERU_MOBILE_MASK, toE164 } from '@/lib/countries/peru/phone'
 import {
   buildCity,
@@ -18,7 +19,6 @@ import {
 } from '@/lib/countries/peru/ubigeo'
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
-import { createAddress, updateAddress } from '@/actions/address'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {

@@ -2,7 +2,7 @@ import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { COLLECTIONS_CACHE_TAG } from '@/lib/data/cache-tags'
+import { COLLECTIONS_CACHE_TAG } from '@/lib/loaders/cache-tags'
 import {
   getCollectionByHandle as getCollectionByHandleQuery,
   getCollectionProducts as getCollectionProductsQuery,

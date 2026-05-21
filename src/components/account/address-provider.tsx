@@ -9,13 +9,13 @@ import {
 } from 'react'
 import { toast } from 'sonner'
 
-import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
-import { __ } from '@/lib/utils'
 import {
   deleteAddress as deleteAddressAction,
   setDefaultAddress as setDefaultAddressAction,
-} from '@/actions/address'
-import type { ActionResult } from '@/actions/types'
+} from '@/lib/actions/address'
+import type { ActionResult } from '@/lib/actions/types'
+import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
+import { __ } from '@/lib/utils'
 
 import { CustomerContext } from './customer-provider'
 

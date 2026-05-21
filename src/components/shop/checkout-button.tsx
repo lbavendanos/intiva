@@ -2,8 +2,8 @@
 
 import { useTransition } from 'react'
 
+import { redirectToCheckout } from '@/lib/actions/cart'
 import { __ } from '@/lib/utils'
-import { redirectToCheckout } from '@/actions/cart'
 import { Button } from '@/components/ui/button'
 
 type CheckoutButtonProps = {

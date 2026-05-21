@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import {
   getCollectionByHandle,
   getCollectionProducts,
-} from '@/lib/data/collections'
+} from '@/lib/loaders/collections'
 import { __ } from '@/lib/utils'
 import { Pagination } from '@/components/shop/pagination'
 import {

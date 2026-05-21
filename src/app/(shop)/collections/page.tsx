@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
-import { getCollections } from '@/lib/data/collections'
+import { getCollections } from '@/lib/loaders/collections'
 import { __ } from '@/lib/utils'
 import {
   CollectionGrid,

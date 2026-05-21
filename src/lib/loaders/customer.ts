@@ -2,8 +2,8 @@ import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { CUSTOMER_CACHE_TAG } from '@/lib/data/cache-tags'
-import { getAccessToken } from '@/lib/session/session'
+import { getAccessToken } from '@/lib/auth/session'
+import { CUSTOMER_CACHE_TAG } from '@/lib/loaders/cache-tags'
 import { getCustomer as getCustomerQuery } from '@/lib/shopify/customer-account/queries/customer'
 import type { Customer } from '@/lib/shopify/customer-account/types'
 

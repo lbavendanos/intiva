@@ -4,8 +4,8 @@ import { updateTag } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { CART_CACHE_TAG } from '@/lib/data/cache-tags'
-import { CART_COOKIE_NAME } from '@/lib/data/cart'
+import { CART_CACHE_TAG } from '@/lib/loaders/cache-tags'
+import { CART_COOKIE_NAME } from '@/lib/loaders/cart'
 import {
   addToCart as addToCartMutation,
   createCart,

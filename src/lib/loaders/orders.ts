@@ -2,8 +2,8 @@ import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { ORDERS_CACHE_TAG } from '@/lib/data/cache-tags'
-import { getAccessToken } from '@/lib/session/session'
+import { getAccessToken } from '@/lib/auth/session'
+import { ORDERS_CACHE_TAG } from '@/lib/loaders/cache-tags'
 import {
   getCustomerOrder as getCustomerOrderQuery,
   getCustomerOrders as getCustomerOrdersQuery,

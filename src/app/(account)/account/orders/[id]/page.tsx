@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 
-import { getOrder } from '@/lib/data/orders'
+import { getOrder } from '@/lib/loaders/orders'
 import { OrderDetail } from '@/components/account/order-detail'
 import { Skeleton } from '@/components/ui/skeleton'
 

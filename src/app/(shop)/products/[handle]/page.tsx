@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { getProductByHandle, getProducts } from '@/lib/data/products'
+import { getProductByHandle, getProducts } from '@/lib/loaders/products'
 import { __, url } from '@/lib/utils'
 import { Price } from '@/components/common/price'
 import { ProductForm } from '@/components/shop/product-form'

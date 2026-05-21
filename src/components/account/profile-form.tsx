@@ -6,9 +6,9 @@ import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
+import { updateCustomer } from '@/lib/actions/customer'
 import type { Customer } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
-import { updateCustomer } from '@/actions/customer'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {

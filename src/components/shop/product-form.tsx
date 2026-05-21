@@ -5,9 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import * as z from 'zod'
 
+import { addToCart } from '@/lib/actions/cart'
 import type { Product } from '@/lib/shopify/storefront/types'
 import { __, cn } from '@/lib/utils'
-import { addToCart } from '@/actions/cart'
 import { Button } from '@/components/ui/button'
 import {
   Field,

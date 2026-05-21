@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
-import { getProducts } from '@/lib/data/products'
+import { getProducts } from '@/lib/loaders/products'
 import { __ } from '@/lib/utils'
 import { Pagination } from '@/components/shop/pagination'
 import {

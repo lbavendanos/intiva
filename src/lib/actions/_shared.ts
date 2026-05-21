@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { getAccessToken } from '@/lib/session/session'
+import { getAccessToken } from '@/lib/auth/session'
 import { __ } from '@/lib/utils'
 
 import type { ActionResult } from './types'

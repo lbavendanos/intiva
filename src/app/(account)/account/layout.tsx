@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 
-import { getCustomer } from '@/lib/data/customer'
+import { getCustomer } from '@/lib/loaders/customer'
 import { __ } from '@/lib/utils'
 import { AccountNav } from '@/components/account/account-nav'
 import { CustomerProvider } from '@/components/account/customer-provider'

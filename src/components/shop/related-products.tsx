@@ -1,4 +1,4 @@
-import { getProductRecommendations } from '@/lib/data/products'
+import { getProductRecommendations } from '@/lib/loaders/products'
 import { __ } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 

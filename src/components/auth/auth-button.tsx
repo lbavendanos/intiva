@@ -5,9 +5,9 @@ import {
   UserIcon,
 } from '@phosphor-icons/react/dist/ssr'
 
-import { isAuthenticated } from '@/lib/session/session'
+import { login, logout } from '@/lib/actions/auth'
+import { isAuthenticated } from '@/lib/auth/session'
 import { __ } from '@/lib/utils'
-import { login, logout } from '@/actions/auth'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,

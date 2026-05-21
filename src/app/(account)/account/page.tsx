@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-import { getOrders } from '@/lib/data/orders'
+import { getOrders } from '@/lib/loaders/orders'
 import { __ } from '@/lib/utils'
 import { DefaultAddressCard } from '@/components/account/default-address-card'
 import { OrderList } from '@/components/account/order-list'

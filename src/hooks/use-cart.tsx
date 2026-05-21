@@ -3,14 +3,14 @@
 import { use, useOptimistic, useTransition } from 'react'
 import { toast } from 'sonner'
 
-import type { Cart, CartLineItem } from '@/lib/shopify/storefront/types'
-import type { Money } from '@/lib/shopify/types'
-import { __ } from '@/lib/utils'
 import {
   removeFromCart as removeFromCartAction,
   updateCartItem as updateCartItemAction,
-} from '@/actions/cart'
-import type { ActionResult } from '@/actions/types'
+} from '@/lib/actions/cart'
+import type { ActionResult } from '@/lib/actions/types'
+import type { Cart, CartLineItem } from '@/lib/shopify/storefront/types'
+import type { Money } from '@/lib/shopify/types'
+import { __ } from '@/lib/utils'
 import { CartContext } from '@/components/shop/cart-provider'
 
 type CartActionResult = ActionResult<Cart | null>

@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
-import { getOrders } from '@/lib/data/orders'
+import { getOrders } from '@/lib/loaders/orders'
 import { __ } from '@/lib/utils'
 import { OrderList } from '@/components/account/order-list'
 import { Pagination } from '@/components/shop/pagination'

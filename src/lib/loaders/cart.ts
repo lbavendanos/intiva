@@ -3,7 +3,7 @@ import 'server-only'
 import { cacheLife, cacheTag } from 'next/cache'
 import { cookies } from 'next/headers'
 
-import { CART_CACHE_TAG } from '@/lib/data/cache-tags'
+import { CART_CACHE_TAG } from '@/lib/loaders/cache-tags'
 import { getCart as getCartQuery } from '@/lib/shopify/storefront/queries/cart'
 import type { Cart } from '@/lib/shopify/storefront/types'
 
