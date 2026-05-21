@@ -55,6 +55,7 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 - `src/components/{ui,common,auth,account,layout,shop}/` — `ui/` is shadcn/ui installed via CLI; rest grouped by domain
 - `src/actions/` — Server Actions
 - `src/lib/foundation/` — Core framework modules (non-obvious; check before adding utilities)
+- `src/lib/countries/{peru,...}/` — Country-specific data and helpers (phone, address divisions, fiscal IDs); one subfolder per country
 - `src/lib/shopify/{storefront,customer-account}/` — each has `client.ts`, `queries/`, `mutations/`, `fragments/`
 - `src/hooks/`, `src/lang/` (i18n dictionaries: `en.json`, `es.json`)
 - `__tests__/{unit,e2e}/`, `public/`

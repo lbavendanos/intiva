@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import { useHookFormMask } from 'use-mask-input'
 import * as z from 'zod'
 
-import { fromE164, PERU_MOBILE_MASK, toE164 } from '@/lib/peru/phone'
+import { fromE164, PERU_MOBILE_MASK, toE164 } from '@/lib/countries/peru/phone'
 import {
   buildCity,
   getDepartments,
@@ -15,7 +15,7 @@ import {
   getProvinces,
   getZoneCode,
   parseAddressToUbigeo,
-} from '@/lib/peru/ubigeo'
+} from '@/lib/countries/peru/ubigeo'
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { createAddress, updateAddress } from '@/actions/address'
