@@ -35,6 +35,12 @@ type GetProductRecommendationsQueryResponse = {
   productRecommendations: ProductListItem[] | null
 }
 
+type SearchProductsQueryResponse = {
+  predictiveSearch: {
+    products: ProductListItem[]
+  } | null
+}
+
 type GetProductsResult = {
   products: ProductListItem[]
   pageInfo: PageInfo
@@ -79,6 +85,19 @@ const GET_PRODUCT_RECOMMENDATIONS_QUERY = /* GraphQL */ `
   ) {
     productRecommendations(productId: $productId, intent: $intent) {
       ...ProductCardFragment
+    }
+  }
+  ${PRODUCT_CARD_FRAGMENT}
+  ${MONEY_FRAGMENT}
+  ${IMAGE_FRAGMENT}
+`
+
+const SEARCH_PRODUCTS_QUERY = /* GraphQL */ `
+  query searchProducts($query: String!, $limit: Int!) {
+    predictiveSearch(query: $query, limit: $limit, types: [PRODUCT]) {
+      products {
+        ...ProductCardFragment
+      }
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
@@ -148,6 +167,25 @@ export async function getProductRecommendations(
   }
 
   return data.productRecommendations.map((product) => ({
+    ...product,
+    ...computePricing(product),
+  }))
+}
+
+export async function searchProducts(
+  query: string,
+  limit: number = 8,
+): Promise<ProductListItem[]> {
+  const data = await storefrontQuery<SearchProductsQueryResponse>(
+    SEARCH_PRODUCTS_QUERY,
+    {
+      variables: { query, limit },
+    },
+  )
+
+  const products = data.predictiveSearch?.products ?? []
+
+  return products.map((product) => ({
     ...product,
     ...computePricing(product),
   }))

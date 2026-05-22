@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import { AuthButton, AuthButtonSkeleton } from '@/components/auth/auth-button'
 import { MiniCart, MiniCartSkeleton } from '@/components/shop/mini-cart'
+import { SearchDialog } from '@/components/shop/search-dialog'
 
 export function Header() {
   const appName = process.env.NEXT_PUBLIC_APP_NAME
@@ -33,6 +34,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <SearchDialog />
           <Suspense fallback={<AuthButtonSkeleton />}>
             <AuthButton />
           </Suspense>
