@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type ReactNode } from 'react'
+import { useState, type ReactElement } from 'react'
 
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
@@ -16,7 +16,7 @@ import {
 import { AddressForm } from './address-form'
 
 type AddressDialogProps = {
-  children: ReactNode
+  children: ReactElement
   address?: CustomerAddress
   isDefault?: boolean
 }
@@ -31,7 +31,7 @@ export function AddressDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger render={children} />
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>

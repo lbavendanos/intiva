@@ -3,7 +3,7 @@ import { CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react/dist/ssr'
 
 import type { PageInfo } from '@/lib/shopify/types'
 import { __, url } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 
 type PaginationProps = {
   pageInfo: PageInfo
@@ -33,12 +33,13 @@ export function Pagination({ pageInfo, basePath }: PaginationProps) {
       aria-label={__('pagination.aria_label')}
     >
       {hasPreviousPage ? (
-        <Button variant="outline" asChild>
-          <Link href={basePath}>
-            <CaretLeftIcon data-icon="inline-start" />
-            {__('pagination.previous')}
-          </Link>
-        </Button>
+        <Link
+          href={basePath}
+          className={buttonVariants({ variant: 'outline' })}
+        >
+          <CaretLeftIcon data-icon="inline-start" />
+          {__('pagination.previous')}
+        </Link>
       ) : (
         <Button variant="outline" disabled>
           <CaretLeftIcon data-icon="inline-start" />
@@ -47,12 +48,13 @@ export function Pagination({ pageInfo, basePath }: PaginationProps) {
       )}
 
       {hasNextPage ? (
-        <Button variant="outline" asChild>
-          <Link href={createUrl(endCursor)}>
-            {__('pagination.next')}
-            <CaretRightIcon data-icon="inline-end" />
-          </Link>
-        </Button>
+        <Link
+          href={createUrl(endCursor)}
+          className={buttonVariants({ variant: 'outline' })}
+        >
+          {__('pagination.next')}
+          <CaretRightIcon data-icon="inline-end" />
+        </Link>
       ) : (
         <Button variant="outline" disabled>
           {__('pagination.next')}

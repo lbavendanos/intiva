@@ -37,33 +37,41 @@ export async function AuthButton() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label={__('auth.account')}>
-          <UserIcon className="size-5" />
-        </Button>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger
+        render={
+          <Button variant="ghost" size="icon" aria-label={__('auth.account')}>
+            <UserIcon className="size-5" />
+          </Button>
+        }
+      />
       <DropdownMenuContent align="end">
-        <DropdownMenuItem asChild>
-          <Link href="/account">
-            <UserIcon />
-            {__('auth.account')}
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/account/orders">
-            <PackageIcon />
-            {__('auth.orders')}
-          </Link>
-        </DropdownMenuItem>
+        <DropdownMenuItem
+          render={
+            <Link href="/account">
+              <UserIcon />
+              {__('auth.account')}
+            </Link>
+          }
+        />
+        <DropdownMenuItem
+          render={
+            <Link href="/account/orders">
+              <PackageIcon />
+              {__('auth.orders')}
+            </Link>
+          }
+        />
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <form action={logout} className="w-full">
-            <button type="submit" className="flex w-full items-center gap-2">
-              <SignOutIcon />
-              {__('auth.logout')}
-            </button>
-          </form>
-        </DropdownMenuItem>
+        <DropdownMenuItem
+          render={
+            <form action={logout} className="w-full">
+              <button type="submit" className="flex w-full items-center gap-2">
+                <SignOutIcon />
+                {__('auth.logout')}
+              </button>
+            </form>
+          }
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   )

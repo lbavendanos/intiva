@@ -58,25 +58,27 @@ export function MiniCart() {
         setIsOpen(open)
       }}
     >
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative"
-          aria-label={__('cart.aria_label', { count: itemCount })}
-          data-testid="cart-button"
-        >
-          <ShoppingBagIcon className="size-5" />
-          {itemCount > 0 && (
-            <span
-              className="absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full bg-zinc-900 text-xs font-medium text-white"
-              data-testid="cart-count"
-            >
-              {itemCount > 99 ? '99+' : itemCount}
-            </span>
-          )}
-        </Button>
-      </SheetTrigger>
+      <SheetTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            aria-label={__('cart.aria_label', { count: itemCount })}
+            data-testid="cart-button"
+          >
+            <ShoppingBagIcon className="size-5" />
+            {itemCount > 0 && (
+              <span
+                className="absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full bg-zinc-900 text-xs font-medium text-white"
+                data-testid="cart-count"
+              >
+                {itemCount > 99 ? '99+' : itemCount}
+              </span>
+            )}
+          </Button>
+        }
+      />
       <SheetContent className="flex w-full flex-col sm:max-w-md">
         <SheetHeader>
           <SheetTitle>{__('cart.title', { count: itemCount })}</SheetTitle>

@@ -5,7 +5,7 @@ import { ShoppingBagIcon } from '@phosphor-icons/react'
 
 import { __ } from '@/lib/utils'
 import { useCart } from '@/hooks/use-cart'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { CartItem } from './cart-item'
@@ -21,9 +21,12 @@ export function FullCart() {
       <div className="flex flex-col items-center justify-center py-16">
         <ShoppingBagIcon className="size-16 text-zinc-300" />
         <p className="mt-4 text-lg text-zinc-500">{__('cart.empty')}</p>
-        <Button asChild className="mt-6">
-          <Link href="/products">{__('cart.explore_products')}</Link>
-        </Button>
+        <Link
+          href="/products"
+          className={buttonVariants({ className: 'mt-6' })}
+        >
+          {__('cart.explore_products')}
+        </Link>
       </div>
     )
   }
