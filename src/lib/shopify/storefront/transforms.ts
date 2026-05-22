@@ -22,9 +22,11 @@ export function computePricing({
 }): ProductPricing {
   const price = priceRange.minVariantPrice
   const compareAtPrice = compareAtPriceRange.minVariantPrice
-  const hasDiscount =
-    compareAtPrice != null &&
+  const isDiscounted =
     parseFloat(compareAtPrice.amount) > parseFloat(price.amount)
 
-  return { price, compareAtPrice, hasDiscount }
+  return {
+    price,
+    compareAtPrice: isDiscounted ? compareAtPrice : null,
+  }
 }

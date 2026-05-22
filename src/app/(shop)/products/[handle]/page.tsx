@@ -116,7 +116,7 @@ async function ProductDetail({
               className="text-2xl font-semibold"
               {...product.price}
             />
-            {product.hasDiscount && (
+            {product.compareAtPrice && (
               <Price
                 as="p"
                 className="text-2xl font-semibold line-through opacity-40"

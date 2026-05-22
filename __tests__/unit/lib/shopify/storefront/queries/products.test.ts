@@ -206,7 +206,6 @@ describe('Products Queries', () => {
         amount: '29.99',
         currencyCode: 'USD',
       })
-      expect(result.products[0].hasDiscount).toBe(true)
     })
   })
 
@@ -357,7 +356,6 @@ describe('Products Queries', () => {
         amount: '79.99',
         currencyCode: 'USD',
       })
-      expect(result?.hasDiscount).toBe(true)
     })
   })
 
@@ -500,7 +498,6 @@ describe('Products Queries', () => {
         amount: '34.99',
         currencyCode: 'USD',
       })
-      expect(result[0].hasDiscount).toBe(true)
     })
   })
 })

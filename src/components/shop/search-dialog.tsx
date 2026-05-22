@@ -85,7 +85,6 @@ function SearchResultItem({
     availableForSale,
     price,
     compareAtPrice,
-    hasDiscount,
   } = product
 
   return (
@@ -114,7 +113,7 @@ function SearchResultItem({
             className="text-sm font-semibold text-zinc-900"
             {...price}
           />
-          {hasDiscount && (
+          {compareAtPrice && (
             <Price
               as="span"
               className="text-xs text-zinc-400 line-through"

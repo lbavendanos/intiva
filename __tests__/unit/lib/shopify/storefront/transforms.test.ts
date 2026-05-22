@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { computePricing } from '@/lib/shopify/storefront/transforms'
 
 describe('computePricing', () => {
-  it('should return hasDiscount true when compareAtPrice is greater than price', () => {
+  it('should return compareAtPrice when it is greater than price', () => {
     const result = computePricing({
       priceRange: {
         minVariantPrice: { amount: '29.99', currencyCode: 'USD' },
@@ -13,7 +13,6 @@ describe('computePricing', () => {
       },
     })
 
-    expect(result.hasDiscount).toBe(true)
     expect(result.price).toEqual({ amount: '29.99', currencyCode: 'USD' })
     expect(result.compareAtPrice).toEqual({
       amount: '39.99',
@@ -21,7 +20,7 @@ describe('computePricing', () => {
     })
   })
 
-  it('should return hasDiscount false when compareAtPrice equals price', () => {
+  it('should return null compareAtPrice when it equals price', () => {
     const result = computePricing({
       priceRange: {
         minVariantPrice: { amount: '29.99', currencyCode: 'USD' },
@@ -31,10 +30,10 @@ describe('computePricing', () => {
       },
     })
 
-    expect(result.hasDiscount).toBe(false)
+    expect(result.compareAtPrice).toBeNull()
   })
 
-  it('should return hasDiscount false when compareAtPrice is less than price', () => {
+  it('should return null compareAtPrice when it is less than price', () => {
     const result = computePricing({
       priceRange: {
         minVariantPrice: { amount: '39.99', currencyCode: 'USD' },
@@ -44,10 +43,10 @@ describe('computePricing', () => {
       },
     })
 
-    expect(result.hasDiscount).toBe(false)
+    expect(result.compareAtPrice).toBeNull()
   })
 
-  it('should return hasDiscount false when compareAtPrice is zero', () => {
+  it('should return null compareAtPrice when it is zero', () => {
     const result = computePricing({
       priceRange: {
         minVariantPrice: { amount: '29.99', currencyCode: 'USD' },
@@ -57,6 +56,6 @@ describe('computePricing', () => {
       },
     })
 
-    expect(result.hasDiscount).toBe(false)
+    expect(result.compareAtPrice).toBeNull()
   })
 })

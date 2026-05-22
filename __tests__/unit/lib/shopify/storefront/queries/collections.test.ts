@@ -198,6 +198,9 @@ describe('Collections Queries', () => {
                     priceRange: {
                       minVariantPrice: { amount: '29.99', currencyCode: 'USD' },
                     },
+                    compareAtPriceRange: {
+                      minVariantPrice: { amount: '0.0', currencyCode: 'USD' },
+                    },
                     featuredImage: {
                       url: 'https://example.com/product.jpg',
                       altText: 'Product image',

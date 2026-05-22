@@ -62,7 +62,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <CardFooter className="p-4 pt-0">
           <div className="flex items-center gap-2 text-lg font-semibold">
             <Price as="p" {...price} />
-            {product.hasDiscount && (
+            {compareAtPrice && (
               <Price
                 as="p"
                 className="text-xl font-semibold line-through opacity-40"

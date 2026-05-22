@@ -30,8 +30,8 @@ export type ProductVariant = {
 /** Derived pricing fields computed from Shopify price ranges */
 export type ProductPricing = {
   price: Money
-  compareAtPrice: Money
-  hasDiscount: boolean
+  /** The pre-discount price, or `null` when the product is not discounted. */
+  compareAtPrice: Maybe<Money>
 }
 
 export type Product = {
