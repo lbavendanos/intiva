@@ -8,7 +8,7 @@ import { useHookFormMask } from 'use-mask-input'
 import * as z from 'zod'
 
 import { createAddress, updateAddress } from '@/lib/actions/address'
-import { fromE164, PERU_MOBILE_MASK, toE164 } from '@/lib/countries/peru/phone'
+import { fromE164, PE_MOBILE_MASK, toE164 } from '@/lib/countries/pe/phone'
 import {
   buildCity,
   getDepartments,
@@ -16,7 +16,7 @@ import {
   getProvinces,
   getZoneCode,
   parseAddressToUbigeo,
-} from '@/lib/countries/peru/ubigeo'
+} from '@/lib/countries/pe/ubigeo'
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -366,10 +366,10 @@ export function AddressForm({
             id="phoneNumber"
             type="tel"
             inputMode="numeric"
-            placeholder={PERU_MOBILE_MASK}
+            placeholder={PE_MOBILE_MASK}
             aria-invalid={!!errors.phoneNumber}
             aria-describedby="phoneNumber-description"
-            {...registerWithMask('phoneNumber', PERU_MOBILE_MASK)}
+            {...registerWithMask('phoneNumber', PE_MOBILE_MASK)}
           />
           <FieldDescription id="phoneNumber-description">
             {__('address.phone_number_description')}

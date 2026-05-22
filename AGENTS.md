@@ -57,7 +57,7 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 - `src/lib/loaders/` — Cached server-side data fetchers for RSCs (read side); wrap Shopify queries with `use cache`/`cacheTag`/`cacheLife`
 - `src/lib/auth/` — Customer session and OAuth state (cookie-backed)
 - `src/lib/foundation/` — Core framework modules (non-obvious; check before adding utilities)
-- `src/lib/countries/{peru,...}/` — Country-specific data and helpers (phone, address divisions, fiscal IDs); one subfolder per country
+- `src/lib/countries/<iso2>/` — Country-specific data and helpers (phone, address divisions, fiscal IDs); one subfolder per country, named by ISO 3166-1 alpha-2 code (lowercase)
 - `src/lib/shopify/{storefront,customer-account}/` — each has `client.ts`, `queries/`, `mutations/`, `fragments/`
 - `src/hooks/`, `src/lang/` (i18n dictionaries: `en.json`, `es.json`)
 - `__tests__/{unit,e2e}/`, `public/`

@@ -2,8 +2,8 @@
 
 import type { ReactNode } from 'react'
 
-import { formatPhoneNumber } from '@/lib/countries/peru/phone'
-import { parseAddressToUbigeo } from '@/lib/countries/peru/ubigeo'
+import { formatPhoneNumber } from '@/lib/countries/pe/phone'
+import { parseAddressToUbigeo } from '@/lib/countries/pe/ubigeo'
 import type { CustomerAddress } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'

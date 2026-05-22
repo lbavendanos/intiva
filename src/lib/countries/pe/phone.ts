@@ -1,11 +1,11 @@
-const PERU_DIAL_CODE = '51'
-const PERU_MOBILE_LENGTH = 9
+const PE_DIAL_CODE = '51'
+const PE_MOBILE_LENGTH = 9
 
 /**
  * Input mask pattern for a Peruvian mobile number (9 digits, grouped).
  * Doubles as the field placeholder. `9` is the digit slot in Inputmask syntax.
  */
-export const PERU_MOBILE_MASK = '999 999 999'
+export const PE_MOBILE_MASK = '999 999 999'
 
 /**
  * Converts a local Peruvian mobile number to E.164 format for Shopify.
@@ -15,7 +15,7 @@ export const PERU_MOBILE_MASK = '999 999 999'
 export function toE164(local: string): string {
   const digits = local.replace(/\D/g, '')
 
-  return `+${PERU_DIAL_CODE}${digits}`
+  return `+${PE_DIAL_CODE}${digits}`
 }
 
 /**
@@ -26,11 +26,11 @@ export function toE164(local: string): string {
 export function formatPhoneNumber(value?: string | null): string {
   const digits = fromE164(value)
 
-  if (digits.length !== PERU_MOBILE_LENGTH) return digits
+  if (digits.length !== PE_MOBILE_LENGTH) return digits
 
   const grouped = digits.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3')
 
-  return `+${PERU_DIAL_CODE} ${grouped}`
+  return `+${PE_DIAL_CODE} ${grouped}`
 }
 
 /**
@@ -44,8 +44,8 @@ export function fromE164(value?: string | null): string {
 
   const digits = value.replace(/\D/g, '')
 
-  if (digits.startsWith(PERU_DIAL_CODE) && digits.length > PERU_MOBILE_LENGTH) {
-    return digits.slice(PERU_DIAL_CODE.length)
+  if (digits.startsWith(PE_DIAL_CODE) && digits.length > PE_MOBILE_LENGTH) {
+    return digits.slice(PE_DIAL_CODE.length)
   }
 
   return digits
