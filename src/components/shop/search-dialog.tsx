@@ -1,9 +1,14 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type SubmitEvent } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MagnifyingGlassIcon, SpinnerGapIcon } from '@phosphor-icons/react'
+import { useRouter } from 'next/navigation'
+import {
+  ArrowRightIcon,
+  MagnifyingGlassIcon,
+  SpinnerGapIcon,
+} from '@phosphor-icons/react'
 
 import type { ProductListItem } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
@@ -128,6 +133,7 @@ function SearchResultItem({
 }
 
 export function SearchDialog() {
+  const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
   const debounceRef = useRef<number | null>(null)
   const abortRef = useRef<AbortController | null>(null)
@@ -142,6 +148,7 @@ export function SearchDialog() {
   // the results are stale and a fresh request is still in flight.
   const response = state && state.query === trimmedQuery ? state.response : null
   const isLoading = isQueryValid && response === null
+  const searchHref = `/search?q=${encodeURIComponent(trimmedQuery)}`
 
   const cancelPendingSearch = () => {
     if (debounceRef.current !== null) {
@@ -194,6 +201,19 @@ export function SearchDialog() {
       setQuery('')
       setState(null)
     }
+  }
+
+  // Pressing Enter navigates to the full search page, which lists every
+  // matching product instead of the limited preview shown in this dialog.
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!isQueryValid) {
+      return
+    }
+
+    router.push(searchHref)
+    handleOpenChange(false)
   }
 
   // Lifecycle cleanup only: drop a pending debounce or in-flight request if the
@@ -285,7 +305,7 @@ export function SearchDialog() {
           {__('search.description')}
         </DialogDescription>
 
-        <div className="border-border border-b p-3">
+        <form onSubmit={handleSubmit} className="border-border border-b p-3">
           <InputGroup>
             <InputGroupAddon>
               {isLoading ? (
@@ -304,7 +324,7 @@ export function SearchDialog() {
               onChange={(event) => handleQueryChange(event.target.value)}
             />
           </InputGroup>
-        </div>
+        </form>
 
         <div
           className="min-h-0 flex-1 overflow-y-auto p-2"
@@ -313,6 +333,20 @@ export function SearchDialog() {
         >
           {renderContent()}
         </div>
+
+        {response?.status === 'success' && response.products.length > 0 && (
+          <div className="border-border border-t p-2">
+            <Link
+              href={searchHref}
+              onClick={() => handleOpenChange(false)}
+              className="hover:bg-muted flex items-center justify-center gap-2 rounded-md p-2 text-sm font-medium text-zinc-900 transition-colors"
+              data-testid="search-view-all"
+            >
+              {__('search.view_all')}
+              <ArrowRightIcon className="size-4" />
+            </Link>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   )

@@ -7,6 +7,7 @@ import {
   getProductByHandle as getProductByHandleQuery,
   getProductRecommendations as getProductRecommendationsQuery,
   getProducts as getProductsQuery,
+  getSearchResults as getSearchResultsQuery,
   searchProducts as searchProductsQuery,
 } from '@/lib/shopify/storefront/queries/products'
 import type {
@@ -57,4 +58,20 @@ export async function searchProducts(
   cacheLife('minutes')
 
   return searchProductsQuery(query, limit)
+}
+
+export async function getSearchResults(
+  query: string,
+  first: number = 12,
+  after?: string,
+): Promise<{
+  products: ProductListItem[]
+  pageInfo: PageInfo
+  totalCount: number
+}> {
+  'use cache'
+  cacheTag(PRODUCTS_CACHE_TAG, `product-search-results-${query}`)
+  cacheLife('minutes')
+
+  return getSearchResultsQuery(query, first, after)
 }

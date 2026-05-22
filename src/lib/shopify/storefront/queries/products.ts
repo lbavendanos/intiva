@@ -41,9 +41,19 @@ type SearchProductsQueryResponse = {
   } | null
 }
 
+type GetSearchResultsQueryResponse = {
+  search: Connection<ProductListItem> & { totalCount: number }
+}
+
 type GetProductsResult = {
   products: ProductListItem[]
   pageInfo: PageInfo
+}
+
+type GetSearchResultsResult = {
+  products: ProductListItem[]
+  pageInfo: PageInfo
+  totalCount: number
 }
 
 const GET_PRODUCTS_QUERY = /* GraphQL */ `
@@ -101,6 +111,28 @@ const SEARCH_PRODUCTS_QUERY = /* GraphQL */ `
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
+  ${MONEY_FRAGMENT}
+  ${IMAGE_FRAGMENT}
+`
+
+const GET_SEARCH_RESULTS_QUERY = /* GraphQL */ `
+  query getSearchResults($query: String!, $first: Int!, $after: String) {
+    search(query: $query, first: $first, after: $after, types: [PRODUCT]) {
+      edges {
+        node {
+          ... on Product {
+            ...ProductCardFragment
+          }
+        }
+      }
+      pageInfo {
+        ...PageInfoFragment
+      }
+      totalCount
+    }
+  }
+  ${PRODUCT_CARD_FRAGMENT}
+  ${PAGE_INFO_FRAGMENT}
   ${MONEY_FRAGMENT}
   ${IMAGE_FRAGMENT}
 `
@@ -189,4 +221,28 @@ export async function searchProducts(
     ...product,
     ...computePricing(product),
   }))
+}
+
+export async function getSearchResults(
+  query: string,
+  first: number = 12,
+  after?: string,
+): Promise<GetSearchResultsResult> {
+  const data = await storefrontQuery<GetSearchResultsQueryResponse>(
+    GET_SEARCH_RESULTS_QUERY,
+    {
+      variables: { query, first, after },
+    },
+  )
+
+  const products = extractNodesFromEdges(data.search).map((product) => ({
+    ...product,
+    ...computePricing(product),
+  }))
+
+  return {
+    products,
+    pageInfo: data.search.pageInfo,
+    totalCount: data.search.totalCount,
+  }
 }

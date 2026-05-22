@@ -8,9 +8,10 @@ import { Button, buttonVariants } from '@/components/ui/button'
 type PaginationProps = {
   pageInfo: PageInfo
   basePath: string
+  params?: Record<string, string>
 }
 
-export function Pagination({ pageInfo, basePath }: PaginationProps) {
+export function Pagination({ pageInfo, basePath, params }: PaginationProps) {
   const { hasNextPage, hasPreviousPage, endCursor } = pageInfo
 
   if (!hasNextPage && !hasPreviousPage) {
@@ -19,6 +20,12 @@ export function Pagination({ pageInfo, basePath }: PaginationProps) {
 
   const createUrl = (cursor?: string | null) => {
     const newUrl = url(basePath)
+
+    if (params) {
+      for (const [key, value] of Object.entries(params)) {
+        newUrl.searchParams.set(key, value)
+      }
+    }
 
     if (cursor) {
       newUrl.searchParams.set('cursor', cursor)
@@ -34,7 +41,7 @@ export function Pagination({ pageInfo, basePath }: PaginationProps) {
     >
       {hasPreviousPage ? (
         <Link
-          href={basePath}
+          href={createUrl()}
           className={buttonVariants({ variant: 'outline' })}
         >
           <CaretLeftIcon data-icon="inline-start" />
