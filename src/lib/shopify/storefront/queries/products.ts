@@ -11,10 +11,14 @@ import {
   PRODUCT_VARIANT_FRAGMENT,
   SEO_FRAGMENT,
 } from '../fragments'
-import { computePricing } from '../transforms'
+import {
+  computePricing,
+  parseProductColor,
+  stripColorSuffix,
+  type ColorMetafieldResponse,
+} from '../transforms'
 import type {
   Product,
-  ProductColor,
   ProductColorSibling,
   ProductListItem,
   ProductRecommendationIntent,
@@ -24,14 +28,6 @@ import type {
 type GetProductsQueryResponse = {
   products: Connection<ProductListItem>
 }
-
-type ColorMetafieldResponse = Maybe<{
-  reference: Maybe<{
-    id: string
-    nameField: Maybe<{ value: Maybe<string> }>
-    hexField: Maybe<{ value: Maybe<string> }>
-  }>
-}>
 
 type ColorSiblingResponse = {
   id: string
@@ -53,7 +49,7 @@ type ColorGroupMetafieldResponse = Maybe<{
 
 type ProductResponse = Omit<
   Product,
-  'images' | 'variants' | 'color' | 'colorSiblings'
+  'images' | 'variants' | 'color' | 'colorSiblings' | 'displayTitle'
 > & {
   images: Connection<Image>
   variants: Connection<ProductVariant>
@@ -172,19 +168,6 @@ const GET_SEARCH_RESULTS_QUERY = /* GraphQL */ `
   ${IMAGE_FRAGMENT}
 `
 
-function parseProductColor(
-  metafield: ColorMetafieldResponse,
-): ProductColor | null {
-  const reference = metafield?.reference
-  if (!reference) return null
-
-  const name = reference.nameField?.value
-  const hex = reference.hexField?.value
-  if (!name || !hex) return null
-
-  return { name, hex }
-}
-
 function parseProductColorSiblings(
   metafield: ColorGroupMetafieldResponse,
 ): ProductColorSibling[] {
@@ -245,13 +228,20 @@ export async function getProductByHandle(
   }
 
   const product = data.product
+  const color = parseProductColor(product.colorMetafield)
+  const colorSiblings = parseProductColorSiblings(product.colorGroupMetafield)
+  const displayTitle =
+    color && colorSiblings.length > 1
+      ? stripColorSuffix(product.title, color.name)
+      : product.title
 
   return {
     ...product,
     images: extractNodesFromEdges(product.images),
     variants: extractNodesFromEdges(product.variants),
-    color: parseProductColor(product.colorMetafield),
-    colorSiblings: parseProductColorSiblings(product.colorGroupMetafield),
+    color,
+    colorSiblings,
+    displayTitle,
     ...computePricing(product),
   }
 }

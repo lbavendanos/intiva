@@ -22,6 +22,7 @@ export function ProductJsonLd({ product }: ProductJsonLdProps) {
     url: url(`/products/${product.handle}`).toString(),
     image: product.featuredImage?.url,
     brand: { '@type': 'Brand', name: appName },
+    ...(product.color && { color: product.color.name }),
     offers: {
       '@type': 'AggregateOffer',
       availability: product.availableForSale

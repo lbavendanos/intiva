@@ -21,11 +21,17 @@ type ProductPageProps = {
 }
 
 export async function generateStaticParams() {
-  const { products } = await getProducts(100)
+  const PAGE_SIZE = 250
+  const handles: string[] = []
+  let after: string | undefined
 
-  return products.map((product) => ({
-    handle: product.handle,
-  }))
+  do {
+    const { products, pageInfo } = await getProducts(PAGE_SIZE, after)
+    handles.push(...products.map((product) => product.handle))
+    after = pageInfo.hasNextPage ? (pageInfo.endCursor ?? undefined) : undefined
+  } while (after)
+
+  return handles.map((handle) => ({ handle }))
 }
 
 export async function generateMetadata({
@@ -107,7 +113,9 @@ async function ProductDetail({
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
         <ProductGallery images={product.images} productTitle={product.title} />
         <div className="flex flex-col">
-          <h1 className="text-3xl font-bold text-zinc-900">{product.title}</h1>
+          <h1 className="text-3xl font-bold text-zinc-900">
+            {product.displayTitle}
+          </h1>
           {product.vendor && (
             <p className="mt-1 text-sm text-zinc-500">{product.vendor}</p>
           )}

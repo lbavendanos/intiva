@@ -12,8 +12,29 @@ import {
 } from '../fragments'
 import type { Order, OrderLineItem, OrderListItem } from '../types'
 
+type RawOrderLineItem = Omit<OrderLineItem, 'displayTitle' | 'color'>
+
 type OrderResponse = Omit<Order, 'lineItems'> & {
-  lineItems: Connection<OrderLineItem>
+  lineItems: Connection<RawOrderLineItem>
+}
+
+function splitOrderLineTitle(title: string): {
+  displayTitle: string
+  color: string | null
+} {
+  const lastSeparator = title.lastIndexOf(' - ')
+  if (lastSeparator === -1) return { displayTitle: title, color: null }
+
+  const displayTitle = title.slice(0, lastSeparator).trim()
+  const color = title.slice(lastSeparator + 3).trim()
+  if (!displayTitle || !color) return { displayTitle: title, color: null }
+
+  return { displayTitle, color }
+}
+
+function transformOrderLineItem(line: RawOrderLineItem): OrderLineItem {
+  const { displayTitle, color } = splitOrderLineTitle(line.title)
+  return { ...line, displayTitle, color }
 }
 
 type GetCustomerOrdersResponse = {
@@ -109,6 +130,8 @@ export async function getCustomerOrder(
 
   return {
     ...data.order,
-    lineItems: extractNodesFromEdges(data.order.lineItems),
+    lineItems: extractNodesFromEdges(data.order.lineItems).map(
+      transformOrderLineItem,
+    ),
   }
 }

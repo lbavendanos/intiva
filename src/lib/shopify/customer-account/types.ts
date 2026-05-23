@@ -64,6 +64,14 @@ export type OrderLineItem = {
   price: Maybe<Money>
   variantTitle: Maybe<string>
   totalPrice: Maybe<Money>
+  /**
+   * Title with the trailing ` - {color}` suffix removed. Equal to `title` when
+   * the title does not follow the convention. Computed from the snapshot at
+   * purchase time (Customer Account API does not expose product metafields).
+   */
+  displayTitle: string
+  /** Color name extracted from the title suffix, or `null` if none detected. */
+  color: Maybe<string>
 }
 
 export type Order = {

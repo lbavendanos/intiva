@@ -75,6 +75,12 @@ export type Product = {
   updatedAt: string
   color: Maybe<ProductColor>
   colorSiblings: ProductColorSibling[]
+  /**
+   * Title with the trailing color name stripped when the product belongs to a
+   * multi-product color group. Falls back to `title` otherwise. Use for visible
+   * headings; keep `title` for SEO, JSON-LD, alt text, and cart line items.
+   */
+  displayTitle: string
 } & ProductPricing
 
 export type ProductListItem = {
@@ -124,6 +130,9 @@ export type CartLineItem = {
       title: string
       handle: string
       featuredImage: Maybe<Image>
+      color: Maybe<ProductColor>
+      /** Title with trailing color stripped when product.color is set. */
+      displayTitle: string
     }
     price: Money
     compareAtPrice: Maybe<Money>

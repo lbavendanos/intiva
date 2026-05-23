@@ -87,8 +87,13 @@ export function CartItem({
               onClick={handleNavigate}
               className="text-sm font-medium text-zinc-900 hover:text-zinc-600"
             >
-              {product.title}
+              {product.displayTitle}
             </Link>
+            {product.color && (
+              <p className="mt-1 text-xs text-zinc-500">
+                {__('product.color')}: {product.color.name}
+              </p>
+            )}
             {variantTitle && (
               <p className="mt-1 text-xs text-zinc-500">{variantTitle}</p>
             )}

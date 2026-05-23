@@ -84,7 +84,14 @@ export function OrderDetail({ order }: OrderDetailProps) {
                 )}
 
                 <div className="flex-1">
-                  <p className="font-medium text-zinc-900">{item.title}</p>
+                  <p className="font-medium text-zinc-900">
+                    {item.displayTitle}
+                  </p>
+                  {item.color && (
+                    <p className="text-sm text-zinc-500">
+                      {__('product.color')}: {item.color}
+                    </p>
+                  )}
                   {item.variantTitle && (
                     <p className="text-sm text-zinc-500">{item.variantTitle}</p>
                   )}
