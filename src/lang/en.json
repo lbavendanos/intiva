@@ -47,6 +47,7 @@
   "products.empty": "No products found",
   "product.not_found": "Product not found",
   "product.description": "Description",
+  "product.color": "Color",
   "product.no_image": "No image",
   "product.gallery_aria_label": "Product image gallery",
   "product.view_image": "View image :index",

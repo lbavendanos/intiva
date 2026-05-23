@@ -1,4 +1,4 @@
-import type { Connection, Image, PageInfo } from '../../types'
+import type { Connection, Image, Maybe, PageInfo } from '../../types'
 import { extractNodesFromEdges } from '../../utils'
 import { storefrontQuery } from '../client'
 import {
@@ -6,6 +6,7 @@ import {
   MONEY_FRAGMENT,
   PAGE_INFO_FRAGMENT,
   PRODUCT_CARD_FRAGMENT,
+  PRODUCT_COLOR_SIBLING_FRAGMENT,
   PRODUCT_FRAGMENT,
   PRODUCT_VARIANT_FRAGMENT,
   SEO_FRAGMENT,
@@ -13,6 +14,8 @@ import {
 import { computePricing } from '../transforms'
 import type {
   Product,
+  ProductColor,
+  ProductColorSibling,
   ProductListItem,
   ProductRecommendationIntent,
   ProductVariant,
@@ -22,9 +25,40 @@ type GetProductsQueryResponse = {
   products: Connection<ProductListItem>
 }
 
-type ProductResponse = Omit<Product, 'images' | 'variants'> & {
+type ColorMetafieldResponse = Maybe<{
+  reference: Maybe<{
+    id: string
+    nameField: Maybe<{ value: Maybe<string> }>
+    hexField: Maybe<{ value: Maybe<string> }>
+  }>
+}>
+
+type ColorSiblingResponse = {
+  id: string
+  handle: string
+  title: string
+  availableForSale: boolean
+  featuredImage: Maybe<Image>
+  colorMetafield: ColorMetafieldResponse
+}
+
+type ColorGroupMetafieldResponse = Maybe<{
+  reference: Maybe<{
+    id: string
+    productsField: Maybe<{
+      references: Connection<ColorSiblingResponse>
+    }>
+  }>
+}>
+
+type ProductResponse = Omit<
+  Product,
+  'images' | 'variants' | 'color' | 'colorSiblings'
+> & {
   images: Connection<Image>
   variants: Connection<ProductVariant>
+  colorMetafield: ColorMetafieldResponse
+  colorGroupMetafield: ColorGroupMetafieldResponse
 }
 
 type GetProductByHandleQueryResponse = {
@@ -82,6 +116,7 @@ const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
     }
   }
   ${PRODUCT_FRAGMENT}
+  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
   ${PRODUCT_VARIANT_FRAGMENT}
   ${SEO_FRAGMENT}
   ${MONEY_FRAGMENT}
@@ -137,6 +172,42 @@ const GET_SEARCH_RESULTS_QUERY = /* GraphQL */ `
   ${IMAGE_FRAGMENT}
 `
 
+function parseProductColor(
+  metafield: ColorMetafieldResponse,
+): ProductColor | null {
+  const reference = metafield?.reference
+  if (!reference) return null
+
+  const name = reference.nameField?.value
+  const hex = reference.hexField?.value
+  if (!name || !hex) return null
+
+  return { name, hex }
+}
+
+function parseProductColorSiblings(
+  metafield: ColorGroupMetafieldResponse,
+): ProductColorSibling[] {
+  const references = metafield?.reference?.productsField?.references
+  if (!references) return []
+
+  return extractNodesFromEdges(references).flatMap((node) => {
+    const color = parseProductColor(node.colorMetafield)
+    if (!color) return []
+
+    return [
+      {
+        id: node.id,
+        handle: node.handle,
+        title: node.title,
+        availableForSale: node.availableForSale,
+        featuredImage: node.featuredImage,
+        color,
+      },
+    ]
+  })
+}
+
 export async function getProducts(
   first: number = 12,
   after?: string,
@@ -179,6 +250,8 @@ export async function getProductByHandle(
     ...product,
     images: extractNodesFromEdges(product.images),
     variants: extractNodesFromEdges(product.variants),
+    color: parseProductColor(product.colorMetafield),
+    colorSiblings: parseProductColorSiblings(product.colorGroupMetafield),
     ...computePricing(product),
   }
 }

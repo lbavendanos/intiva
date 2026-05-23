@@ -98,6 +98,31 @@ export const COLLECTION_FRAGMENT = /* GraphQL */ `
   }
 `
 
+export const PRODUCT_COLOR_SIBLING_FRAGMENT = /* GraphQL */ `
+  fragment ProductColorSiblingFragment on Product {
+    id
+    handle
+    title
+    availableForSale
+    featuredImage {
+      ...ImageFragment
+    }
+    colorMetafield: metafield(namespace: "custom", key: "color") {
+      reference {
+        ... on Metaobject {
+          id
+          nameField: field(key: "name") {
+            value
+          }
+          hexField: field(key: "hex") {
+            value
+          }
+        }
+      }
+    }
+  }
+`
+
 export const PRODUCT_FRAGMENT = /* GraphQL */ `
   fragment ProductFragment on Product {
     id
@@ -155,6 +180,35 @@ export const PRODUCT_FRAGMENT = /* GraphQL */ `
     vendor
     createdAt
     updatedAt
+    colorMetafield: metafield(namespace: "custom", key: "color") {
+      reference {
+        ... on Metaobject {
+          id
+          nameField: field(key: "name") {
+            value
+          }
+          hexField: field(key: "hex") {
+            value
+          }
+        }
+      }
+    }
+    colorGroupMetafield: metafield(namespace: "custom", key: "color_group") {
+      reference {
+        ... on Metaobject {
+          id
+          productsField: field(key: "products") {
+            references(first: 50) {
+              edges {
+                node {
+                  ...ProductColorSiblingFragment
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 `
 

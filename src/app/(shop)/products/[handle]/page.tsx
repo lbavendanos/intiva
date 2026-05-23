@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { getProductByHandle, getProducts } from '@/lib/loaders/products'
 import { __, url } from '@/lib/utils'
 import { Price } from '@/components/common/price'
+import { ProductColorSwatches } from '@/components/shop/product-color-swatches'
 import { ProductForm } from '@/components/shop/product-form'
 import { ProductGallery } from '@/components/shop/product-gallery'
 import { ProductJsonLd } from '@/components/shop/product-json-ld'
@@ -125,6 +126,13 @@ async function ProductDetail({
             )}
           </div>
           <Separator className="my-6" />
+          {product.colorSiblings.length > 1 && (
+            <ProductColorSwatches
+              siblings={product.colorSiblings}
+              currentHandle={product.handle}
+              className="mb-6"
+            />
+          )}
           <ProductForm product={product} />
           {product.descriptionHtml && (
             <>

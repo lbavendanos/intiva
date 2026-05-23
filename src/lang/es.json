@@ -47,6 +47,7 @@
   "products.empty": "No se encontraron productos",
   "product.not_found": "Producto no encontrado",
   "product.description": "Descripción",
+  "product.color": "Color",
   "product.no_image": "Sin imagen",
   "product.gallery_aria_label": "Galería de imágenes del producto",
   "product.view_image": "Ver imagen :index",

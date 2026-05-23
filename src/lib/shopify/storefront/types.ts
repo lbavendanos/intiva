@@ -34,6 +34,20 @@ export type ProductPricing = {
   compareAtPrice: Maybe<Money>
 }
 
+export type ProductColor = {
+  name: string
+  hex: string
+}
+
+export type ProductColorSibling = {
+  id: string
+  handle: string
+  title: string
+  availableForSale: boolean
+  featuredImage: Maybe<Image>
+  color: ProductColor
+}
+
 export type Product = {
   id: string
   title: string
@@ -59,6 +73,8 @@ export type Product = {
   vendor: string
   createdAt: string
   updatedAt: string
+  color: Maybe<ProductColor>
+  colorSiblings: ProductColorSibling[]
 } & ProductPricing
 
 export type ProductListItem = {
