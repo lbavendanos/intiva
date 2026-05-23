@@ -63,6 +63,7 @@ export type OrderLineItem = {
   image: Maybe<Image>
   price: Maybe<Money>
   variantTitle: Maybe<string>
+  variantOptions: { name: string; value: string }[]
   totalPrice: Maybe<Money>
   /**
    * Title with the trailing ` - {color}` suffix removed. Equal to `title` when

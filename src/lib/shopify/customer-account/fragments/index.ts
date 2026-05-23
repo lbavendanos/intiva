@@ -70,6 +70,10 @@ export const ORDER_LINE_ITEM_FRAGMENT = /* GraphQL */ `
     name
     quantity
     variantTitle
+    variantOptions {
+      name
+      value
+    }
     image {
       ...ImageFragment
     }

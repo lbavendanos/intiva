@@ -24,10 +24,9 @@ export function CartItem({
   const { product, selectedOptions } = merchandise
   const href = `/products/${product.handle}`
 
-  const variantTitle = selectedOptions
-    .filter((option) => option.value !== 'Default Title')
-    .map((option) => option.value)
-    .join(' / ')
+  const visibleOptions = selectedOptions.filter(
+    (option) => option.value !== 'Default Title',
+  )
 
   const handleUpdateQuantity = (newQuantity: number) => {
     updateQuantity(id, newQuantity)
@@ -94,9 +93,14 @@ export function CartItem({
                 {__('product.color')}: {product.color.name}
               </p>
             )}
-            {variantTitle && (
-              <p className="mt-1 text-xs text-zinc-500">{variantTitle}</p>
-            )}
+            {visibleOptions.map((option) => (
+              <p
+                key={option.name}
+                className="mt-1 text-xs text-zinc-500"
+              >
+                {option.name}: {option.value}
+              </p>
+            ))}
           </div>
           <Button
             variant="ghost"

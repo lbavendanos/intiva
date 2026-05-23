@@ -92,9 +92,14 @@ export function OrderDetail({ order }: OrderDetailProps) {
                       {__('product.color')}: {item.color}
                     </p>
                   )}
-                  {item.variantTitle && (
-                    <p className="text-sm text-zinc-500">{item.variantTitle}</p>
-                  )}
+                  {item.variantOptions.map((option) => (
+                    <p
+                      key={option.name}
+                      className="text-sm text-zinc-500"
+                    >
+                      {option.name}: {option.value}
+                    </p>
+                  ))}
                   <p className="text-sm text-zinc-500">
                     {__('order.quantity')}: {item.quantity}
                   </p>
