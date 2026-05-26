@@ -93,10 +93,7 @@ export function OrderDetail({ order }: OrderDetailProps) {
                     </p>
                   )}
                   {item.variantOptions.map((option) => (
-                    <p
-                      key={option.name}
-                      className="text-sm text-zinc-500"
-                    >
+                    <p key={option.name} className="text-sm text-zinc-500">
                       {option.name}: {option.value}
                     </p>
                   ))}

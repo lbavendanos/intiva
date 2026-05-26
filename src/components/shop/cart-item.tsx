@@ -94,10 +94,7 @@ export function CartItem({
               </p>
             )}
             {visibleOptions.map((option) => (
-              <p
-                key={option.name}
-                className="mt-1 text-xs text-zinc-500"
-              >
+              <p key={option.name} className="mt-1 text-xs text-zinc-500">
                 {option.name}: {option.value}
               </p>
             ))}

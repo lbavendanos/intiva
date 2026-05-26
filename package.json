@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
-    "@hookform/resolvers": "^5.2.2",
+    "@hookform/resolvers": "^5.4.0",
     "@phosphor-icons/react": "^2.1.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -26,8 +26,8 @@
     "next-themes": "^0.4.6",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "react-hook-form": "^7.76.0",
-    "shadcn": "^4.7.0",
+    "react-hook-form": "^7.76.1",
+    "shadcn": "^4.8.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
     "use-mask-input": "^3.10.1",
@@ -61,5 +61,5 @@
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.7"
   },
-  "packageManager": "pnpm@11.2.2+sha512.36e6621fad506178936455e70247b8808ef4ec25797a9f437a93281a020484e2607f6a469a22e982987c3dbb8866e3071514ab10a4a1749e06edcd1ec118436f"
+  "packageManager": "pnpm@11.3.0+sha512.2c403d6594527287672b1f7056343a1f7c3634036a67ffabfcc2b3d7595d843768f8787148d1b57cf7956c90606bbd192857c363af19e96d2d0ec9ec5741d215"
 }
