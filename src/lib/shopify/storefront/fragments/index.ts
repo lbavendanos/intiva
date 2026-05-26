@@ -38,6 +38,50 @@ export const PAGE_INFO_FRAGMENT = /* GraphQL */ `
   }
 `
 
+export const COLOR_METAOBJECT_FRAGMENT = /* GraphQL */ `
+  fragment ColorMetaobjectFragment on Metaobject {
+    id
+    nameField: field(key: "name") {
+      value
+    }
+    hexField: field(key: "hex") {
+      value
+    }
+  }
+`
+
+export const PRODUCT_COLOR_SIBLING_FRAGMENT = /* GraphQL */ `
+  fragment ProductColorSiblingFragment on Product {
+    id
+    handle
+    title
+    availableForSale
+    featuredImage {
+      ...ImageFragment
+    }
+    colorMetafield: metafield(namespace: "custom", key: "color") {
+      reference {
+        ...ColorMetaobjectFragment
+      }
+    }
+  }
+`
+
+export const COLOR_GROUP_METAOBJECT_FRAGMENT = /* GraphQL */ `
+  fragment ColorGroupMetaobjectFragment on Metaobject {
+    id
+    productsField: field(key: "products") {
+      references(first: 50) {
+        edges {
+          node {
+            ...ProductColorSiblingFragment
+          }
+        }
+      }
+    }
+  }
+`
+
 export const PRODUCT_VARIANT_FRAGMENT = /* GraphQL */ `
   fragment ProductVariantFragment on ProductVariant {
     id
@@ -81,31 +125,12 @@ export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
     }
     colorMetafield: metafield(namespace: "custom", key: "color") {
       reference {
-        ... on Metaobject {
-          id
-          nameField: field(key: "name") {
-            value
-          }
-          hexField: field(key: "hex") {
-            value
-          }
-        }
+        ...ColorMetaobjectFragment
       }
     }
     colorGroupMetafield: metafield(namespace: "custom", key: "color_group") {
       reference {
-        ... on Metaobject {
-          id
-          productsField: field(key: "products") {
-            references(first: 50) {
-              edges {
-                node {
-                  ...ProductColorSiblingFragment
-                }
-              }
-            }
-          }
-        }
+        ...ColorGroupMetaobjectFragment
       }
     }
   }
@@ -123,31 +148,6 @@ export const COLLECTION_FRAGMENT = /* GraphQL */ `
     }
     seo {
       ...SEOFragment
-    }
-  }
-`
-
-export const PRODUCT_COLOR_SIBLING_FRAGMENT = /* GraphQL */ `
-  fragment ProductColorSiblingFragment on Product {
-    id
-    handle
-    title
-    availableForSale
-    featuredImage {
-      ...ImageFragment
-    }
-    colorMetafield: metafield(namespace: "custom", key: "color") {
-      reference {
-        ... on Metaobject {
-          id
-          nameField: field(key: "name") {
-            value
-          }
-          hexField: field(key: "hex") {
-            value
-          }
-        }
-      }
     }
   }
 `
@@ -211,31 +211,12 @@ export const PRODUCT_FRAGMENT = /* GraphQL */ `
     updatedAt
     colorMetafield: metafield(namespace: "custom", key: "color") {
       reference {
-        ... on Metaobject {
-          id
-          nameField: field(key: "name") {
-            value
-          }
-          hexField: field(key: "hex") {
-            value
-          }
-        }
+        ...ColorMetaobjectFragment
       }
     }
     colorGroupMetafield: metafield(namespace: "custom", key: "color_group") {
       reference {
-        ... on Metaobject {
-          id
-          productsField: field(key: "products") {
-            references(first: 50) {
-              edges {
-                node {
-                  ...ProductColorSiblingFragment
-                }
-              }
-            }
-          }
-        }
+        ...ColorGroupMetaobjectFragment
       }
     }
   }
@@ -262,15 +243,7 @@ export const CART_LINE_FRAGMENT = /* GraphQL */ `
           }
           colorMetafield: metafield(namespace: "custom", key: "color") {
             reference {
-              ... on Metaobject {
-                id
-                nameField: field(key: "name") {
-                  value
-                }
-                hexField: field(key: "hex") {
-                  value
-                }
-              }
+              ...ColorMetaobjectFragment
             }
           }
         }

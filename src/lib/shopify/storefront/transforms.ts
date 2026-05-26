@@ -5,6 +5,7 @@ import type {
   CartLineItem,
   ProductColor,
   ProductColorSibling,
+  ProductListItem,
   ProductPricing,
   SelectedOption,
 } from './types'
@@ -34,6 +35,14 @@ export type ColorGroupMetafieldResponse = Maybe<{
     }>
   }>
 }>
+
+export type ProductListItemResponse = Omit<
+  ProductListItem,
+  'colorSiblings' | 'displayTitle'
+> & {
+  colorMetafield: ColorMetafieldResponse
+  colorGroupMetafield: ColorGroupMetafieldResponse
+}
 
 type RawCartLineProduct = Omit<
   CartLineItem['merchandise']['product'],
@@ -98,6 +107,30 @@ export function stripColorSuffix(title: string, colorName: string): string {
   const pattern = new RegExp(`\\s*[-–—|/]?\\s*${escaped}\\s*$`, 'i')
   const stripped = title.replace(pattern, '').trim()
   return stripped || title
+}
+
+export function computeDisplayTitle(
+  title: string,
+  color: ProductColor | null,
+  colorSiblings: ProductColorSibling[],
+): string {
+  if (!color || colorSiblings.length <= 1) return title
+  return stripColorSuffix(title, color.name)
+}
+
+export function transformProductListItem(
+  product: ProductListItemResponse,
+): ProductListItem {
+  const { colorMetafield, colorGroupMetafield, ...rest } = product
+  const color = parseProductColor(colorMetafield)
+  const colorSiblings = parseProductColorSiblings(colorGroupMetafield)
+
+  return {
+    ...rest,
+    colorSiblings,
+    displayTitle: computeDisplayTitle(rest.title, color, colorSiblings),
+    ...computePricing(product),
+  }
 }
 
 function transformCartLine(line: RawCartLineItem): CartLineItem {

@@ -2,6 +2,8 @@ import type { Connection, Image, PageInfo } from '../../types'
 import { extractNodesFromEdges } from '../../utils'
 import { storefrontQuery } from '../client'
 import {
+  COLOR_GROUP_METAOBJECT_FRAGMENT,
+  COLOR_METAOBJECT_FRAGMENT,
   IMAGE_FRAGMENT,
   MONEY_FRAGMENT,
   PAGE_INFO_FRAGMENT,
@@ -12,12 +14,14 @@ import {
   SEO_FRAGMENT,
 } from '../fragments'
 import {
+  computeDisplayTitle,
   computePricing,
   parseProductColor,
   parseProductColorSiblings,
-  stripColorSuffix,
+  transformProductListItem,
   type ColorGroupMetafieldResponse,
   type ColorMetafieldResponse,
+  type ProductListItemResponse,
 } from '../transforms'
 import type {
   Product,
@@ -25,18 +29,6 @@ import type {
   ProductRecommendationIntent,
   ProductVariant,
 } from '../types'
-
-type ProductListItemResponse = Omit<
-  ProductListItem,
-  'colorSiblings' | 'displayTitle'
-> & {
-  colorMetafield: ColorMetafieldResponse
-  colorGroupMetafield: ColorGroupMetafieldResponse
-}
-
-type GetProductsQueryResponse = {
-  products: Connection<ProductListItemResponse>
-}
 
 type ProductResponse = Omit<
   Product,
@@ -46,6 +38,10 @@ type ProductResponse = Omit<
   variants: Connection<ProductVariant>
   colorMetafield: ColorMetafieldResponse
   colorGroupMetafield: ColorGroupMetafieldResponse
+}
+
+type GetProductsQueryResponse = {
+  products: Connection<ProductListItemResponse>
 }
 
 type GetProductByHandleQueryResponse = {
@@ -77,6 +73,15 @@ type GetSearchResultsResult = {
   totalCount: number
 }
 
+const PRODUCT_CARD_QUERY_FRAGMENTS = `
+  ${PRODUCT_CARD_FRAGMENT}
+  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
+  ${COLOR_METAOBJECT_FRAGMENT}
+  ${COLOR_GROUP_METAOBJECT_FRAGMENT}
+  ${MONEY_FRAGMENT}
+  ${IMAGE_FRAGMENT}
+`
+
 const GET_PRODUCTS_QUERY = /* GraphQL */ `
   query getProducts($first: Int!, $after: String) {
     products(first: $first, after: $after) {
@@ -90,11 +95,8 @@ const GET_PRODUCTS_QUERY = /* GraphQL */ `
       }
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
+  ${PRODUCT_CARD_QUERY_FRAGMENTS}
   ${PAGE_INFO_FRAGMENT}
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
 `
 
 const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
@@ -106,6 +108,8 @@ const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
   ${PRODUCT_FRAGMENT}
   ${PRODUCT_COLOR_SIBLING_FRAGMENT}
   ${PRODUCT_VARIANT_FRAGMENT}
+  ${COLOR_METAOBJECT_FRAGMENT}
+  ${COLOR_GROUP_METAOBJECT_FRAGMENT}
   ${SEO_FRAGMENT}
   ${MONEY_FRAGMENT}
   ${IMAGE_FRAGMENT}
@@ -120,10 +124,7 @@ const GET_PRODUCT_RECOMMENDATIONS_QUERY = /* GraphQL */ `
       ...ProductCardFragment
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
+  ${PRODUCT_CARD_QUERY_FRAGMENTS}
 `
 
 const SEARCH_PRODUCTS_QUERY = /* GraphQL */ `
@@ -134,10 +135,7 @@ const SEARCH_PRODUCTS_QUERY = /* GraphQL */ `
       }
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
+  ${PRODUCT_CARD_QUERY_FRAGMENTS}
 `
 
 const GET_SEARCH_RESULTS_QUERY = /* GraphQL */ `
@@ -156,31 +154,9 @@ const GET_SEARCH_RESULTS_QUERY = /* GraphQL */ `
       totalCount
     }
   }
-  ${PRODUCT_CARD_FRAGMENT}
-  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
+  ${PRODUCT_CARD_QUERY_FRAGMENTS}
   ${PAGE_INFO_FRAGMENT}
-  ${MONEY_FRAGMENT}
-  ${IMAGE_FRAGMENT}
 `
-
-function transformProductListItem(
-  product: ProductListItemResponse,
-): ProductListItem {
-  const { colorMetafield, colorGroupMetafield, ...rest } = product
-  const color = parseProductColor(colorMetafield)
-  const colorSiblings = parseProductColorSiblings(colorGroupMetafield)
-  const displayTitle =
-    color && colorSiblings.length > 1
-      ? stripColorSuffix(rest.title, color.name)
-      : rest.title
-
-  return {
-    ...rest,
-    colorSiblings,
-    displayTitle,
-    ...computePricing(product),
-  }
-}
 
 export async function getProducts(
   first: number = 12,
@@ -220,10 +196,6 @@ export async function getProductByHandle(
   const product = data.product
   const color = parseProductColor(product.colorMetafield)
   const colorSiblings = parseProductColorSiblings(product.colorGroupMetafield)
-  const displayTitle =
-    color && colorSiblings.length > 1
-      ? stripColorSuffix(product.title, color.name)
-      : product.title
 
   return {
     ...product,
@@ -231,7 +203,7 @@ export async function getProductByHandle(
     variants: extractNodesFromEdges(product.variants),
     color,
     colorSiblings,
-    displayTitle,
+    displayTitle: computeDisplayTitle(product.title, color, colorSiblings),
     ...computePricing(product),
   }
 }

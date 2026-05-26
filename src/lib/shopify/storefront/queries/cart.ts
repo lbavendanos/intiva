@@ -2,6 +2,7 @@ import { storefrontQuery } from '../client'
 import {
   CART_FRAGMENT,
   CART_LINE_FRAGMENT,
+  COLOR_METAOBJECT_FRAGMENT,
   IMAGE_FRAGMENT,
   MONEY_FRAGMENT,
 } from '../fragments'
@@ -20,6 +21,7 @@ const GET_CART_QUERY = /* GraphQL */ `
   }
   ${CART_FRAGMENT}
   ${CART_LINE_FRAGMENT}
+  ${COLOR_METAOBJECT_FRAGMENT}
   ${IMAGE_FRAGMENT}
   ${MONEY_FRAGMENT}
 `

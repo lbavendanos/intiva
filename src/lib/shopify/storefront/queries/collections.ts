@@ -3,6 +3,8 @@ import { extractNodesFromEdges } from '../../utils'
 import { storefrontQuery } from '../client'
 import {
   COLLECTION_FRAGMENT,
+  COLOR_GROUP_METAOBJECT_FRAGMENT,
+  COLOR_METAOBJECT_FRAGMENT,
   IMAGE_FRAGMENT,
   MONEY_FRAGMENT,
   PAGE_INFO_FRAGMENT,
@@ -11,12 +13,8 @@ import {
   SEO_FRAGMENT,
 } from '../fragments'
 import {
-  computePricing,
-  parseProductColor,
-  parseProductColorSiblings,
-  stripColorSuffix,
-  type ColorGroupMetafieldResponse,
-  type ColorMetafieldResponse,
+  transformProductListItem,
+  type ProductListItemResponse,
 } from '../transforms'
 import type { Collection, CollectionListItem, ProductListItem } from '../types'
 
@@ -29,14 +27,6 @@ type GetCollectionsQueryResponse = {
 
 type GetCollectionByHandleQueryResponse = {
   collection: Collection | null
-}
-
-type ProductListItemResponse = Omit<
-  ProductListItem,
-  'colorSiblings' | 'displayTitle'
-> & {
-  colorMetafield: ColorMetafieldResponse
-  colorGroupMetafield: ColorGroupMetafieldResponse
 }
 
 type GetCollectionProductsQueryResponse = {
@@ -121,6 +111,8 @@ const GET_COLLECTION_PRODUCTS_QUERY = /* GraphQL */ `
   ${COLLECTION_FRAGMENT}
   ${PRODUCT_CARD_FRAGMENT}
   ${PRODUCT_COLOR_SIBLING_FRAGMENT}
+  ${COLOR_METAOBJECT_FRAGMENT}
+  ${COLOR_GROUP_METAOBJECT_FRAGMENT}
   ${PAGE_INFO_FRAGMENT}
   ${IMAGE_FRAGMENT}
   ${MONEY_FRAGMENT}
@@ -183,21 +175,7 @@ export async function getCollectionProducts(
   }
 
   const products = extractNodesFromEdges(data.collection.products).map(
-    ({ colorMetafield, colorGroupMetafield, ...product }) => {
-      const color = parseProductColor(colorMetafield)
-      const colorSiblings = parseProductColorSiblings(colorGroupMetafield)
-      const displayTitle =
-        color && colorSiblings.length > 1
-          ? stripColorSuffix(product.title, color.name)
-          : product.title
-
-      return {
-        ...product,
-        colorSiblings,
-        displayTitle,
-        ...computePricing(product),
-      }
-    },
+    transformProductListItem,
   )
 
   return {
