@@ -1,9 +1,10 @@
-import type { Connection, Maybe, Money } from '../types'
+import type { Connection, Image, Maybe, Money } from '../types'
 import { extractNodesFromEdges } from '../utils'
 import type {
   Cart,
   CartLineItem,
   ProductColor,
+  ProductColorSibling,
   ProductPricing,
   SelectedOption,
 } from './types'
@@ -13,6 +14,24 @@ export type ColorMetafieldResponse = Maybe<{
     id: string
     nameField: Maybe<{ value: Maybe<string> }>
     hexField: Maybe<{ value: Maybe<string> }>
+  }>
+}>
+
+type ColorSiblingResponse = {
+  id: string
+  handle: string
+  title: string
+  availableForSale: boolean
+  featuredImage: Maybe<Image>
+  colorMetafield: ColorMetafieldResponse
+}
+
+export type ColorGroupMetafieldResponse = Maybe<{
+  reference: Maybe<{
+    id: string
+    productsField: Maybe<{
+      references: Connection<ColorSiblingResponse>
+    }>
   }>
 }>
 
@@ -49,6 +68,29 @@ export function parseProductColor(
   if (!name || !hex) return null
 
   return { name, hex }
+}
+
+export function parseProductColorSiblings(
+  metafield: ColorGroupMetafieldResponse,
+): ProductColorSibling[] {
+  const references = metafield?.reference?.productsField?.references
+  if (!references) return []
+
+  return extractNodesFromEdges(references).flatMap((node) => {
+    const color = parseProductColor(node.colorMetafield)
+    if (!color) return []
+
+    return [
+      {
+        id: node.id,
+        handle: node.handle,
+        title: node.title,
+        availableForSale: node.availableForSale,
+        featuredImage: node.featuredImage,
+        color,
+      },
+    ]
+  })
 }
 
 export function stripColorSuffix(title: string, colorName: string): string {

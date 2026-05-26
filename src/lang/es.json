@@ -48,6 +48,8 @@
   "product.not_found": "Producto no encontrado",
   "product.description": "Descripción",
   "product.color": "Color",
+  "product.available_colors": "Colores disponibles",
+  "product.more_colors": "+:count colores más",
   "product.no_image": "Sin imagen",
   "product.gallery_aria_label": "Galería de imágenes del producto",
   "product.view_image": "Ver imagen :index",

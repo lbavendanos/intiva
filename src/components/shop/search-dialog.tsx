@@ -80,12 +80,18 @@ function SearchResultItem({
 }) {
   const {
     title,
+    displayTitle,
     handle,
     featuredImage,
     availableForSale,
     price,
     compareAtPrice,
+    colorSiblings,
   } = product
+
+  const ownSibling = colorSiblings.find((sibling) => sibling.handle === handle)
+  const colorLabel =
+    colorSiblings.length > 1 ? (ownSibling?.color.name ?? null) : null
 
   return (
     <Link
@@ -106,7 +112,12 @@ function SearchResultItem({
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-zinc-900">{title}</p>
+        <p className="truncate text-sm font-medium text-zinc-900">
+          {displayTitle}
+        </p>
+        {colorLabel && (
+          <p className="truncate text-xs text-zinc-500">{colorLabel}</p>
+        )}
         <div className="mt-0.5 flex items-center gap-2">
           <Price
             as="span"

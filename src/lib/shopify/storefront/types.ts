@@ -95,6 +95,13 @@ export type ProductListItem = {
     minVariantPrice: Money
   }
   featuredImage: Maybe<Image>
+  colorSiblings: ProductColorSibling[]
+  /**
+   * Title with the trailing color name stripped when the product belongs to a
+   * multi-product color group. Falls back to `title` otherwise. Use for visible
+   * card headings; keep `title` for SEO and image alt text.
+   */
+  displayTitle: string
 } & ProductPricing
 
 export type ProductRecommendationIntent = 'RELATED' | 'COMPLEMENTARY'

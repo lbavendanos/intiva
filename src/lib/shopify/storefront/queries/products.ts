@@ -1,4 +1,4 @@
-import type { Connection, Image, Maybe, PageInfo } from '../../types'
+import type { Connection, Image, PageInfo } from '../../types'
 import { extractNodesFromEdges } from '../../utils'
 import { storefrontQuery } from '../client'
 import {
@@ -14,38 +14,29 @@ import {
 import {
   computePricing,
   parseProductColor,
+  parseProductColorSiblings,
   stripColorSuffix,
+  type ColorGroupMetafieldResponse,
   type ColorMetafieldResponse,
 } from '../transforms'
 import type {
   Product,
-  ProductColorSibling,
   ProductListItem,
   ProductRecommendationIntent,
   ProductVariant,
 } from '../types'
 
-type GetProductsQueryResponse = {
-  products: Connection<ProductListItem>
-}
-
-type ColorSiblingResponse = {
-  id: string
-  handle: string
-  title: string
-  availableForSale: boolean
-  featuredImage: Maybe<Image>
+type ProductListItemResponse = Omit<
+  ProductListItem,
+  'colorSiblings' | 'displayTitle'
+> & {
   colorMetafield: ColorMetafieldResponse
+  colorGroupMetafield: ColorGroupMetafieldResponse
 }
 
-type ColorGroupMetafieldResponse = Maybe<{
-  reference: Maybe<{
-    id: string
-    productsField: Maybe<{
-      references: Connection<ColorSiblingResponse>
-    }>
-  }>
-}>
+type GetProductsQueryResponse = {
+  products: Connection<ProductListItemResponse>
+}
 
 type ProductResponse = Omit<
   Product,
@@ -62,17 +53,17 @@ type GetProductByHandleQueryResponse = {
 }
 
 type GetProductRecommendationsQueryResponse = {
-  productRecommendations: ProductListItem[] | null
+  productRecommendations: ProductListItemResponse[] | null
 }
 
 type SearchProductsQueryResponse = {
   predictiveSearch: {
-    products: ProductListItem[]
+    products: ProductListItemResponse[]
   } | null
 }
 
 type GetSearchResultsQueryResponse = {
-  search: Connection<ProductListItem> & { totalCount: number }
+  search: Connection<ProductListItemResponse> & { totalCount: number }
 }
 
 type GetProductsResult = {
@@ -100,6 +91,7 @@ const GET_PRODUCTS_QUERY = /* GraphQL */ `
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
+  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
   ${PAGE_INFO_FRAGMENT}
   ${MONEY_FRAGMENT}
   ${IMAGE_FRAGMENT}
@@ -129,6 +121,7 @@ const GET_PRODUCT_RECOMMENDATIONS_QUERY = /* GraphQL */ `
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
+  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
   ${MONEY_FRAGMENT}
   ${IMAGE_FRAGMENT}
 `
@@ -142,6 +135,7 @@ const SEARCH_PRODUCTS_QUERY = /* GraphQL */ `
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
+  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
   ${MONEY_FRAGMENT}
   ${IMAGE_FRAGMENT}
 `
@@ -163,32 +157,29 @@ const GET_SEARCH_RESULTS_QUERY = /* GraphQL */ `
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
+  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
   ${PAGE_INFO_FRAGMENT}
   ${MONEY_FRAGMENT}
   ${IMAGE_FRAGMENT}
 `
 
-function parseProductColorSiblings(
-  metafield: ColorGroupMetafieldResponse,
-): ProductColorSibling[] {
-  const references = metafield?.reference?.productsField?.references
-  if (!references) return []
+function transformProductListItem(
+  product: ProductListItemResponse,
+): ProductListItem {
+  const { colorMetafield, colorGroupMetafield, ...rest } = product
+  const color = parseProductColor(colorMetafield)
+  const colorSiblings = parseProductColorSiblings(colorGroupMetafield)
+  const displayTitle =
+    color && colorSiblings.length > 1
+      ? stripColorSuffix(rest.title, color.name)
+      : rest.title
 
-  return extractNodesFromEdges(references).flatMap((node) => {
-    const color = parseProductColor(node.colorMetafield)
-    if (!color) return []
-
-    return [
-      {
-        id: node.id,
-        handle: node.handle,
-        title: node.title,
-        availableForSale: node.availableForSale,
-        featuredImage: node.featuredImage,
-        color,
-      },
-    ]
-  })
+  return {
+    ...rest,
+    colorSiblings,
+    displayTitle,
+    ...computePricing(product),
+  }
 }
 
 export async function getProducts(
@@ -202,10 +193,9 @@ export async function getProducts(
     },
   )
 
-  const products = extractNodesFromEdges(data.products).map((product) => ({
-    ...product,
-    ...computePricing(product),
-  }))
+  const products = extractNodesFromEdges(data.products).map(
+    transformProductListItem,
+  )
 
   return {
     products,
@@ -261,10 +251,7 @@ export async function getProductRecommendations(
     return []
   }
 
-  return data.productRecommendations.map((product) => ({
-    ...product,
-    ...computePricing(product),
-  }))
+  return data.productRecommendations.map(transformProductListItem)
 }
 
 export async function searchProducts(
@@ -280,10 +267,7 @@ export async function searchProducts(
 
   const products = data.predictiveSearch?.products ?? []
 
-  return products.map((product) => ({
-    ...product,
-    ...computePricing(product),
-  }))
+  return products.map(transformProductListItem)
 }
 
 export async function getSearchResults(
@@ -298,10 +282,9 @@ export async function getSearchResults(
     },
   )
 
-  const products = extractNodesFromEdges(data.search).map((product) => ({
-    ...product,
-    ...computePricing(product),
-  }))
+  const products = extractNodesFromEdges(data.search).map(
+    transformProductListItem,
+  )
 
   return {
     products,

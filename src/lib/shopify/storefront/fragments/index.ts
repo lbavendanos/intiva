@@ -79,6 +79,35 @@ export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
     featuredImage {
       ...ImageFragment
     }
+    colorMetafield: metafield(namespace: "custom", key: "color") {
+      reference {
+        ... on Metaobject {
+          id
+          nameField: field(key: "name") {
+            value
+          }
+          hexField: field(key: "hex") {
+            value
+          }
+        }
+      }
+    }
+    colorGroupMetafield: metafield(namespace: "custom", key: "color_group") {
+      reference {
+        ... on Metaobject {
+          id
+          productsField: field(key: "products") {
+            references(first: 50) {
+              edges {
+                node {
+                  ...ProductColorSiblingFragment
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 `
 

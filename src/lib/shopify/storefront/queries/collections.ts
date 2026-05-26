@@ -7,9 +7,17 @@ import {
   MONEY_FRAGMENT,
   PAGE_INFO_FRAGMENT,
   PRODUCT_CARD_FRAGMENT,
+  PRODUCT_COLOR_SIBLING_FRAGMENT,
   SEO_FRAGMENT,
 } from '../fragments'
-import { computePricing } from '../transforms'
+import {
+  computePricing,
+  parseProductColor,
+  parseProductColorSiblings,
+  stripColorSuffix,
+  type ColorGroupMetafieldResponse,
+  type ColorMetafieldResponse,
+} from '../transforms'
 import type { Collection, CollectionListItem, ProductListItem } from '../types'
 
 type GetCollectionsQueryResponse = {
@@ -23,6 +31,14 @@ type GetCollectionByHandleQueryResponse = {
   collection: Collection | null
 }
 
+type ProductListItemResponse = Omit<
+  ProductListItem,
+  'colorSiblings' | 'displayTitle'
+> & {
+  colorMetafield: ColorMetafieldResponse
+  colorGroupMetafield: ColorGroupMetafieldResponse
+}
+
 type GetCollectionProductsQueryResponse = {
   collection: {
     id: string
@@ -33,7 +49,7 @@ type GetCollectionProductsQueryResponse = {
     image: Image | null
     seo: { title: string | null; description: string | null }
     products: {
-      edges: Array<{ node: ProductListItem }>
+      edges: Array<{ node: ProductListItemResponse }>
       pageInfo: PageInfo
     }
   } | null
@@ -104,6 +120,7 @@ const GET_COLLECTION_PRODUCTS_QUERY = /* GraphQL */ `
   }
   ${COLLECTION_FRAGMENT}
   ${PRODUCT_CARD_FRAGMENT}
+  ${PRODUCT_COLOR_SIBLING_FRAGMENT}
   ${PAGE_INFO_FRAGMENT}
   ${IMAGE_FRAGMENT}
   ${MONEY_FRAGMENT}
@@ -166,10 +183,21 @@ export async function getCollectionProducts(
   }
 
   const products = extractNodesFromEdges(data.collection.products).map(
-    (product) => ({
-      ...product,
-      ...computePricing(product),
-    }),
+    ({ colorMetafield, colorGroupMetafield, ...product }) => {
+      const color = parseProductColor(colorMetafield)
+      const colorSiblings = parseProductColorSiblings(colorGroupMetafield)
+      const displayTitle =
+        color && colorSiblings.length > 1
+          ? stripColorSuffix(product.title, color.name)
+          : product.title
+
+      return {
+        ...product,
+        colorSiblings,
+        displayTitle,
+        ...computePricing(product),
+      }
+    },
   )
 
   return {
