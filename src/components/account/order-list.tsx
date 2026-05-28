@@ -44,7 +44,7 @@ export function OrderList({ orders }: OrderListProps) {
       {orders.map((order) => (
         <Link
           key={order.id}
-          href={`/account/orders/${encodeURIComponent(order.id)}`}
+          href={`/account/orders/${order.id.split('/').pop()}`}
           className="flex items-center justify-between rounded-lg border border-zinc-200 p-4 transition-colors hover:bg-zinc-50"
         >
           <div className="space-y-1">

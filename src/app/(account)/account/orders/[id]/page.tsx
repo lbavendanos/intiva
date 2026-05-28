@@ -11,7 +11,7 @@ type OrderPageProps = {
 
 async function OrderContent({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const order = await getOrder(decodeURIComponent(id))
+  const order = await getOrder(`gid://shopify/Order/${id}`)
 
   if (!order) {
     notFound()
