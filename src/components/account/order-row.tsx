@@ -16,7 +16,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { getOrderUrl, OrderStatusBadges } from './order-helpers'
+import { OrderStatusBadges } from './order-status-badges'
+import { getOrderUrl } from './order-utils'
 
 type OrderRowProps = {
   order: OrderListItem

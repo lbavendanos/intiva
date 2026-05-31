@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
 import { OrderBackButton } from './order-back-button'
-import { OrderStatusBadges } from './order-helpers'
+import { OrderStatusBadges } from './order-status-badges'
 
 type OrderDetailProps = {
   order: Order

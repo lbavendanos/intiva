@@ -9,7 +9,8 @@ import { DateTime } from '@/components/common/datetime'
 import { Price } from '@/components/common/price'
 import { Button } from '@/components/ui/button'
 
-import { getOrderUrl, OrderStatusBadges } from './order-helpers'
+import { OrderStatusBadges } from './order-status-badges'
+import { getOrderUrl } from './order-utils'
 
 type OrderCardProps = {
   order: OrderListItem
