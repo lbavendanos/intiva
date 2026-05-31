@@ -1,11 +1,13 @@
 'use client'
 
+import { useState, useTransition } from 'react'
 import { CaretDownIcon, ListIcon, SquaresFourIcon } from '@phosphor-icons/react'
 
+import type { OrdersView } from '@/lib/preferences/orders-view'
+import { setOrdersView } from '@/lib/preferences/orders-view.actions'
 import type { OrderListItem } from '@/lib/shopify/customer-account/types'
 import type { PageInfo } from '@/lib/shopify/types'
 import { __ } from '@/lib/utils'
-import { useOrdersView, type OrdersView } from '@/hooks/use-orders-view'
 import { Pagination } from '@/components/shop/pagination'
 import { Button } from '@/components/ui/button'
 import {
@@ -39,9 +41,15 @@ const VIEW_OPTIONS: ReadonlyArray<{
 ]
 
 export function OrdersView({ orders, pageInfo, initialView }: OrdersViewProps) {
-  const { view, setView } = useOrdersView(initialView)
+  const [view, setView] = useState<OrdersView>(initialView)
+  const [, startTransition] = useTransition()
   const current = VIEW_OPTIONS.find((option) => option.value === view)!
   const CurrentIcon = current.Icon
+
+  const handleViewChange = (next: OrdersView) => {
+    setView(next)
+    startTransition(() => setOrdersView(next))
+  }
 
   return (
     <div>
@@ -65,7 +73,7 @@ export function OrdersView({ orders, pageInfo, initialView }: OrdersViewProps) {
           <DropdownMenuContent align="end">
             <DropdownMenuRadioGroup
               value={view}
-              onValueChange={(value) => setView(value as OrdersView)}
+              onValueChange={(value) => handleViewChange(value as OrdersView)}
             >
               {VIEW_OPTIONS.map(({ value, label, Icon }) => (
                 <DropdownMenuRadioItem key={value} value={value} closeOnClick>

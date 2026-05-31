@@ -7,13 +7,13 @@ import {
   ORDERS_VIEW_COOKIE,
   ORDERS_VIEW_COOKIE_MAX_AGE,
   type OrdersView,
-} from '@/lib/preferences/orders-view'
+} from './orders-view'
 
-export async function setOrdersViewPreference(view: OrdersView): Promise<void> {
+export async function setOrdersView(view: OrdersView): Promise<void> {
   if (!isOrdersView(view)) return
 
-  const cookieStore = await cookies()
-  cookieStore.set({
+  const store = await cookies()
+  store.set({
     name: ORDERS_VIEW_COOKIE,
     value: view,
     httpOnly: true,
