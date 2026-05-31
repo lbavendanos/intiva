@@ -18,13 +18,13 @@ import {
 
 import { getOrderUrl, OrderStatusBadges } from './order-helpers'
 
-type OrderRowListProps = {
+type OrderRowProps = {
   order: OrderListItem
 }
 
 const MAX_PREVIEW_IMAGES = 2
 
-export function OrderRowList({ order }: OrderRowListProps) {
+export function OrderRow({ order }: OrderRowProps) {
   const orderUrl = getOrderUrl(order)
   const previewItems = order.lineItems.slice(0, MAX_PREVIEW_IMAGES)
   const itemsLabel = __('orders.items_count', { count: order.lineItems.length })

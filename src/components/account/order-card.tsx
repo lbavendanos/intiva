@@ -11,13 +11,13 @@ import { Button } from '@/components/ui/button'
 
 import { getOrderUrl, OrderStatusBadges } from './order-helpers'
 
-type OrderCardGalleryProps = {
+type OrderCardProps = {
   order: OrderListItem
 }
 
 const MAX_PREVIEW_IMAGES = 4
 
-export function OrderCardGallery({ order }: OrderCardGalleryProps) {
+export function OrderCard({ order }: OrderCardProps) {
   const orderUrl = getOrderUrl(order)
   const previewItems = order.lineItems.slice(0, MAX_PREVIEW_IMAGES)
   const itemsLabel = __('orders.items_count', { count: order.lineItems.length })

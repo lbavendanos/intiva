@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { OrderCardGallery } from './order-card-gallery'
+import { OrderGallery } from './order-gallery'
 import { OrderList } from './order-list'
 
 type OrdersViewProps = {
@@ -77,14 +77,8 @@ export function OrdersView({ orders, pageInfo }: OrdersViewProps) {
         </DropdownMenu>
       </div>
 
-      {orders.length === 0 ? (
-        <p className="text-center text-zinc-500">{__('orders.empty')}</p>
-      ) : view === 'gallery' ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {orders.map((order) => (
-            <OrderCardGallery key={order.id} order={order} />
-          ))}
-        </div>
+      {view === 'gallery' ? (
+        <OrderGallery orders={orders} />
       ) : (
         <OrderList orders={orders} />
       )}
