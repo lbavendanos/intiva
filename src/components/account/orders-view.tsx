@@ -22,6 +22,7 @@ import { OrderList } from './order-list'
 type OrdersViewProps = {
   orders: OrderListItem[]
   pageInfo: PageInfo
+  initialView: OrdersView
 }
 
 const VIEW_OPTIONS: ReadonlyArray<{
@@ -37,8 +38,8 @@ const VIEW_OPTIONS: ReadonlyArray<{
   { value: 'list', label: () => __('orders.view_list'), Icon: ListIcon },
 ]
 
-export function OrdersView({ orders, pageInfo }: OrdersViewProps) {
-  const { view, setView } = useOrdersView()
+export function OrdersView({ orders, pageInfo, initialView }: OrdersViewProps) {
+  const { view, setView } = useOrdersView(initialView)
   const current = VIEW_OPTIONS.find((option) => option.value === view)!
   const CurrentIcon = current.Icon
 

@@ -2,7 +2,11 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
 import { getOrders } from '@/lib/loaders/orders'
+import type { OrdersView as OrdersViewType } from '@/lib/preferences/orders-view'
+import { getOrdersViewPreference } from '@/lib/preferences/orders-view.server'
 import { __ } from '@/lib/utils'
+import { OrderGallerySkeleton } from '@/components/account/order-gallery'
+import { OrderListSkeleton } from '@/components/account/order-list'
 import { OrdersView } from '@/components/account/orders-view'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -16,8 +20,10 @@ type OrdersPageProps = {
 
 async function OrdersContent({
   searchParams,
+  initialView,
 }: {
   searchParams: Promise<{ cursor?: string }>
+  initialView: OrdersViewType
 }) {
   const { cursor } = await searchParams
   const result = await getOrders(10, cursor)
@@ -28,29 +34,33 @@ async function OrdersContent({
     )
   }
 
-  return <OrdersView orders={result.orders} pageInfo={result.pageInfo} />
+  return (
+    <OrdersView
+      orders={result.orders}
+      pageInfo={result.pageInfo}
+      initialView={initialView}
+    />
+  )
 }
 
-function OrdersSkeleton() {
+function OrdersSkeleton({ view }: { view: OrdersViewType }) {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between gap-4">
         <Skeleton className="h-7 w-40" />
         <Skeleton className="h-7 w-28" />
       </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-96 w-full" />
-        ))}
-      </div>
+      {view === 'gallery' ? <OrderGallerySkeleton /> : <OrderListSkeleton />}
     </div>
   )
 }
 
-export default function OrdersPage({ searchParams }: OrdersPageProps) {
+export default async function OrdersPage({ searchParams }: OrdersPageProps) {
+  const initialView = await getOrdersViewPreference()
+
   return (
-    <Suspense fallback={<OrdersSkeleton />}>
-      <OrdersContent searchParams={searchParams} />
+    <Suspense fallback={<OrdersSkeleton view={initialView} />}>
+      <OrdersContent searchParams={searchParams} initialView={initialView} />
     </Suspense>
   )
 }

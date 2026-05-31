@@ -1,48 +1,27 @@
 'use client'
 
-import { useSyncExternalStore } from 'react'
+import { useState, useTransition } from 'react'
 
-export type OrdersView = 'gallery' | 'list'
+import { setOrdersViewPreference } from '@/lib/actions/preferences'
+import {
+  ORDERS_VIEW_DEFAULT,
+  type OrdersView,
+} from '@/lib/preferences/orders-view'
 
-const STORAGE_KEY = 'intiva.orders-view'
-const DEFAULT_VIEW: OrdersView = 'gallery'
+export type { OrdersView }
 
-function isOrdersView(value: unknown): value is OrdersView {
-  return value === 'gallery' || value === 'list'
-}
-
-function getSnapshot(): OrdersView {
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY)
-    return isOrdersView(stored) ? stored : DEFAULT_VIEW
-  } catch {
-    return DEFAULT_VIEW
-  }
-}
-
-function getServerSnapshot(): OrdersView {
-  return DEFAULT_VIEW
-}
-
-function subscribe(onStoreChange: () => void): () => void {
-  window.addEventListener('storage', onStoreChange)
-  return () => window.removeEventListener('storage', onStoreChange)
-}
-
-export function useOrdersView(): {
+export function useOrdersView(initialView: OrdersView = ORDERS_VIEW_DEFAULT): {
   view: OrdersView
   setView: (view: OrdersView) => void
 } {
-  const view = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  const [view, setViewState] = useState<OrdersView>(initialView)
+  const [, startTransition] = useTransition()
 
   const setView = (next: OrdersView) => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next)
-      // 'storage' event only fires across tabs; dispatch manually for same-tab updates.
-      window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
-    } catch {
-      // Ignore storage errors (private mode, quota, etc.)
-    }
+    setViewState(next)
+    startTransition(async () => {
+      await setOrdersViewPreference(next)
+    })
   }
 
   return { view, setView }
