@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { OrderStatusBadges } from './order-status-badges'
-import { getOrderUrl } from './order-utils'
+import { getOrderUrl, getPreviewCornerClass } from './order-utils'
 
 type OrderRowProps = {
   order: OrderListItem
@@ -33,16 +33,20 @@ export function OrderRow({ order }: OrderRowProps) {
   return (
     <div className="flex items-center gap-4 rounded-lg border border-zinc-200 bg-white p-4 transition-colors hover:bg-zinc-50">
       <Link href={orderUrl} className="flex flex-1 items-center gap-4">
-        <div
-          className={cn(
-            'grid h-16 shrink-0 gap-px overflow-hidden rounded-md bg-zinc-100',
-            previewItems.length <= 1 ? 'w-16 grid-cols-1' : 'w-24 grid-cols-2',
-          )}
-        >
-          {previewItems.map((item) => (
+        <div className="flex h-16 shrink-0 items-stretch gap-0.5">
+          {previewItems.map((item, index) => (
             <div
               key={item.id}
-              className="relative h-full overflow-hidden bg-zinc-100"
+              className={cn(
+                'relative h-full overflow-hidden',
+                getPreviewCornerClass(index, previewItems.length),
+              )}
+              style={{
+                aspectRatio:
+                  item.image?.width && item.image?.height
+                    ? `${item.image.width} / ${item.image.height}`
+                    : '3 / 4',
+              }}
             >
               {item.image ? (
                 <Image

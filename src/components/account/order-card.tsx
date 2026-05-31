@@ -1,4 +1,4 @@
-'use client'
+'py-use client'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -10,7 +10,7 @@ import { Price } from '@/components/common/price'
 import { Button } from '@/components/ui/button'
 
 import { OrderStatusBadges } from './order-status-badges'
-import { getOrderUrl } from './order-utils'
+import { getOrderUrl, getPreviewCornerClass } from './order-utils'
 
 type OrderCardProps = {
   order: OrderListItem
@@ -24,9 +24,12 @@ export function OrderCard({ order }: OrderCardProps) {
   const itemsLabel = __('orders.items_count', { count: order.lineItems.length })
 
   return (
-    <div className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
-      <Link href={orderUrl} className="block">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 bg-zinc-50 px-5 py-4">
+    <div className="relative flex flex-col gap-y-5 overflow-hidden rounded-lg border border-zinc-200 bg-white p-5 transition-colors hover:bg-zinc-50">
+      <Link
+        href={orderUrl}
+        className="flex flex-col gap-y-5 before:absolute before:inset-0 before:content-['']"
+      >
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <OrderStatusBadges
             financialStatus={order.financialStatus}
             fulfillmentStatus={order.fulfillmentStatus}
@@ -39,16 +42,25 @@ export function OrderCard({ order }: OrderCardProps) {
 
         <div
           className={cn(
-            'grid gap-px bg-zinc-100',
+            'grid items-start gap-2',
             previewItems.length === 1 && 'grid-cols-1',
             previewItems.length === 2 && 'grid-cols-2',
             previewItems.length >= 3 && 'grid-cols-2 grid-rows-2',
           )}
         >
-          {previewItems.map((item) => (
+          {previewItems.map((item, index) => (
             <div
               key={item.id}
-              className="relative aspect-3/4 overflow-hidden bg-zinc-100"
+              className={cn(
+                'relative overflow-hidden',
+                getPreviewCornerClass(index, previewItems.length),
+              )}
+              style={{
+                aspectRatio:
+                  item.image?.width && item.image?.height
+                    ? `${item.image.width} / ${item.image.height}`
+                    : '3 / 4',
+              }}
             >
               {item.image ? (
                 <Image
@@ -67,7 +79,7 @@ export function OrderCard({ order }: OrderCardProps) {
           ))}
         </div>
 
-        <div className="space-y-3 px-5 pt-5">
+        <div className="space-y-3">
           <div>
             <p className="font-semibold text-zinc-900">{itemsLabel}</p>
             <p className="text-sm text-zinc-500">
@@ -82,7 +94,7 @@ export function OrderCard({ order }: OrderCardProps) {
         </div>
       </Link>
 
-      <div className="px-5 pt-4 pb-5">
+      <div className="relative">
         <Button variant="outline" className="w-full" type="button">
           {__('orders.buy_again')}
         </Button>
