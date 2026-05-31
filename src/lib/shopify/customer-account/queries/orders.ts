@@ -10,7 +10,12 @@ import {
   ORDER_LINE_ITEM_FRAGMENT,
   ORDER_LIST_ITEM_FRAGMENT,
 } from '../fragments'
-import type { Order, OrderLineItem, OrderListItem } from '../types'
+import type {
+  Order,
+  OrderLineItem,
+  OrderListItem,
+  OrderListLineItem,
+} from '../types'
 
 type RawOrderLineItem = Omit<OrderLineItem, 'displayTitle' | 'color'>
 
@@ -37,9 +42,13 @@ function transformOrderLineItem(line: RawOrderLineItem): OrderLineItem {
   return { ...line, displayTitle, color }
 }
 
+type RawOrderListItem = Omit<OrderListItem, 'lineItems' | 'totalQuantity'> & {
+  lineItems: Connection<OrderListLineItem>
+}
+
 type GetCustomerOrdersResponse = {
   customer: {
-    orders: Connection<OrderListItem>
+    orders: Connection<RawOrderListItem>
   }
 }
 
@@ -77,7 +86,7 @@ const GET_CUSTOMER_ORDERS_QUERY = composeQuery(
       }
     }
   `,
-  [ORDER_LIST_ITEM_FRAGMENT, MONEY_FRAGMENT],
+  [ORDER_LIST_ITEM_FRAGMENT, MONEY_FRAGMENT, IMAGE_FRAGMENT],
 )
 
 const GET_CUSTOMER_ORDER_QUERY = composeQuery(
@@ -97,6 +106,12 @@ const GET_CUSTOMER_ORDER_QUERY = composeQuery(
   ],
 )
 
+function transformOrderListItem(order: RawOrderListItem): OrderListItem {
+  const lineItems = extractNodesFromEdges(order.lineItems)
+  const totalQuantity = lineItems.reduce((sum, item) => sum + item.quantity, 0)
+  return { ...order, lineItems, totalQuantity }
+}
+
 export async function getCustomerOrders(
   accessToken: string,
   first: number = 10,
@@ -109,7 +124,9 @@ export async function getCustomerOrders(
   )
 
   return {
-    orders: extractNodesFromEdges(data.customer.orders),
+    orders: extractNodesFromEdges(data.customer.orders).map(
+      transformOrderListItem,
+    ),
     pageInfo: data.customer.orders.pageInfo,
   }
 }

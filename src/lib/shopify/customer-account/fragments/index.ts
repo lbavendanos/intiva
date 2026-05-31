@@ -131,5 +131,17 @@ export const ORDER_LIST_ITEM_FRAGMENT = /* GraphQL */ `
     totalPrice {
       ...MoneyFragment
     }
+    lineItems(first: 50) {
+      edges {
+        node {
+          id
+          title
+          quantity
+          image {
+            ...ImageFragment
+          }
+        }
+      }
+    }
   }
 `

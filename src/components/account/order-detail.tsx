@@ -4,62 +4,35 @@ import type { Order } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { DateTime } from '@/components/common/datetime'
 import { Price } from '@/components/common/price'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+
+import { OrderBackButton } from './order-back-button'
+import { OrderStatusBadges } from './order-helpers'
 
 type OrderDetailProps = {
   order: Order
 }
 
-function getStatusVariant(
-  status: string,
-): 'default' | 'secondary' | 'destructive' | 'outline' {
-  switch (status) {
-    case 'PAID':
-    case 'FULFILLED':
-      return 'default'
-    case 'PARTIALLY_PAID':
-    case 'PARTIALLY_FULFILLED':
-    case 'IN_PROGRESS':
-      return 'secondary'
-    case 'REFUNDED':
-    case 'VOIDED':
-      return 'destructive'
-    default:
-      return 'outline'
-  }
-}
-
-function formatStatus(status: string): string {
-  const key = `order.status.${status.toLowerCase()}` as Parameters<typeof __>[0]
-  return __(key)
-}
-
 export function OrderDetail({ order }: OrderDetailProps) {
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-zinc-900">
-            {__('orders.order_number', { number: order.name })}
-          </h1>
-          <DateTime
-            value={order.processedAt}
-            className="text-sm text-zinc-500"
+      <header className="grid grid-cols-[auto_1fr_auto] items-center gap-x-3 gap-y-1">
+        <OrderBackButton />
+        <h1 className="text-2xl font-bold text-zinc-900">
+          {__('orders.order_number', { number: order.name })}
+        </h1>
+        <div className="row-span-2 flex gap-2 self-center">
+          <OrderStatusBadges
+            financialStatus={order.financialStatus}
+            fulfillmentStatus={order.fulfillmentStatus}
           />
         </div>
-        <div className="flex gap-2">
-          {order.financialStatus && (
-            <Badge variant={getStatusVariant(order.financialStatus)}>
-              {formatStatus(order.financialStatus)}
-            </Badge>
-          )}
-          <Badge variant={getStatusVariant(order.fulfillmentStatus)}>
-            {formatStatus(order.fulfillmentStatus)}
-          </Badge>
-        </div>
-      </div>
+        <DateTime
+          value={order.processedAt}
+          className="col-start-2 text-sm text-zinc-500"
+        />
+      </header>
 
       <Card>
         <CardHeader>

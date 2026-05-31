@@ -91,6 +91,13 @@ export type Order = {
   statusPageUrl: string
 }
 
+export type OrderListLineItem = {
+  id: string
+  title: string
+  quantity: number
+  image: Maybe<Image>
+}
+
 export type OrderListItem = {
   id: string
   name: string
@@ -99,6 +106,8 @@ export type OrderListItem = {
   financialStatus: Maybe<string>
   fulfillmentStatus: string
   totalPrice: Money
+  lineItems: OrderListLineItem[]
+  totalQuantity: number
 }
 
 export type CustomerAddressInput = {

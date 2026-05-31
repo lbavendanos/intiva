@@ -3,8 +3,7 @@ import type { Metadata } from 'next'
 
 import { getOrders } from '@/lib/loaders/orders'
 import { __ } from '@/lib/utils'
-import { OrderList } from '@/components/account/order-list'
-import { Pagination } from '@/components/shop/pagination'
+import { OrdersView } from '@/components/account/orders-view'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {
@@ -29,33 +28,29 @@ async function OrdersContent({
     )
   }
 
-  return (
-    <>
-      <OrderList orders={result.orders} />
-      <Pagination pageInfo={result.pageInfo} basePath="/account/orders" />
-    </>
-  )
+  return <OrdersView orders={result.orders} pageInfo={result.pageInfo} />
 }
 
 function OrdersSkeleton() {
   return (
-    <div className="space-y-4">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Skeleton key={i} className="h-20 w-full" />
-      ))}
+    <div>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <Skeleton className="h-7 w-40" />
+        <Skeleton className="h-7 w-28" />
+      </div>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Skeleton key={i} className="h-96 w-full" />
+        ))}
+      </div>
     </div>
   )
 }
 
 export default function OrdersPage({ searchParams }: OrdersPageProps) {
   return (
-    <div>
-      <h2 className="mb-6 text-xl font-semibold text-zinc-900">
-        {__('orders.title')}
-      </h2>
-      <Suspense fallback={<OrdersSkeleton />}>
-        <OrdersContent searchParams={searchParams} />
-      </Suspense>
-    </div>
+    <Suspense fallback={<OrdersSkeleton />}>
+      <OrdersContent searchParams={searchParams} />
+    </Suspense>
   )
 }
