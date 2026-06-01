@@ -63,13 +63,20 @@ type GetCustomerOrdersResult = {
 
 const GET_CUSTOMER_ORDERS_QUERY = composeQuery(
   /* GraphQL */ `
-    query getCustomerOrders($first: Int!, $after: String) {
+    query getCustomerOrders(
+      $first: Int!
+      $after: String
+      $sortKey: OrderSortKeys
+      $reverse: Boolean
+      $query: String
+    ) {
       customer {
         orders(
           first: $first
           after: $after
-          sortKey: PROCESSED_AT
-          reverse: true
+          sortKey: $sortKey
+          reverse: $reverse
+          query: $query
         ) {
           edges {
             node {
@@ -112,15 +119,22 @@ function transformOrderListItem(order: RawOrderListItem): OrderListItem {
   return { ...order, lineItems, totalQuantity }
 }
 
+type GetCustomerOrdersOptions = {
+  first?: number
+  after?: string
+  sortKey?: string
+  reverse?: boolean
+  query?: string
+}
+
 export async function getCustomerOrders(
   accessToken: string,
-  first: number = 10,
-  after?: string,
+  { first = 10, after, sortKey, reverse, query }: GetCustomerOrdersOptions = {},
 ): Promise<GetCustomerOrdersResult> {
   const data = await customerAccountQuery<GetCustomerOrdersResponse>(
     GET_CUSTOMER_ORDERS_QUERY,
     accessToken,
-    { variables: { first, after } },
+    { variables: { first, after, sortKey, reverse, query } },
   )
 
   return {
