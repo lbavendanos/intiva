@@ -3,6 +3,7 @@
 import { useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm, useWatch } from 'react-hook-form'
+import { toast } from 'sonner'
 import * as z from 'zod'
 
 import { addToCart } from '@/lib/actions/cart'
@@ -126,7 +127,7 @@ export function ProductForm({
       const result = await addToCart(selectedVariant.id, 1)
 
       if (!result.success) {
-        form.setError('root', { message: result.error })
+        toast.error(result.error || __('cart.error.generic'))
       }
     })
   }
@@ -139,10 +140,6 @@ export function ProductForm({
       {...props}
     >
       <FieldGroup>
-        {form.formState.errors.root && (
-          <FieldError>{form.formState.errors.root.message}</FieldError>
-        )}
-
         {hasRealOptions &&
           product.options.map((option) => (
             <Controller

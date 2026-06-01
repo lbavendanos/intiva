@@ -20,6 +20,8 @@ import type { ActionResult } from './types'
 
 type CartResult = ActionResult<Cart | null>
 
+type CartLineInput = { merchandiseId: string; quantity: number }
+
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 
 const CART_ERROR_CODE = {
@@ -47,6 +49,18 @@ async function setCartId(cartId: string): Promise<void> {
   })
 }
 
+async function clearCartId(): Promise<void> {
+  const cookieStore = await cookies()
+  cookieStore.delete(CART_COOKIE_NAME)
+}
+
+function isStaleCartError(error: CartUserError): boolean {
+  return (
+    error.code === CART_ERROR_CODE.INVALID &&
+    (error.field?.includes('cartId') ?? false)
+  )
+}
+
 function translateCartError(
   error: CartUserError,
   fallbackKey: 'cart.error.generic' | 'cart.error.not_found',
@@ -64,23 +78,44 @@ function translateCartError(
   }
 }
 
-export async function addToCart(
-  merchandiseId: string,
-  quantity: number = 1,
+async function createCartWithLines(
+  lines: CartLineInput[],
 ): Promise<CartResult> {
-  const cartId = await getCartId()
-  const lines = [{ merchandiseId, quantity }]
-
-  const { cart, userErrors } = cartId
-    ? await addToCartMutation(cartId, lines)
-    : await createCart(lines)
+  const { cart, userErrors } = await createCart(lines)
 
   if (userErrors.length > 0) {
     return fail(translateCartError(userErrors[0], 'cart.error.generic'))
   }
 
-  if (!cartId && cart) {
+  if (cart) {
     await setCartId(cart.id)
+  }
+
+  updateTag(CART_CACHE_TAG)
+
+  return ok(cart)
+}
+
+export async function addToCart(
+  merchandiseId: string,
+  quantity: number = 1,
+): Promise<CartResult> {
+  const cartId = await getCartId()
+  const lines: CartLineInput[] = [{ merchandiseId, quantity }]
+
+  if (!cartId) {
+    return createCartWithLines(lines)
+  }
+
+  const { cart, userErrors } = await addToCartMutation(cartId, lines)
+
+  // Cart was consumed (likely after checkout). Start a new one transparently.
+  if (userErrors.some(isStaleCartError)) {
+    return createCartWithLines(lines)
+  }
+
+  if (userErrors.length > 0) {
+    return fail(translateCartError(userErrors[0], 'cart.error.generic'))
   }
 
   updateTag(CART_CACHE_TAG)
@@ -106,6 +141,12 @@ export async function updateCartItem(
     { id: lineId, quantity },
   ])
 
+  if (userErrors.some(isStaleCartError)) {
+    await clearCartId()
+    updateTag(CART_CACHE_TAG)
+    return fail(__('cart.error.session_expired'))
+  }
+
   if (userErrors.length > 0) {
     return fail(translateCartError(userErrors[0], 'cart.error.generic'))
   }
@@ -123,6 +164,12 @@ export async function removeFromCart(lineId: string): Promise<CartResult> {
   }
 
   const { cart, userErrors } = await removeFromCartMutation(cartId, [lineId])
+
+  if (userErrors.some(isStaleCartError)) {
+    await clearCartId()
+    updateTag(CART_CACHE_TAG)
+    return fail(__('cart.error.session_expired'))
+  }
 
   if (userErrors.length > 0) {
     return fail(translateCartError(userErrors[0], 'cart.error.generic'))

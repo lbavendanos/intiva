@@ -41,6 +41,7 @@
   "cart.error.invalid_product": "This product is not available",
   "cart.error.invalid_quantity": "Invalid quantity",
   "cart.error.item_not_found": "Item not found in cart",
+  "cart.error.session_expired": "Your cart has expired. Please try again.",
   "cart.error.generic": "An error occurred. Please try again.",
   "products.title": "Products",
   "products.description": "Explore our complete collection of products.",

@@ -41,6 +41,7 @@
   "cart.error.invalid_product": "Este producto no está disponible",
   "cart.error.invalid_quantity": "Cantidad inválida",
   "cart.error.item_not_found": "Artículo no encontrado en el carrito",
+  "cart.error.session_expired": "Tu carrito caducó. Vuelve a intentarlo.",
   "cart.error.generic": "Ocurrió un error. Por favor intenta de nuevo.",
   "products.title": "Productos",
   "products.description": "Explora nuestra colección completa de productos.",
