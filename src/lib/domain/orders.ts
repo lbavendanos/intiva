@@ -1,3 +1,5 @@
+import { isPlainDateString } from '@/lib/utils'
+
 type ShopifyOrderSortKey = 'PROCESSED_AT' | 'ORDER_NUMBER' | 'TOTAL_PRICE'
 
 export type OrdersInterval =
@@ -37,8 +39,6 @@ const ORDERS_SORT_VALUES: ReadonlyArray<OrdersSort> = [
   'total_high',
   'total_low',
 ]
-
-const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 
 function isOrdersInterval(value: unknown): value is OrdersInterval {
   return (
@@ -84,12 +84,6 @@ function computeIntervalStart(
   }
 }
 
-export function isIsoDate(value: unknown): value is string {
-  if (typeof value !== 'string' || !ISO_DATE_PATTERN.test(value)) return false
-  const date = new Date(`${value}T00:00:00Z`)
-  return !Number.isNaN(date.getTime())
-}
-
 export function parseOrdersFilter({
   interval,
   from,
@@ -101,7 +95,7 @@ export function parseOrdersFilter({
 }): OrdersFilter | null {
   if (!isOrdersInterval(interval)) return null
   if (interval === 'custom') {
-    if (!isIsoDate(from) || !isIsoDate(to)) return null
+    if (!isPlainDateString(from) || !isPlainDateString(to)) return null
     if (from > to) return null
     return { interval, from, to }
   }

@@ -12,12 +12,8 @@ import {
 import { format, parseISO } from 'date-fns'
 import type { Matcher } from 'react-day-picker'
 
-import {
-  isIsoDate,
-  type OrdersFilter,
-  type OrdersInterval,
-} from '@/lib/domain/orders'
-import { __ } from '@/lib/utils'
+import { type OrdersFilter, type OrdersInterval } from '@/lib/domain/orders'
+import { __, isPlainDateString } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -200,8 +196,8 @@ function CustomRangeDialog({
   const [from, setFrom] = useState(initialFrom)
   const [to, setTo] = useState(initialTo)
 
-  const validFrom = isIsoDate(from)
-  const validTo = isIsoDate(to)
+  const validFrom = isPlainDateString(from)
+  const validTo = isPlainDateString(to)
   const rangeValid = validFrom && validTo && from <= to
   const showRangeError = validFrom && validTo && from > to
 
@@ -294,7 +290,8 @@ function DatePickerInput({
   disabled,
 }: DatePickerInputProps) {
   const [open, setOpen] = useState(false)
-  const date = value ? parseISO(value) : undefined
+  const parsed = value ? parseISO(value) : undefined
+  const date = parsed && !Number.isNaN(parsed.getTime()) ? parsed : undefined
 
   const handleSelect = (next: Date | undefined) => {
     onChange(next ? format(next, ISO_DATE_FORMAT) : '')

@@ -9,6 +9,8 @@ import {
   type TranslationKeys,
 } from '@/lib/foundation/translation/translator'
 
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
+
 /**
  * Utility for constructing className strings conditionally and merging Tailwind CSS classes.
  * Combines clsx for conditional class handling with tailwind-merge for deduplication.
@@ -96,4 +98,30 @@ export function __(
   locale?: Locale,
 ): string {
   return getTranslator().get(key, replacements, locale)
+}
+
+/**
+ * Type guard that checks whether a value is a valid ISO date string (YYYY-MM-DD).
+ *
+ * Rejects strings that pattern-match but are calendar-invalid (e.g. Feb 30, Apr 31,
+ * Feb 29 on a non-leap year), which V8's `Date` constructor silently rolls over into
+ * the next month. The round-trip check ensures the parsed date renders back to the
+ * exact input string.
+ *
+ * @param {unknown} value - The value to check.
+ * @returns {boolean} `true` if `value` is a calendar-valid `YYYY-MM-DD` string.
+ *
+ * @example
+ * isPlainDateString('2026-02-28') // true
+ * isPlainDateString('2026-02-30') // false (V8 would roll this over to 2026-03-02)
+ * isPlainDateString('2025-02-29') // false (2025 is not a leap year)
+ * isPlainDateString('2026-13-01') // false
+ * isPlainDateString(undefined)    // false
+ */
+export function isPlainDateString(value: unknown): value is string {
+  if (typeof value !== 'string' || !ISO_DATE_PATTERN.test(value)) return false
+  const date = new Date(`${value}T00:00:00Z`)
+  return (
+    !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value
+  )
 }
