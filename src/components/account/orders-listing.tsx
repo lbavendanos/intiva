@@ -2,8 +2,7 @@
 
 import { useState, useTransition } from 'react'
 
-import { type OrdersFilter } from '@/lib/orders/filter'
-import { type OrdersSort } from '@/lib/orders/sort'
+import type { OrdersFilter, OrdersSort } from '@/lib/domain/orders'
 import type { OrdersView } from '@/lib/preferences/orders-view'
 import { setOrdersView } from '@/lib/preferences/orders-view.actions'
 import type { OrderListItem } from '@/lib/shopify/customer-account/types'

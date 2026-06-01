@@ -3,9 +3,13 @@ import 'server-only'
 import { cacheLife, cacheTag } from 'next/cache'
 
 import { getAccessToken } from '@/lib/auth/session'
+import {
+  toShopifyOrdersQuery,
+  toShopifySort,
+  type OrdersFilter,
+  type OrdersSort,
+} from '@/lib/domain/orders'
 import { ORDERS_CACHE_TAG } from '@/lib/loaders/cache-tags'
-import { toShopifyOrdersQuery, type OrdersFilter } from '@/lib/orders/filter'
-import { toShopifySort, type OrdersSort } from '@/lib/orders/sort'
 import {
   getCustomerOrder as getCustomerOrderQuery,
   getCustomerOrders as getCustomerOrdersQuery,

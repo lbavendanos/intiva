@@ -4,7 +4,7 @@ import { useTransition } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowsDownUpIcon, CaretDownIcon, XIcon } from '@phosphor-icons/react'
 
-import { type OrdersSort } from '@/lib/orders/sort'
+import { type OrdersSort } from '@/lib/domain/orders'
 import { __ } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {

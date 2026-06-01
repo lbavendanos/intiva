@@ -1,9 +1,8 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
+import { parseOrdersFilter, parseOrdersSort } from '@/lib/domain/orders'
 import { getOrders } from '@/lib/loaders/orders'
-import { parseOrdersFilter } from '@/lib/orders/filter'
-import { parseOrdersSort } from '@/lib/orders/sort'
 import { getOrdersView, type OrdersView } from '@/lib/preferences/orders-view'
 import { __ } from '@/lib/utils'
 import { OrderGallerySkeleton } from '@/components/account/order-gallery'

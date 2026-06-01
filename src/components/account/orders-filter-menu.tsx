@@ -16,7 +16,7 @@ import {
   isIsoDate,
   type OrdersFilter,
   type OrdersInterval,
-} from '@/lib/orders/filter'
+} from '@/lib/domain/orders'
 import { __ } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'

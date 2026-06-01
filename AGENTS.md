@@ -55,6 +55,7 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 - `src/components/{ui,common,auth,account,layout,shop}/` — `ui/` is shadcn/ui installed via CLI; rest grouped by domain
 - `src/lib/actions/` — Server Actions (write side)
 - `src/lib/loaders/` — Cached server-side data fetchers for RSCs (read side); wrap Shopify queries with `use cache`/`cacheTag`/`cacheLife`
+- `src/lib/domain/` — Pure domain logic (types, parsers, validators, transformers); no I/O, no Next.js APIs
 - `src/lib/auth/` — Customer session and OAuth state (cookie-backed)
 - `src/lib/preferences/` — Persistent UI preferences (cookie-backed)
 - `src/lib/foundation/` — Core framework modules (non-obvious; check before adding utilities)
