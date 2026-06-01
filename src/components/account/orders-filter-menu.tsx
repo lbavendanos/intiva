@@ -1,13 +1,16 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, type SubmitEvent } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
+  CalendarBlankIcon,
   CaretDownIcon,
   CheckIcon,
   FunnelIcon,
   XIcon,
 } from '@phosphor-icons/react'
+import { format, parseISO } from 'date-fns'
+import type { Matcher } from 'react-day-picker'
 
 import {
   isIsoDate,
@@ -16,6 +19,7 @@ import {
 } from '@/lib/orders/filter'
 import { __ } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Dialog,
   DialogContent,
@@ -31,12 +35,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 
 type OrdersFilterMenuProps = {
   value: OrdersFilter | null
 }
+
+const ISO_DATE_FORMAT = 'yyyy-MM-dd'
+const DISPLAY_DATE_FORMAT = 'PP'
 
 const PRESET_INTERVALS: ReadonlyArray<{
   value: Exclude<OrdersInterval, 'custom'>
@@ -194,7 +205,7 @@ function CustomRangeDialog({
   const rangeValid = validFrom && validTo && from <= to
   const showRangeError = validFrom && validTo && from > to
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!rangeValid) return
     onApply(from, to)
@@ -208,9 +219,11 @@ function CustomRangeDialog({
     onOpenChange(next)
   }
 
+  const today = new Date()
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{__('orders.filter_custom_title')}</DialogTitle>
           <DialogDescription>
@@ -224,24 +237,23 @@ function CustomRangeDialog({
               <Label htmlFor="orders-filter-from">
                 {__('orders.filter_from')}
               </Label>
-              <Input
+              <DatePickerInput
                 id="orders-filter-from"
-                type="date"
                 value={from}
-                max={validTo ? to : undefined}
-                onChange={(event) => setFrom(event.currentTarget.value)}
-                required
+                onChange={setFrom}
+                disabled={{ after: validTo ? parseISO(to) : today }}
               />
             </div>
             <div className="flex flex-col gap-1">
               <Label htmlFor="orders-filter-to">{__('orders.filter_to')}</Label>
-              <Input
+              <DatePickerInput
                 id="orders-filter-to"
-                type="date"
                 value={to}
-                min={validFrom ? from : undefined}
-                onChange={(event) => setTo(event.currentTarget.value)}
-                required
+                onChange={setTo}
+                disabled={[
+                  { after: today },
+                  ...(validFrom ? [{ before: parseISO(from) }] : []),
+                ]}
               />
             </div>
           </div>
@@ -265,5 +277,59 @@ function CustomRangeDialog({
         </form>
       </DialogContent>
     </Dialog>
+  )
+}
+
+type DatePickerInputProps = {
+  id: string
+  value: string
+  onChange: (value: string) => void
+  disabled?: Matcher | Matcher[]
+}
+
+function DatePickerInput({
+  id,
+  value,
+  onChange,
+  disabled,
+}: DatePickerInputProps) {
+  const [open, setOpen] = useState(false)
+  const date = value ? parseISO(value) : undefined
+
+  const handleSelect = (next: Date | undefined) => {
+    onChange(next ? format(next, ISO_DATE_FORMAT) : '')
+    setOpen(false)
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        render={
+          <Button
+            id={id}
+            variant="outline"
+            className="justify-start font-normal"
+          >
+            <CalendarBlankIcon data-icon="inline-start" />
+            {date ? (
+              format(date, DISPLAY_DATE_FORMAT)
+            ) : (
+              <span className="text-muted-foreground">
+                {__('orders.filter_pick_date')}
+              </span>
+            )}
+          </Button>
+        }
+      />
+      <PopoverContent align="start" className="w-auto p-0">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={handleSelect}
+          defaultMonth={date}
+          disabled={disabled}
+        />
+      </PopoverContent>
+    </Popover>
   )
 }

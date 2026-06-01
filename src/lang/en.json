@@ -125,6 +125,7 @@
   "orders.filter_custom_range": ":from – :to",
   "orders.filter_from": "From",
   "orders.filter_to": "To",
+  "orders.filter_pick_date": "Pick a date",
   "orders.filter_apply": "Apply",
   "orders.filter_cancel": "Cancel",
   "orders.filter_range_invalid": "End date must be on or after start date",

@@ -125,6 +125,7 @@
   "orders.filter_custom_range": ":from – :to",
   "orders.filter_from": "Desde",
   "orders.filter_to": "Hasta",
+  "orders.filter_pick_date": "Selecciona una fecha",
   "orders.filter_apply": "Aplicar",
   "orders.filter_cancel": "Cancelar",
   "orders.filter_range_invalid": "La fecha de fin debe ser igual o posterior a la de inicio",
