@@ -42,25 +42,21 @@ export function OrderCard({ order }: OrderCardProps) {
 
         <div
           className={cn(
-            'grid items-start gap-2',
-            previewItems.length === 1 && 'grid-cols-1',
-            previewItems.length === 2 && 'grid-cols-2',
-            previewItems.length >= 3 && 'grid-cols-2 grid-rows-2',
+            'grid aspect-4/6 gap-2',
+            previewItems.length === 1 && 'grid-cols-1 grid-rows-1',
+            previewItems.length === 2 && 'grid-cols-2 grid-rows-1',
+            previewItems.length === 3 && 'grid-cols-[2fr_1fr] grid-rows-2',
+            previewItems.length >= 4 && 'grid-cols-2 grid-rows-2',
           )}
         >
           {previewItems.map((item, index) => (
             <div
               key={item.id}
               className={cn(
-                'relative overflow-hidden',
+                'relative h-full overflow-hidden',
+                previewItems.length === 3 && index === 0 && 'row-span-2',
                 getPreviewCornerClass(index, previewItems.length),
               )}
-              style={{
-                aspectRatio:
-                  item.image?.width && item.image?.height
-                    ? `${item.image.width} / ${item.image.height}`
-                    : '3 / 4',
-              }}
             >
               {item.image ? (
                 <Image
@@ -80,7 +76,7 @@ export function OrderCard({ order }: OrderCardProps) {
         </div>
 
         <div className="space-y-3">
-          <div>
+          <div className="flex flex-col">
             <p className="font-semibold text-zinc-900">{itemsLabel}</p>
             <p className="text-sm text-zinc-500">
               {__('orders.order_number', { number: order.name })}

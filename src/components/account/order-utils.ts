@@ -5,6 +5,11 @@ export function getOrderUrl(order: { id: string }): string {
 export function getPreviewCornerClass(index: number, total: number): string {
   if (total === 1) return 'rounded-lg'
   if (total === 2) return index === 0 ? 'rounded-l-lg' : 'rounded-r-lg'
+  if (total === 3) {
+    if (index === 0) return 'rounded-l-lg'
+    if (index === 1) return 'rounded-tr-lg'
+    return 'rounded-br-lg'
+  }
   if (index === 0) return 'rounded-tl-lg'
   if (index === 1) return 'rounded-tr-lg'
   if (index === 2) return 'rounded-bl-lg'
