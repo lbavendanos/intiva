@@ -119,6 +119,10 @@ export function toShopifyOrdersQuery(
   return `processed_at:>=${since}`
 }
 
+export function getOrderUrl(order: { id: string }): string {
+  return `/account/orders/${order.id.split('/').pop()}`
+}
+
 export function toShopifySort(sort: OrdersSort | null): {
   sortKey: ShopifyOrderSortKey
   reverse: boolean

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { DotsThreeIcon } from '@phosphor-icons/react'
 
+import { getOrderUrl } from '@/lib/domain/orders'
 import type { OrderListItem } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { DateTime } from '@/components/common/datetime'
@@ -17,7 +18,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { OrderStatusBadges } from './order-status-badges'
-import { getOrderUrl } from './order-utils'
 
 type OrderRowProps = {
   order: OrderListItem
