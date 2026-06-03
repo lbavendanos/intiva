@@ -12,7 +12,7 @@ import {
 
 import type { ProductListItem } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
-import { Price } from '@/components/common/price'
+import { Price } from '@/components/format/price'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -122,13 +122,13 @@ function SearchResultItem({
           <Price
             as="span"
             className="text-sm font-semibold text-zinc-900"
-            {...price}
+            value={price}
           />
           {compareAtPrice && (
             <Price
               as="span"
               className="text-xs text-zinc-400 line-through"
-              {...compareAtPrice}
+              value={compareAtPrice}
             />
           )}
         </div>

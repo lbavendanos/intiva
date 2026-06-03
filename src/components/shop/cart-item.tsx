@@ -4,7 +4,7 @@ import { MinusIcon, PlusIcon, XIcon } from '@phosphor-icons/react/dist/ssr'
 
 import type { CartLineItem } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
-import { Price } from '@/components/common/price'
+import { Price } from '@/components/format/price'
 import { Button } from '@/components/ui/button'
 
 type CartItemProps = {
@@ -133,8 +133,7 @@ export function CartItem({
           <Price
             as="p"
             className="text-sm font-semibold"
-            amount={cost.totalAmount.amount}
-            currencyCode={cost.totalAmount.currencyCode}
+            value={cost.totalAmount}
           />
         </div>
       </div>

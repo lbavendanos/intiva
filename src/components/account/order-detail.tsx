@@ -2,8 +2,8 @@ import Image from 'next/image'
 
 import type { Order } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
-import { DateTime } from '@/components/common/datetime'
-import { Price } from '@/components/common/price'
+import { DateTime } from '@/components/format/datetime'
+import { Price } from '@/components/format/price'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
@@ -77,8 +77,7 @@ export function OrderDetail({ order }: OrderDetailProps) {
 
                 {item.totalPrice && (
                   <Price
-                    amount={item.totalPrice.amount}
-                    currencyCode={item.totalPrice.currencyCode}
+                    value={item.totalPrice}
                     className="font-medium text-zinc-900"
                   />
                 )}
@@ -112,35 +111,23 @@ export function OrderDetail({ order }: OrderDetailProps) {
             {order.subtotal && (
               <div className="flex justify-between text-sm">
                 <span className="text-zinc-600">{__('order.subtotal')}</span>
-                <Price
-                  amount={order.subtotal.amount}
-                  currencyCode={order.subtotal.currencyCode}
-                />
+                <Price value={order.subtotal} />
               </div>
             )}
             <div className="flex justify-between text-sm">
               <span className="text-zinc-600">{__('order.shipping')}</span>
-              <Price
-                amount={order.totalShipping.amount}
-                currencyCode={order.totalShipping.currencyCode}
-              />
+              <Price value={order.totalShipping} />
             </div>
             {order.totalTax && (
               <div className="flex justify-between text-sm">
                 <span className="text-zinc-600">{__('order.tax')}</span>
-                <Price
-                  amount={order.totalTax.amount}
-                  currencyCode={order.totalTax.currencyCode}
-                />
+                <Price value={order.totalTax} />
               </div>
             )}
             <Separator />
             <div className="flex justify-between font-medium">
               <span>{__('order.total')}</span>
-              <Price
-                amount={order.totalPrice.amount}
-                currencyCode={order.totalPrice.currencyCode}
-              />
+              <Price value={order.totalPrice} />
             </div>
           </CardContent>
         </Card>

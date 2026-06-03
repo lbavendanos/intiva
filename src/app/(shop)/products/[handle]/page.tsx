@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 
 import { getProductByHandle, getProducts } from '@/lib/loaders/products'
 import { __, url } from '@/lib/utils'
-import { Price } from '@/components/common/price'
+import { Price } from '@/components/format/price'
 import { ProductColorSwatches } from '@/components/shop/product-color-swatches'
 import { ProductForm } from '@/components/shop/product-form'
 import { ProductGallery } from '@/components/shop/product-gallery'
@@ -123,13 +123,13 @@ async function ProductDetail({
             <Price
               as="p"
               className="text-2xl font-semibold"
-              {...product.price}
+              value={product.price}
             />
             {product.compareAtPrice && (
               <Price
                 as="p"
                 className="text-2xl font-semibold line-through opacity-40"
-                {...product.compareAtPrice}
+                value={product.compareAtPrice}
               />
             )}
           </div>

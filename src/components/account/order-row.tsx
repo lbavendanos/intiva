@@ -7,8 +7,8 @@ import { DotsThreeIcon } from '@phosphor-icons/react'
 import { getOrderUrl } from '@/lib/domain/orders'
 import type { OrderListItem } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
-import { DateTime } from '@/components/common/datetime'
-import { Price } from '@/components/common/price'
+import { DateTime } from '@/components/format/datetime'
+import { Price } from '@/components/format/price'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -66,8 +66,7 @@ export function OrderRow({ order }: OrderRowProps) {
           </div>
 
           <Price
-            amount={order.totalPrice.amount}
-            currencyCode={order.totalPrice.currencyCode}
+            value={order.totalPrice}
             className="font-medium text-zinc-900 sm:text-right"
           />
         </div>

@@ -1,6 +1,6 @@
 import type { Cart } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
-import { Price } from '@/components/common/price'
+import { Price } from '@/components/format/price'
 import { Separator } from '@/components/ui/separator'
 
 import { CheckoutButton } from './checkout-button'
@@ -19,12 +19,7 @@ export function CartSummary({ cart }: CartSummaryProps) {
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span className="text-zinc-600">{__('cart.subtotal')}</span>
-          <Price
-            as="p"
-            className="font-medium"
-            amount={cost.subtotalAmount.amount}
-            currencyCode={cost.subtotalAmount.currencyCode}
-          />
+          <Price as="p" className="font-medium" value={cost.subtotalAmount} />
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-zinc-600">{__('cart.shipping')}</span>
@@ -38,11 +33,7 @@ export function CartSummary({ cart }: CartSummaryProps) {
 
       <div className="flex justify-between text-base font-semibold">
         <span>{__('cart.total')}</span>
-        <Price
-          as="p"
-          amount={cost.totalAmount.amount}
-          currencyCode={cost.totalAmount.currencyCode}
-        />
+        <Price as="p" value={cost.totalAmount} />
       </div>
 
       <CheckoutButton checkoutUrl={checkoutUrl} />

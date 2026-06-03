@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 import type { ProductListItem } from '@/lib/shopify/storefront/types'
 import { __ } from '@/lib/utils'
-import { Price } from '@/components/common/price'
+import { Price } from '@/components/format/price'
 import { ProductCardColorSwatches } from '@/components/shop/product-card-color-swatches'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
@@ -74,12 +74,12 @@ export function ProductCard({ product }: ProductCardProps) {
         </CardContent>
         <CardFooter className="p-4 pt-0">
           <div className="flex items-center gap-2 text-lg font-semibold">
-            <Price as="p" {...product.price} />
+            <Price as="p" value={product.price} />
             {product.compareAtPrice && (
               <Price
                 as="p"
                 className="text-xl font-semibold line-through opacity-40"
-                {...product.compareAtPrice}
+                value={product.compareAtPrice}
               />
             )}
           </div>

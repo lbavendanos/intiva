@@ -6,8 +6,8 @@ import Link from 'next/link'
 import { getOrderUrl } from '@/lib/domain/orders'
 import type { OrderListItem } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
-import { DateTime } from '@/components/common/datetime'
-import { Price } from '@/components/common/price'
+import { DateTime } from '@/components/format/datetime'
+import { Price } from '@/components/format/price'
 import { Button } from '@/components/ui/button'
 import {
   Carousel,
@@ -84,8 +84,7 @@ export function OrderCard({ order }: OrderCardProps) {
           </p>
         </div>
         <Price
-          amount={order.totalPrice.amount}
-          currencyCode={order.totalPrice.currencyCode}
+          value={order.totalPrice}
           className="block text-base font-semibold text-zinc-900"
         />
       </Link>

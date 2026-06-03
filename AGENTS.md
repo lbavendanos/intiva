@@ -52,7 +52,7 @@ This is a Next.js 16 project using the App Router pattern with React 19 and Type
 **Key directories:**
 
 - `src/app/` — App Router; `(shop)` is a route group
-- `src/components/{ui,common,auth,account,layout,shop}/` — `ui/` is shadcn/ui installed via CLI; rest grouped by domain
+- `src/components/{ui,format,auth,account,layout,shop}/` — `ui/` is shadcn/ui installed via CLI; `format/` holds locale-aware display primitives (`Price`, `DateTime`); rest grouped by domain
 - `src/lib/actions/` — Server Actions (write side)
 - `src/lib/loaders/` — Cached server-side data fetchers for RSCs (read side); wrap Shopify queries with `use cache`/`cacheTag`/`cacheLife`
 - `src/lib/domain/` — Pure domain logic (types, parsers, validators, transformers); no I/O, no Next.js APIs
