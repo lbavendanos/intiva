@@ -2,19 +2,15 @@ import { Suspense } from 'react'
 
 import { getCustomer } from '@/lib/loaders/customer'
 import { __ } from '@/lib/utils'
-import { AccountNav } from '@/components/account/account-nav'
+import {
+  AccountBottomNav,
+  AccountBottomNavSkeleton,
+} from '@/components/account/account-bottom-nav'
+import {
+  AccountSidebarNav,
+  AccountSidebarNavSkeleton,
+} from '@/components/account/account-sidebar-nav'
 import { CustomerProvider } from '@/components/account/customer-provider'
-import { Skeleton } from '@/components/ui/skeleton'
-
-function AccountNavSkeleton() {
-  return (
-    <div className="flex flex-col gap-1">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <Skeleton key={i} className="h-9 w-full" />
-      ))}
-    </div>
-  )
-}
 
 export default function AccountLayout({
   children,
@@ -25,19 +21,22 @@ export default function AccountLayout({
 
   return (
     <CustomerProvider customerPromise={customerPromise}>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 pb-24 md:pb-8">
         <h1 className="mb-8 text-3xl font-bold text-zinc-900">
           {__('account.title')}
         </h1>
         <div className="flex flex-col gap-8 md:flex-row">
-          <aside className="w-full shrink-0 md:w-56">
-            <Suspense fallback={<AccountNavSkeleton />}>
-              <AccountNav />
+          <aside className="hidden shrink-0 md:block md:w-56">
+            <Suspense fallback={<AccountSidebarNavSkeleton />}>
+              <AccountSidebarNav />
             </Suspense>
           </aside>
           <div className="min-w-0 flex-1">{children}</div>
         </div>
       </div>
+      <Suspense fallback={<AccountBottomNavSkeleton />}>
+        <AccountBottomNav />
+      </Suspense>
     </CustomerProvider>
   )
 }

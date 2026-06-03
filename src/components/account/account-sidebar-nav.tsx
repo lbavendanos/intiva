@@ -10,49 +10,56 @@ import {
 } from '@phosphor-icons/react'
 
 import { __, cn } from '@/lib/utils'
+import { Skeleton } from '@/components/ui/skeleton'
 
-const NAV_ITEMS = [
+type NavItem = {
+  href: string
+  label: () => string
+  icon: React.ComponentType<{ className?: string }>
+  isActive: (pathname: string) => boolean
+}
+
+const NAV_ITEMS: NavItem[] = [
   {
     href: '/account',
     label: () => __('account.dashboard'),
     icon: SquaresFourIcon,
-    exact: true,
+    isActive: (pathname) => pathname === '/account',
   },
   {
     href: '/account/profile',
     label: () => __('account.profile'),
     icon: UserIcon,
-    exact: false,
+    isActive: (pathname) => pathname.startsWith('/account/profile'),
   },
   {
     href: '/account/orders',
     label: () => __('account.orders'),
     icon: PackageIcon,
-    exact: false,
+    isActive: (pathname) => pathname.startsWith('/account/orders'),
   },
   {
     href: '/account/addresses',
     label: () => __('account.addresses'),
     icon: MapPinIcon,
-    exact: false,
+    isActive: (pathname) => pathname.startsWith('/account/addresses'),
   },
-] as const
+]
 
-export function AccountNav() {
+export function AccountSidebarNav() {
   const pathname = usePathname()
 
   return (
     <nav className="flex flex-col gap-1">
       {NAV_ITEMS.map((item) => {
-        const isActive = item.exact
-          ? pathname === item.href
-          : pathname.startsWith(item.href)
+        const isActive = item.isActive(pathname)
         const Icon = item.icon
 
         return (
           <Link
             key={item.href}
             href={item.href}
+            aria-current={isActive ? 'page' : undefined}
             className={cn(
               'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
               isActive
@@ -66,5 +73,15 @@ export function AccountNav() {
         )
       })}
     </nav>
+  )
+}
+
+export function AccountSidebarNavSkeleton() {
+  return (
+    <div className="flex flex-col gap-1">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Skeleton key={i} className="h-9 w-full" />
+      ))}
+    </div>
   )
 }

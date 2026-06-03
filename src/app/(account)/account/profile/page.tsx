@@ -1,5 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { CaretRightIcon, MapPinIcon } from '@phosphor-icons/react/dist/ssr'
 
 import { __ } from '@/lib/utils'
 import { ProfileContent } from '@/components/account/profile-content'
@@ -29,6 +31,16 @@ export default function ProfilePage() {
       <Suspense fallback={<ProfileSkeleton />}>
         <ProfileContent />
       </Suspense>
+      <Link
+        href="/account/addresses"
+        className="mt-8 flex items-center justify-between gap-3 rounded-lg border border-zinc-200 px-4 py-3 transition-colors hover:bg-zinc-50 md:hidden"
+      >
+        <span className="flex items-center gap-3 text-sm font-medium text-zinc-900">
+          <MapPinIcon className="size-5 text-zinc-500" />
+          {__('account.addresses')}
+        </span>
+        <CaretRightIcon className="size-4 text-zinc-400" />
+      </Link>
     </div>
   )
 }
