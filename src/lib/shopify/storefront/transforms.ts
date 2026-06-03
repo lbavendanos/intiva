@@ -139,11 +139,15 @@ function transformCartLine(line: RawCartLineItem): CartLineItem {
   const displayTitle = color
     ? stripColorSuffix(productRest.title, color.name)
     : productRest.title
+  const selectedOptions = line.merchandise.selectedOptions.filter(
+    (option) => option.value !== 'Default Title',
+  )
 
   return {
     ...line,
     merchandise: {
       ...line.merchandise,
+      selectedOptions,
       product: { ...productRest, color, displayTitle },
     },
   }

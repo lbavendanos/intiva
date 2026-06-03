@@ -24,10 +24,6 @@ export function CartItem({
   const { product, selectedOptions } = merchandise
   const href = `/products/${product.handle}`
 
-  const visibleOptions = selectedOptions.filter(
-    (option) => option.value !== 'Default Title',
-  )
-
   const handleUpdateQuantity = (newQuantity: number) => {
     updateQuantity(id, newQuantity)
   }
@@ -93,7 +89,7 @@ export function CartItem({
                 {__('product.color')}: {product.color.name}
               </p>
             )}
-            {visibleOptions.map((option) => (
+            {selectedOptions.map((option) => (
               <p key={option.name} className="mt-1 text-xs text-zinc-500">
                 {option.name}: {option.value}
               </p>

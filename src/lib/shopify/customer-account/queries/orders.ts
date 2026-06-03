@@ -59,7 +59,10 @@ function splitOrderLineTitle(title: string): {
 
 function transformOrderLineItem(line: RawOrderLineItem): OrderLineItem {
   const { displayTitle, color } = splitOrderLineTitle(line.title)
-  return { ...line, displayTitle, color }
+  const variantOptions = line.variantOptions.filter(
+    (option) => option.value !== 'Default Title',
+  )
+  return { ...line, displayTitle, color, variantOptions }
 }
 
 function buildContactName(address: Maybe<CustomerAddress>): string | null {
