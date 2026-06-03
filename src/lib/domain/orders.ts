@@ -1,6 +1,9 @@
+import type { OrderLineItem } from '@/lib/shopify/customer-account/types'
 import { isPlainDateString } from '@/lib/utils'
 
 type ShopifyOrderSortKey = 'PROCESSED_AT' | 'ORDER_NUMBER' | 'TOTAL_PRICE'
+
+export type OrderCartLine = { merchandiseId: string; quantity: number }
 
 export type OrdersInterval =
   | 'today'
@@ -121,6 +124,32 @@ export function toShopifyOrdersQuery(
 
 export function getOrderUrl(order: { id: string }): string {
   return `/account/orders/${order.id.split('/').pop()}`
+}
+
+export function buildCartLinesFromOrder(lineItems: OrderLineItem[]): {
+  lines: OrderCartLine[]
+  skipped: number
+} {
+  const quantities = new Map<string, number>()
+  let skipped = 0
+
+  for (const item of lineItems) {
+    if (!item.variantId) {
+      skipped += 1
+      continue
+    }
+
+    const quantity = Math.max(1, item.quantity)
+    const current = quantities.get(item.variantId) ?? 0
+    quantities.set(item.variantId, current + quantity)
+  }
+
+  const lines = Array.from(quantities, ([merchandiseId, quantity]) => ({
+    merchandiseId,
+    quantity,
+  }))
+
+  return { lines, skipped }
 }
 
 export function toShopifySort(sort: OrdersSort | null): {

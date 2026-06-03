@@ -4,7 +4,6 @@ import type { Order, OrderLineItem } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { DateTime } from '@/components/format/datetime'
 import { Price } from '@/components/format/price'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardAction,
@@ -15,6 +14,7 @@ import {
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
+import { BuyAgainButton } from './buy-again-button'
 import { OrderBackButton } from './order-back-button'
 import { OrderStatusBadges } from './order-status-badges'
 
@@ -113,13 +113,11 @@ export function OrderDetail({ order }: OrderDetailProps) {
         <h1 className="text-2xl font-bold text-zinc-900">
           {__('orders.order_number', { number: order.name })}
         </h1>
-        <Button
-          type="button"
+        <BuyAgainButton
+          orderId={order.id}
           variant="outline"
           className="row-span-2 self-center"
-        >
-          {__('orders.buy_again')}
-        </Button>
+        />
         <DateTime
           value={order.processedAt}
           className="col-start-2 text-sm text-zinc-500"

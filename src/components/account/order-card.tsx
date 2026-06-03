@@ -8,7 +8,6 @@ import type { OrderListItem } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
 import { DateTime } from '@/components/format/datetime'
 import { Price } from '@/components/format/price'
-import { Button } from '@/components/ui/button'
 import {
   Carousel,
   CarouselContent,
@@ -17,6 +16,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 
+import { BuyAgainButton } from './buy-again-button'
 import { OrderStatusBadges } from './order-status-badges'
 
 type OrderCardProps = {
@@ -89,9 +89,7 @@ export function OrderCard({ order }: OrderCardProps) {
         />
       </Link>
 
-      <Button variant="outline" className="w-full" type="button">
-        {__('orders.buy_again')}
-      </Button>
+      <BuyAgainButton orderId={order.id} variant="outline" className="w-full" />
     </div>
   )
 }

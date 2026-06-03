@@ -60,6 +60,8 @@ export type OrderLineItem = {
   title: string
   name: string
   quantity: number
+  /** ProductVariant id used to re-add to the cart; `null` if the variant is gone. */
+  variantId: Maybe<string>
   image: Maybe<Image>
   price: Maybe<Money>
   variantTitle: Maybe<string>

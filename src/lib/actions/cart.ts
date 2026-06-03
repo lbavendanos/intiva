@@ -4,8 +4,10 @@ import { updateTag } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { buildCartLinesFromOrder } from '@/lib/domain/orders'
 import { CART_CACHE_TAG } from '@/lib/loaders/cache-tags'
 import { CART_COOKIE_NAME } from '@/lib/loaders/cart'
+import { getOrder } from '@/lib/loaders/orders'
 import {
   addToCart as addToCartMutation,
   createCart,
@@ -21,6 +23,11 @@ import type { ActionResult } from './types'
 type CartResult = ActionResult<Cart | null>
 
 type CartLineInput = { merchandiseId: string; quantity: number }
+
+type AddOrderToCartResult = ActionResult<{
+  cart: Cart | null
+  skipped: number
+}>
 
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 
@@ -96,12 +103,8 @@ async function createCartWithLines(
   return ok(cart)
 }
 
-export async function addToCart(
-  merchandiseId: string,
-  quantity: number = 1,
-): Promise<CartResult> {
+async function addLinesToCart(lines: CartLineInput[]): Promise<CartResult> {
   const cartId = await getCartId()
-  const lines: CartLineInput[] = [{ merchandiseId, quantity }]
 
   if (!cartId) {
     return createCartWithLines(lines)
@@ -121,6 +124,37 @@ export async function addToCart(
   updateTag(CART_CACHE_TAG)
 
   return ok(cart)
+}
+
+export async function addToCart(
+  merchandiseId: string,
+  quantity: number = 1,
+): Promise<CartResult> {
+  return addLinesToCart([{ merchandiseId, quantity }])
+}
+
+export async function addOrderToCart(
+  orderId: string,
+): Promise<AddOrderToCartResult> {
+  const order = await getOrder(orderId)
+
+  if (!order) {
+    return fail(__('cart.add_order.error'))
+  }
+
+  const { lines, skipped } = buildCartLinesFromOrder(order.lineItems)
+
+  if (lines.length === 0) {
+    return fail(__('cart.add_order.unavailable'))
+  }
+
+  const result = await addLinesToCart(lines)
+
+  if (!result.success) {
+    return fail(result.error ?? __('cart.add_order.error'))
+  }
+
+  return ok({ cart: result.data ?? null, skipped })
 }
 
 export async function updateCartItem(

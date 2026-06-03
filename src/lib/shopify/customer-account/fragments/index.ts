@@ -69,6 +69,7 @@ export const ORDER_LINE_ITEM_FRAGMENT = /* GraphQL */ `
     title
     name
     quantity
+    variantId
     variantTitle
     variantOptions {
       name

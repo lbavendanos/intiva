@@ -7,6 +7,7 @@ import { DotsThreeIcon } from '@phosphor-icons/react'
 import { getOrderUrl } from '@/lib/domain/orders'
 import type { OrderListItem } from '@/lib/shopify/customer-account/types'
 import { __ } from '@/lib/utils'
+import { useBuyAgain } from '@/hooks/use-buy-again'
 import { DateTime } from '@/components/format/datetime'
 import { Price } from '@/components/format/price'
 import { Button } from '@/components/ui/button'
@@ -27,6 +28,7 @@ export function OrderRow({ order }: OrderRowProps) {
   const orderUrl = getOrderUrl(order)
   const itemsLabel = __('orders.items_count', { count: order.lineItems.length })
   const [previewItem] = order.lineItems
+  const { buyAgain, isPending } = useBuyAgain(order.id)
 
   return (
     <div className="flex items-start gap-4 rounded-lg border border-zinc-200 bg-white p-4 transition-colors hover:bg-zinc-50 sm:items-center">
@@ -85,7 +87,9 @@ export function OrderRow({ order }: OrderRowProps) {
           }
         />
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>{__('orders.buy_again')}</DropdownMenuItem>
+          <DropdownMenuItem disabled={isPending} onClick={buyAgain}>
+            {isPending ? __('cart.add_order.adding') : __('orders.buy_again')}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
