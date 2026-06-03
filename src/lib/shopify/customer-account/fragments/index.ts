@@ -91,6 +91,7 @@ export const ORDER_FRAGMENT = /* GraphQL */ `
     id
     name
     number
+    email
     processedAt
     financialStatus
     fulfillmentStatus
@@ -109,6 +110,32 @@ export const ORDER_FRAGMENT = /* GraphQL */ `
     }
     shippingAddress {
       ...CustomerAddressFragment
+    }
+    billingAddress {
+      ...CustomerAddressFragment
+    }
+    shippingLine {
+      title
+    }
+    paymentInformation {
+      totalPaidAmount {
+        ...MoneyFragment
+      }
+    }
+    transactions {
+      processedAt
+      type
+      transactionAmount {
+        presentmentMoney {
+          ...MoneyFragment
+        }
+      }
+      paymentDetails {
+        ... on CardPaymentDetails {
+          cardBrand
+          last4
+        }
+      }
     }
     lineItems(first: 50) {
       edges {

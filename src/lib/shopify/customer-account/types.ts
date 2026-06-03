@@ -75,10 +75,24 @@ export type OrderLineItem = {
   color: Maybe<string>
 }
 
+export type OrderShippingLine = {
+  title: string
+}
+
+export type OrderPayment = {
+  /** Card brand reported by the gateway (e.g. `"Visa"`, `"Bogus"`). */
+  brand: Maybe<string>
+  /** Last four digits of the card, when the payment was made by card. */
+  last4: Maybe<string>
+  amount: Maybe<Money>
+  processedAt: Maybe<string>
+}
+
 export type Order = {
   id: string
   name: string
   number: number
+  email: Maybe<string>
   processedAt: string
   financialStatus: Maybe<string>
   fulfillmentStatus: string
@@ -88,6 +102,11 @@ export type Order = {
   totalShipping: Money
   lineItems: OrderLineItem[]
   shippingAddress: Maybe<CustomerAddress>
+  billingAddress: Maybe<CustomerAddress>
+  shippingLine: Maybe<OrderShippingLine>
+  payment: Maybe<OrderPayment>
+  /** Customer name for the contact section, derived from the order addresses. */
+  contactName: Maybe<string>
   statusPageUrl: string
 }
 

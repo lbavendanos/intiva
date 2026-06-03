@@ -14,6 +14,22 @@ type OrderDetailProps = {
   order: Order
 }
 
+type OrderInfoSectionProps = {
+  title: string
+  children: React.ReactNode
+}
+
+function OrderInfoSection({ title, children }: OrderInfoSectionProps) {
+  return (
+    <section>
+      <h2 className="font-heading mb-2 text-sm font-medium text-zinc-900">
+        {title}
+      </h2>
+      <div className="space-y-0.5 text-sm text-zinc-600">{children}</div>
+    </section>
+  )
+}
+
 export function OrderDetail({ order }: OrderDetailProps) {
   return (
     <div className="space-y-6">
@@ -87,22 +103,68 @@ export function OrderDetail({ order }: OrderDetailProps) {
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {order.shippingAddress && (
-          <Card>
-            <CardHeader>
-              <CardTitle>{__('order.shipping_address')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-sm text-zinc-600">
-                {order.shippingAddress.formatted.map((line, i) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+      <Card>
+        <CardContent className="grid gap-x-8 gap-y-6 md:grid-cols-2">
+          <OrderInfoSection title={__('order.contact_information')}>
+            {order.contactName && <p>{order.contactName}</p>}
+            {order.email && <p>{order.email}</p>}
+          </OrderInfoSection>
 
+          {order.payment && (
+            <OrderInfoSection title={__('order.payment')}>
+              {order.payment.brand && (
+                <p>
+                  {order.payment.last4
+                    ? __('order.payment_card', {
+                        brand: order.payment.brand,
+                        last4: order.payment.last4,
+                      })
+                    : order.payment.brand}
+                </p>
+              )}
+              {order.payment.amount && (
+                <Price
+                  as="p"
+                  value={order.payment.amount}
+                  className="text-zinc-500"
+                />
+              )}
+              {order.payment.processedAt && (
+                <DateTime
+                  as="p"
+                  value={order.payment.processedAt}
+                  format={{ month: 'short', day: 'numeric' }}
+                  className="text-zinc-500"
+                />
+              )}
+            </OrderInfoSection>
+          )}
+
+          {order.shippingAddress && (
+            <OrderInfoSection title={__('order.shipping_address')}>
+              {order.shippingAddress.formatted.map((line, i) => (
+                <p key={i}>{line}</p>
+              ))}
+            </OrderInfoSection>
+          )}
+
+          {order.billingAddress && (
+            <OrderInfoSection title={__('order.billing_address')}>
+              {order.billingAddress.formatted.map((line, i) => (
+                <p key={i}>{line}</p>
+              ))}
+            </OrderInfoSection>
+          )}
+
+          {order.shippingLine && (
+            <OrderInfoSection title={__('order.shipping_method')}>
+              <p>{order.shippingLine.title}</p>
+            </OrderInfoSection>
+          )}
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>{__('order.summary')}</CardTitle>

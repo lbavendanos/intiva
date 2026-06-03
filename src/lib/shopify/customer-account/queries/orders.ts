@@ -1,5 +1,5 @@
 import { composeQuery } from '../../graphql'
-import type { Connection, PageInfo } from '../../types'
+import type { Connection, Maybe, Money, PageInfo } from '../../types'
 import { extractNodesFromEdges } from '../../utils'
 import { customerAccountQuery } from '../client'
 import {
@@ -11,16 +11,36 @@ import {
   ORDER_LIST_ITEM_FRAGMENT,
 } from '../fragments'
 import type {
+  CustomerAddress,
   Order,
   OrderLineItem,
   OrderListItem,
   OrderListLineItem,
+  OrderPayment,
 } from '../types'
 
 type RawOrderLineItem = Omit<OrderLineItem, 'displayTitle' | 'color'>
 
-type OrderResponse = Omit<Order, 'lineItems'> & {
+type RawCardPaymentDetails = {
+  cardBrand?: Maybe<string>
+  last4?: Maybe<string>
+}
+
+type RawTransaction = {
+  processedAt: string
+  type: string
+  transactionAmount: { presentmentMoney: Money }
+  paymentDetails: Maybe<RawCardPaymentDetails>
+}
+
+type RawPaymentInformation = Maybe<{
+  totalPaidAmount: Money
+}>
+
+type OrderResponse = Omit<Order, 'lineItems' | 'payment' | 'contactName'> & {
   lineItems: Connection<RawOrderLineItem>
+  transactions: RawTransaction[]
+  paymentInformation: RawPaymentInformation
 }
 
 function splitOrderLineTitle(title: string): {
@@ -40,6 +60,35 @@ function splitOrderLineTitle(title: string): {
 function transformOrderLineItem(line: RawOrderLineItem): OrderLineItem {
   const { displayTitle, color } = splitOrderLineTitle(line.title)
   return { ...line, displayTitle, color }
+}
+
+function buildContactName(address: Maybe<CustomerAddress>): string | null {
+  if (!address) return null
+  const name = [address.firstName, address.lastName].filter(Boolean).join(' ')
+  return name.trim() || null
+}
+
+function buildPayment(
+  transactions: RawTransaction[],
+  paymentInformation: RawPaymentInformation,
+): OrderPayment | null {
+  const transaction =
+    transactions.find((t) => t.type === 'SALE' || t.type === 'CAPTURE') ??
+    transactions[0]
+
+  const amount =
+    paymentInformation?.totalPaidAmount ??
+    transaction?.transactionAmount.presentmentMoney ??
+    null
+
+  if (!transaction && !amount) return null
+
+  return {
+    brand: transaction?.paymentDetails?.cardBrand ?? null,
+    last4: transaction?.paymentDetails?.last4 ?? null,
+    amount,
+    processedAt: transaction?.processedAt ?? null,
+  }
 }
 
 type RawOrderListItem = Omit<OrderListItem, 'lineItems' | 'totalQuantity'> & {
@@ -159,10 +208,14 @@ export async function getCustomerOrder(
     return null
   }
 
+  const { lineItems, transactions, paymentInformation, ...order } = data.order
+
   return {
-    ...data.order,
-    lineItems: extractNodesFromEdges(data.order.lineItems).map(
-      transformOrderLineItem,
+    ...order,
+    lineItems: extractNodesFromEdges(lineItems).map(transformOrderLineItem),
+    payment: buildPayment(transactions, paymentInformation),
+    contactName: buildContactName(
+      order.shippingAddress ?? order.billingAddress,
     ),
   }
 }
