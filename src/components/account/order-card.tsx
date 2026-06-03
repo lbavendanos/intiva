@@ -1,100 +1,98 @@
-'py-use client'
+'use client'
 
 import Image from 'next/image'
 import Link from 'next/link'
 
 import type { OrderListItem } from '@/lib/shopify/customer-account/types'
-import { __, cn } from '@/lib/utils'
+import { __ } from '@/lib/utils'
 import { DateTime } from '@/components/common/datetime'
 import { Price } from '@/components/common/price'
 import { Button } from '@/components/ui/button'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
 
 import { OrderStatusBadges } from './order-status-badges'
-import { getOrderUrl, getPreviewCornerClass } from './order-utils'
+import { getOrderUrl } from './order-utils'
 
 type OrderCardProps = {
   order: OrderListItem
 }
 
-const MAX_PREVIEW_IMAGES = 4
-
 export function OrderCard({ order }: OrderCardProps) {
   const orderUrl = getOrderUrl(order)
-  const previewItems = order.lineItems.slice(0, MAX_PREVIEW_IMAGES)
   const itemsLabel = __('orders.items_count', { count: order.lineItems.length })
+  const hasMultiple = order.lineItems.length > 1
 
   return (
-    <div className="relative flex flex-col gap-y-5 overflow-hidden rounded-lg border border-zinc-200 bg-white p-5 transition-colors hover:bg-zinc-50">
-      <Link
-        href={orderUrl}
-        className="flex flex-col gap-y-5 before:absolute before:inset-0 before:content-['']"
-      >
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+    <div className="flex flex-col gap-y-5 rounded-lg border border-zinc-200 bg-white p-5 transition-colors hover:bg-zinc-50">
+      <Link href={orderUrl} className="flex flex-col items-start gap-1">
+        <div className="flex flex-wrap items-center gap-2">
           <OrderStatusBadges
             financialStatus={order.financialStatus}
             fulfillmentStatus={order.fulfillmentStatus}
           />
-          <DateTime
-            value={order.processedAt}
-            className="text-sm text-zinc-600"
-          />
         </div>
-
-        <div
-          className={cn(
-            'grid aspect-4/6 gap-2',
-            previewItems.length === 1 && 'grid-cols-1 grid-rows-1',
-            previewItems.length === 2 && 'grid-cols-2 grid-rows-1',
-            previewItems.length === 3 && 'grid-cols-[2fr_1fr] grid-rows-2',
-            previewItems.length >= 4 && 'grid-cols-2 grid-rows-2',
-          )}
-        >
-          {previewItems.map((item, index) => (
-            <div
-              key={item.id}
-              className={cn(
-                'relative h-full overflow-hidden',
-                previewItems.length === 3 && index === 0 && 'row-span-2',
-                getPreviewCornerClass(index, previewItems.length),
-              )}
-            >
-              {item.image ? (
-                <Image
-                  src={item.image.url}
-                  alt={item.image.altText ?? item.title}
-                  fill
-                  sizes="(min-width: 768px) 320px, 50vw"
-                  className="object-cover"
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center text-xs text-zinc-400">
-                  {__('cart.item.no_image')}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className="space-y-3">
-          <div className="flex flex-col">
-            <p className="font-semibold text-zinc-900">{itemsLabel}</p>
-            <p className="text-sm text-zinc-500">
-              {__('orders.order_number', { number: order.name })}
-            </p>
-          </div>
-          <Price
-            amount={order.totalPrice.amount}
-            currencyCode={order.totalPrice.currencyCode}
-            className="block text-base font-semibold text-zinc-900"
-          />
-        </div>
+        <DateTime value={order.processedAt} className="text-sm text-zinc-600" />
       </Link>
 
-      <div className="relative">
-        <Button variant="outline" className="w-full" type="button">
-          {__('orders.buy_again')}
-        </Button>
-      </div>
+      <Carousel
+        opts={{ loop: hasMultiple, watchDrag: hasMultiple }}
+        className="overflow-hidden rounded-lg"
+      >
+        <CarouselContent className="ml-0">
+          {order.lineItems.map((item) => (
+            <CarouselItem key={item.id} className="basis-full pl-0">
+              <Link
+                href={orderUrl}
+                className="relative block aspect-2/3 bg-zinc-100"
+              >
+                {item.image ? (
+                  <Image
+                    src={item.image.url}
+                    alt={item.image.altText ?? item.title}
+                    fill
+                    sizes="(min-width: 1024px) 280px, (min-width: 640px) 360px, 90vw"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-xs text-zinc-400">
+                    {__('cart.item.no_image')}
+                  </div>
+                )}
+              </Link>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        {hasMultiple && (
+          <>
+            <CarouselPrevious className="left-2" />
+            <CarouselNext className="right-2" />
+          </>
+        )}
+      </Carousel>
+
+      <Link href={orderUrl} className="space-y-3">
+        <div className="flex flex-col">
+          <p className="font-semibold text-zinc-900">{itemsLabel}</p>
+          <p className="text-sm text-zinc-500">
+            {__('orders.order_number', { number: order.name })}
+          </p>
+        </div>
+        <Price
+          amount={order.totalPrice.amount}
+          currencyCode={order.totalPrice.currencyCode}
+          className="block text-base font-semibold text-zinc-900"
+        />
+      </Link>
+
+      <Button variant="outline" className="w-full" type="button">
+        {__('orders.buy_again')}
+      </Button>
     </div>
   )
 }
