@@ -137,6 +137,7 @@
   "order.not_found": "Order not found",
   "order.items": "Items",
   "order.quantity": "Qty",
+  "order.price_each": "each",
   "order.contact_information": "Contact information",
   "order.shipping_address": "Shipping address",
   "order.billing_address": "Billing address",

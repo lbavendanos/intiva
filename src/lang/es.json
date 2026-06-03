@@ -137,6 +137,7 @@
   "order.not_found": "Pedido no encontrado",
   "order.items": "Artículos",
   "order.quantity": "Cant",
+  "order.price_each": "c/u",
   "order.contact_information": "Información de contacto",
   "order.shipping_address": "Dirección de envío",
   "order.billing_address": "Dirección de facturación",
