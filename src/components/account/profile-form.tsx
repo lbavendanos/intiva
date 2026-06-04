@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input'
 
 type ProfileFormProps = {
   customer: Customer
+  onSuccess?: () => void
 }
 
 function isMarketingSubscribed(state: string): boolean {
@@ -35,7 +36,7 @@ function createFormSchema() {
   })
 }
 
-export function ProfileForm({ customer }: ProfileFormProps) {
+export function ProfileForm({ customer, onSuccess }: ProfileFormProps) {
   const [isPending, startTransition] = useTransition()
 
   const email = customer.emailAddress?.emailAddress ?? ''
@@ -68,6 +69,7 @@ export function ProfileForm({ customer }: ProfileFormProps) {
       }
 
       toast.success(__('profile.success'))
+      onSuccess?.()
     })
   }
 
